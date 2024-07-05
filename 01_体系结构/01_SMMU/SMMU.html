@@ -174,6 +174,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="smmu"><a class="header" href="#smmu">SMMU</a></h1>
+<p>[toc]</p>
 <h2 id="什么是smmu它是做什么的"><a class="header" href="#什么是smmu它是做什么的">什么是SMMU，它是做什么的？</a></h2>
 <p>系统内存管理单元 (SMMU, System Memory Management Unit) 是计算机体系结构中的一个关键组件，尤其在复杂的系统中，例如多核处理器、虚拟化环境和高性能计算系统中。它主要负责管理和控制系统内存访问的安全性和有效性。具体来说，SMMU 的主要功能包括以下几个方面：</p>
 <ol>
@@ -267,6 +268,25 @@ The DTI interconnect connects multiple TBUs to the TCU</p>
 <tr><td>CD</td><td>Context Descriptor, 是一个特定格式的数据结构，包含了指向stage1地址翻译表的基地址指针</td></tr>
 </tbody></table>
 </div>
+<p>有两个重要数据结构，STE和CD。</p>
+<p>STE（stream table entry）：包含stage1初始化信息、CD表指针（<strong>CD中包含stage1的页表基地址和相关转换信息</strong>）、stage2的页表基地址以及相关转换信息（如果使能stage2的话）</p>
+<h2 id="数据格式"><a class="header" href="#数据格式">数据格式</a></h2>
+<h3 id="ste"><a class="header" href="#ste">STE</a></h3>
+<p><img src="images/SMMU/image-20240705110509333.png" alt="image-20240705110509333" /></p>
+<p><img src="images/SMMU/image-20240705110521407.png" alt="image-20240705110521407" /></p>
+<p>STE大小为64B。SMMU根据寄存器配置的STRTAB_BASE地址找到STE， STRTAB_BASE定义了STE的基地值， Stream id定义了STE的偏移。如果使用linear 查找， 通过STRTAB_BASE + sid * 64（一个STE的大小为64B）找到STE； 若使用2-level查找， 则先通过sid的高位找到L1_STD（STRTAB_BASE + sid[9:8] * 8, 一个L1_STD的大小为8B）, L1_STD定义了下一级查找的基地址，然后通过sid 找到具体的STE（l2ptr + sid[7:0] * 64）.</p>
+<p>最终找到的STE如下所示，表中的信息包含属性相关信息， 翻译模式信息（是否 stream bypass, 若否，选择stage1, stage2或者stage1 + stage2翻译模式）。</p>
+<p><img src="images/SMMU/image-20240705110739974.png" alt="image-20240705110739974" /></p>
+<h3 id="cd"><a class="header" href="#cd">CD</a></h3>
+<p><img src="images/SMMU/image-20240705131054747.png" alt="image-20240705131054747" /></p>
+<p><img src="images/SMMU/image-20240705131413291.png" alt="image-20240705131413291" /></p>
+<p>由上可知每个SubStreamID对应一个CD表，SubStreamID对应每个用户态空间地址，换句话说，每个涉及对应外设的进程，都对应一个SubStreamID。</p>
+<h2 id="smmu-command-queue-与-event-queue"><a class="header" href="#smmu-command-queue-与-event-queue">SMMU command queue 与 event queue</a></h2>
+<p>系统软件通过Command Queue和Event Queue来和SMMU打交道，这2个Queue都是循环队列。
+Command queue用于软件与SMMU的硬件交互，软件写命令到command queue, SMMU从command queue中 地区命令处理。
+Event Queue用于SMMU发生软件配置错误的状态信息记录，SMMU将配置错误信息写到Event queue中，软件通过读取Event queue获得配置错误信息并进行配置错误处理。</p>
+<p>问题：streamID是谁来生成的。</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
