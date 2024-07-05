@@ -546,9 +546,123 @@ PASID TLP prefix 的格式：</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie"><a class="header" href="#pcie">PCIe</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-1"><a class="header" href="#pcie-1">PCIe</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="物理层"><a class="header" href="#物理层">物理层</a></h1>
-<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240704095625749.png" alt="image-20240704095625749" /></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="data-link-layer"><a class="header" href="#data-link-layer">Data Link Layer</a></h1>
+<p>关键字：逻辑与电气，Link与Lane，串并转换，编码，加扰，EQ，LTSSM</p>
 <h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>物理层就是将上层封装好的东西，通过电信号传输出去。</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240704095625749.png" alt="image-20240704095625749" /></p>
+<p>物理层主要分为两个子块：</p>
+<ul>
+<li>逻辑子块（Logical Sub-Block）：逻辑子块负责编码和解码数据，以及处理时钟恢复和同步。它将数据链路层发送过来的数据进行编码后发送到电气子块。在接收方向，逻辑子块将电气子块接收的编码数据进行解码，恢复原始的数据，并送入数据链路层进行后续处理。此外，逻辑子块还处理与时钟恢复和数据流的对齐和同步相关的任务。</li>
+<li>电气子块（Electrical Sub-Block）：电气子块负责实际的数据传输。它将逻辑子块编码的数据转换为电信号，并通过物理链路发送出去。在接收方向，电气子块将接收到的电信号转换回编码数据，并发送给逻辑子块。电气子块还负责处理物理链路的一些特性，如电平调整，差分信号传输，以及其他与物理链路的电气特性相关的任务。</li>
+</ul>
+<h2 id="logical-sub-block"><a class="header" href="#logical-sub-block">Logical Sub-Block</a></h2>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705171230174.png" alt="image-20240705171230174" /></p>
+<h3 id="tx-buffer--mux"><a class="header" href="#tx-buffer--mux">Tx Buffer &amp; Mux</a></h3>
+<p>这里有个buffer，缓存DL层的包。同时有个Mux，选择发送DL层的东西，或者发送物理层自己的有续集。因为有时候需要停下正常的包，发一些有续集，如skip等，所以需要这个buffer。</p>
+<h3 id="byte-striping"><a class="header" href="#byte-striping">Byte Striping</a></h3>
+<p>把字节流分到不同的lane上。</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705172339842.png" alt="image-20240705172339842" /></p>
+<h3 id="data-scrambling"><a class="header" href="#data-scrambling">Data Scrambling</a></h3>
+<p>首先，物理层会将接收到的数据进行加扰（Scrambling），让原本规整的数据流看上去像是随机数一样（所以有时候又把这个称为伪随机数生成：pseudo-random number generator）。</p>
+<p>这样做的目的是为了<strong>避免信号的能量聚集在某些特殊的频段</strong>上，从而减少EMI。原理是这样：我们传输的数据其实是大量高频的0和1，而由于传输的数据可能是类似的，所以会形成特定高频的01变化的模式。了解傅里叶变换的小伙伴知道，任何周期信号都可以表示为一系列成谐波关系的正弦信号的叠加。这样分解之后，这种特定形状的高频信号，就会在特定的频率上产生能量集中的电磁波，导致干扰。而加扰（Scrambling）就是为了避免这种特定形状的信号出现，从而避免这种情况的发生。</p>
+<p>而PCIe使用了一种非常聪明的方法进行数据加扰 —— <strong>利用XOR运算！也就是线性反馈移位寄存器（LFSR，Linear-feedback shift register）</strong></p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705172450492.png" alt="image-20240705172450492" /></p>
+<p>PCIe使用的是伽罗瓦（Galois）式LFSR，其中PCIe 1.0和2.0使用的是16位的LFSR的多项式表达为：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705172531352.png" alt="image-20240705172531352" /></p>
+<p>而3.0开始之后，使用的是更长的23位LFSR，表达为：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705172536567.png" alt="image-20240705172536567" /></p>
+<p>这样，每一次时钟，LFSR就会产生一个伪随机的bit，然后我们用这个bit和数据再进行一次XOR运算，就可以达到数据加扰的目的了。</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/pcie-phy-lfsr-galois.gif" alt="pcie-phy-lfsr-galois" /></p>
+<p>另外，PCIe1.0和2.0中，数据加扰用的LFSR的初始值（Seed）都是0xFFFF，但是在PCIe3.0之后，为了避免不同的Lane上出现相似的数据，每条Lane上的LFSR的初始值（Seed）都不一样（大于等于8的Lane ID需要对8取模）：</p>
+<div class="table-wrapper"><table><thead><tr><th>Lane</th><th>Seed</th></tr></thead><tbody>
+<tr><td>0</td><td>1DBFBCh</td></tr>
+<tr><td>1</td><td>0607BBh</td></tr>
+<tr><td>2</td><td>1EC760h</td></tr>
+<tr><td>3</td><td>18C0DBh</td></tr>
+<tr><td>4</td><td>010F12h</td></tr>
+<tr><td>5</td><td>19CFC9h</td></tr>
+<tr><td>6</td><td>0277CEh</td></tr>
+<tr><td>7</td><td>1BB807h</td></tr>
+</tbody></table>
+</div>
+<p>这个方法聪明的地方在于，通过XOR产生的伪随机数是可以恢复的！因为只要操作数一样，两次XOR操作的效果会被抵消，所以只要发送方和接收方的Seed一样，那么接收方就可以通过执行完全一样的LFSR操作，来恢复出原始的数据。</p>
+<p>最后，为了方便我们用示波器调试，数据加扰是可以被关闭的。规范没有说怎么关闭，具体看厂商实现。</p>
+<h3 id="encoding"><a class="header" href="#encoding">Encoding</a></h3>
+<p>在打乱数据之后，接下来就是对数据进行编码（Encoding）了。编码的目的是保证传输的0和1的数量尽可能的一致，从而保持DC平衡（DC Balance），让数据的传输更加可靠，也能帮助PCIe从数据信号中恢复时钟（Clock Recovery）。</p>
+<p>PCIe使用的编码方式有三种：8b/10b编码，128b/130b编码和242B/256B FLIT编码。而一旦知道了编码方式和PCIe的总线时钟频率，我们就可以算出来每条Lane的传输速率了。用PCIe 1.0 8b/10b来举例子，这个代表8bit的数据会被编码为10b的数据进行传输，所以，最后每条Lane的传输速率就是：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705173724380.png" alt="image-20240705173724380" /></p>
+<p>以下是PCIe各个版本的编码方式和传输速率：</p>
+<div class="table-wrapper"><table><thead><tr><th>PCIe Version</th><th>Line code</th><th>Transfer rate per lane</th><th>Throughput x1</th><th>Throughput x16</th></tr></thead><tbody>
+<tr><td>1.0</td><td>8b/10b</td><td>2.5 GT/s</td><td>250 MB/s</td><td>4 GB/s</td></tr>
+<tr><td>2.0</td><td>8b/10b</td><td>5 GT/s</td><td>500 MB/s</td><td>8 GB/s</td></tr>
+<tr><td>3.0</td><td>128b/130b</td><td>8 GT/s</td><td>984.6 MB/s</td><td>15.75 GB/s</td></tr>
+<tr><td>4.0</td><td>128b/130b</td><td>16 GT/s</td><td>1.969 GB/s</td><td>31.51 GB/s</td></tr>
+<tr><td>5.0</td><td>128b/130b</td><td>32 GT/s</td><td>3.938 GB/s</td><td>63.02 GB/s</td></tr>
+<tr><td>6.0</td><td>1b/1b 242B/256B FLIT</td><td>64 GT/s</td><td>7.564 GB/s</td><td>121.00 GB/s</td></tr>
+</tbody></table>
+</div>
+<p>注意：242B/256B是大写的B，不再是bit而是Byte了。</p>
+<h4 id="8b10b编码"><a class="header" href="#8b10b编码">8b/10b编码</a></h4>
+<p>8b/10b编码主要用在PCIe 1.0和2.0中，为2.5GT/s和5GT/s的传输频率提供数据编码 [<a href="https://en.wikipedia.org/wiki/8b/10b_encoding">4]</a>。它的核心思想是，将一个8bits的数据拆分成一个5bits的数据和一个3bits的数据，然后分别通过一个固定的关系映射到6bits和4bits的中空间中去，从而避免连续的0或者1的出现。如下：<code>ABCDEFGH</code>被拆分成<code>ABCDE</code>和<code>FGH</code>，然后转换为小端，再分别映射到<code>abcdei</code>和<code>fghj</code>中去。</p>
+<p>转换后的8b/10b编码有两种类型的值：控制码（K）和数据码（D），根据数据<code>ABCDE</code>和<code>FGH</code>的分组，被记为<code>D.&lt;ABCDE&gt;.&lt;FGH&gt;</code>或者<code>K.&lt;ABCDE&gt;.&lt;FGH&gt;</code>。其具体的映射方式如下：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174102857.png" alt="image-20240705174102857" /></p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174110853.png" alt="image-20240705174110853" /></p>
+<p>这里**RD（Running Disparity）**代表着当前字节开始前，前面的数据流中1的数量减去0的数量的差值。为了保证精确的01数量一致，8b/10b编码会使用这个值对当前字节的编码进行调整。这样它就能保证在传输每个字节之前，RD的值不会超过±1，在传输数据过程中，RD的值不会超过±2。</p>
+<p>由于硬编码的原因，8b/10b编码可以精确的01数量一致，从而达到稳定的保持DC平衡，但是它的问题在于编码设计复杂，而且编码的效率有高达20%的浪费！这也是为什么PCIe 3.0之后，就不再使用8b/10b编码的原因。</p>
+<h4 id="128b130b编码"><a class="header" href="#128b130b编码">128b/130b编码</a></h4>
+<p>PCIe 3.0之后，为了提高编码效率从而提升有效带宽，PCIe开始使用128b/130b编码。可以看到由于每130个bits中间，只有2个bits是浪费的，所以它的效率高达98.46%！</p>
+<p>128b/130b编码是64b/66b编码的变形 [<a href="https://en.wikipedia.org/wiki/64b/66b_encoding">5]</a>，唯一的区别是将其payload的部分扩大了一倍（64b -&gt; 128b）。它和8b/10b最大的不同在于它不再使用硬编码表进行转换了，而是依赖于上面我们提到的3.0之后的LFSR算法来进行转换，从而生成一个统计意义上的DC平衡的数据流。</p>
+<p>除了使用LFSR算法进行数据处理以外，在编码的时候，128b/130b编码会做两件事情：Framing和Encoding。</p>
+<h5 id="framing"><a class="header" href="#framing">Framing</a></h5>
+<p>首先，128b/130b编码会将整个上层的包（不是一个block）的之前和之后加上特定的标识用的Token，用来表示这个包的开始：</p>
+<ul>
+<li>对于TLP而言，它会在前面增加一个2字节的头，并且复写数据链路层的前4个bits，将其修改为FCRC，从而和已有的数据链路层的Seq一起组成一个4字节的token —— STP（Start of TLP）。</li>
+</ul>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174145453.png" alt="image-20240705174145453" /></p>
+<ul>
+<li>对于DLLP而言，它会用一个2字节的Token - SDP（Start of DLLP）表示开始。</li>
+</ul>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174151441.png" alt="image-20240705174151441" /></p>
+<p>这两个Token会被永远从Lane 0开始，并作为一个数据包的开头（Byte 0）。另外，除此以外，还有用来标记空闲的IDL（Logical Idle），Nullify之前TLP的EDB（EnD Bad），和标记数据流结束的EDS（End of Data Stream）。</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174208546.png" alt="image-20240705174208546" /></p>
+<h5 id="encoding-1"><a class="header" href="#encoding-1">Encoding</a></h5>
+<p>然后，128b/130b编码会将整个数据包分为大小为128bit的block，然后在每个128bits的payload之前，加上一个2bits的同步头（SyncHeader），用来表示这个payload的类型并且做多通道同步。这个同步头的值有两种：</p>
+<ul>
+<li>01b：表示这个payload是数据块（Data Block），长度为128bits</li>
+<li>10b：表示这个payload是Ordered Set Block，长度也为128bits</li>
+</ul>
+<p>比如，我们假设需要在一个通道上传输一个数据块，总共16个字节，S0-S15，其中最低位的bit我们记作.0，最高位记作.7，那么传输序列如下（注意同步头也会被转位小端发送，所以01b会变成10b）：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174235248.png" alt="image-20240705174235248" /></p>
+<p>当有多条通道的时候，发送的时候数据将被分配到多个通道上同时发送，并且时钟对齐的：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174247660.png" alt="image-20240705174247660" /></p>
+<h4 id="242b256b-flit编码"><a class="header" href="#242b256b-flit编码">242B/256B FLIT编码</a></h4>
+<p>虽然128b/130b的编码很好，但是随着对速率的要求变得更高，PCIe6.0更换了从PCIe1.0一致沿用下来的NRZ（Non-Return-To-Zero）信号调制方式，而是转而使用了PAM4（Pulse Amplitude Modulation 4）信号调制方式。这种调制方式可以在同样的信号频率下，提供双倍的传输速率（下面会详细说）。然而这样的调制方式，也让错误率变得更高，所以PCIe6.0开始，PCIe使用了242B/256B FLIT编码，加入更多的校验机制，来提高信号的可靠性。</p>
+<p>242B/256B FLIT编码的传输单位是一个FLIT，大小为256个字节（不是bits）。</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174353371.png" alt="image-20240705174353371" /></p>
+<p>其中没有包头，从报文开始，前236个字节是TLP数据，然后是6个字节的DLLP（Data Link Layer Packet），8个字节的CRC，最后是6个字节的FEC（Forward Error Correction）。由于FLIT中已经带有CRC了，所以DLLP和TLP中是没有CRC的。传输后如果发现问题，就会尝试使用FEC进行修正（单字节），如果不行，就会对整个FLIT进行重传。</p>
+<p>另外，一旦开启了FLIT模式，PCIe就会一直使用FLIT模式，即使速率降低到NRZ的速率（比如2.5 GT/s，5.0 GT/s，8.0 GT/s，16.0 GT/s，32.0 GT/s）也不会转换回NRZ模式了。</p>
+<h2 id="electrical-sub-block"><a class="header" href="#electrical-sub-block">Electrical Sub-block</a></h2>
+<h3 id="parallel-to-serial"><a class="header" href="#parallel-to-serial">Parallel to Serial</a></h3>
+<p>首先，由于我们最后的信号是串行的，而逻辑子块上传下来的数据是是一个一个的字节（单通道），所以需要将按字节的并行信号转变为最后的串行信号（Parallel to Serial），再进行发送。</p>
+<p>自然的，接收方则相反，最后当所有的数据处理完成之后，需要将串行的数据重新转化为并行的数据，交给数据链路层进行处理。</p>
+<h3 id="调制modulation"><a class="header" href="#调制modulation">调制（Modulation）</a></h3>
+<p>接下来转换为串行的数据需要经过调制，将其变为易于传输的电信号，而接收方则需要将电信号重新解调，转换会数字信号。</p>
+<h4 id="nrz编码non-return-to-zero"><a class="header" href="#nrz编码non-return-to-zero">NRZ编码（Non-Return-to-Zero）</a></h4>
+<p>在PCIe1.0到5.0中，PCIe一直使用的调制方法叫做不归零码（NRZ，Non-Return-to-Zero） [<a href="https://en.wikipedia.org/wiki/Non-return-to-zero">10]</a>。这种调制方式特点是与归零码（RZ，Return-to-Zero）相比，它的每个比特1会占满整个时钟周期，不会在后半个周期归零。PCIe使用的是中的两极不归零码（Bipolar NRZ level），它的编码方法很简单，就是将0变为负电平−V，1变为正电平+V，其电平图和眼图如下：</p>
+<p><strong><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174549147.png" alt="image-20240705174549147" /></strong></p>
+<p>由于不归零码本身没有稳定的机制传递时钟，所以需要上面提到的编码（Encoding），加扰（Scrambling）和其他方式来进行辅助时钟恢复，这个我们下面会提到。</p>
+<h4 id="pam4编码"><a class="header" href="#pam4编码">PAM4编码</a></h4>
+<p>为了支持更高的传输速率，PCIe6.0开始使用PAM4（Pulse Amplitude Modulation 4）调制方式，即脉冲幅度调制，将00变为−V，10变为+V，01变为−V/3，11变为+V/3，其眼图与每个电平表示的信号如下：</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174638258.png" alt="image-20240705174638258" /></p>
+<p>这样在同样的电压下，容纳的状态就变成了之前的两倍，所以在同样的时钟下，传输速率也就变成了之前的两倍！但是这样也就导致了更高概率的误码。</p>
+<h3 id="差分信号differential-signal"><a class="header" href="#差分信号differential-signal">差分信号（Differential Signal）</a></h3>
+<p>再接下来，再最后发送给真正的电路前，为了对抗电磁辐射等等原因导致的干扰，PCIe使用了差分信号（Differential Signaling）的方式进行传输。即将信号分为正负两个信号，然后在接收端，将两个信号相减，重新得到原始信号（这就是在Pinout中，我们看到的Differential Pair）。</p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174714897.png" alt="image-20240705174714897" /></p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174727675.png" alt="image-20240705174727675" /></p>
+<p><img src="03_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/physical_layer/image-20240705174944032.png" alt="image-20240705174944032" /></p>
+<p>参考： <a href="https://r12f.com/posts/pcie-4-phy/#%E7%89%A9%E7%90%86%E5%B1%82%EF%BC%88Physical-Layer%EF%BC%89">Blog</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="data-link-layer"><a class="header" href="#data-link-layer">Data Link Layer</a></h1>
+<h2 id="introduction-1"><a class="header" href="#introduction-1">Introduction</a></h2>
 <p><strong>关键词：传输TLP，Ack/Nack，流控</strong>，电源管理</p>
 <p>当事务层将事务消息准备好之后，就会向下传递给数据链路层（Data Link Layer）。对于我们发送的事务消息来说，数据链路层主要负责一件事情：<strong>保证事务消息能正确的传输到目的地</strong>。</p>
 <p>数据链路层传输的包主要包括两种，<strong>一种用于传输TLP事务消息</strong>，<strong>一种用于传输数据链路层的控制消息</strong>，比如功能（Feature）控制，流量控制，电源管理ack/nack机制等等。这两种类型的包通过物理层的Token来进行区分：STP（Start of TLP）表示TLP消息，SDP（Start of DLLP）表示控制消息（DLLP，Data Link Layer Packet）。</p>
@@ -656,7 +770,8 @@ PASID TLP prefix 的格式：</p>
 <p>参考：<a href="https://r12f.com/posts/pcie-3-tl-dll/#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%EF%BC%88Transaction-Layer%EF%BC%89">Blog</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="transaction-layer"><a class="header" href="#transaction-layer">Transaction Layer</a></h1>
 <p>[toc]</p>
-<h2 id="introduction-1"><a class="header" href="#introduction-1">Introduction</a></h2>
+<p><strong>关键词：事务类型，组包，路由，VC，Ordering</strong></p>
+<h2 id="introduction-2"><a class="header" href="#introduction-2">Introduction</a></h2>
 <p>PCIe的所有操作都被称为一个事务（Transaction），这些事务分为四种类型：</p>
 <ul>
 <li>内存事务（Memory Transaction）</li>
@@ -721,7 +836,7 @@ PASID TLP prefix 的格式：</p>
 <p><strong>EP（Error Poisoning）</strong>：1 = 有错误，0 = 没有错误</p>
 </li>
 <li>
-<p><strong>AT（Address Translation）</strong>：虚拟化相关的字段，00 = 无地址转换，01 = 需要地址转换，10 = 地址转换已完成，11 = 保留</p>
+<p><strong>AT（Address Type）</strong>：虚拟化，ATS相关的字段，00 = 无地址转换，01 = 需要地址转换，10 = 地址转换已完成，11 = 保留</p>
 </li>
 <li>
 <p><strong>Length</strong>：Payload的长度，<strong>单位为DW（Double Word）</strong>，1DW = 4字节</p>
