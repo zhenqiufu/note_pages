@@ -447,21 +447,28 @@ The DTI interconnect connects multiple TBUs to the TCU</p>
 <p>The TBU contains Translation Lookaside Buffers (TLBs) that cache translation tables.</p>
 <p>TBU里有两级cache，一个micro TLB一个是mainTLB。</p>
 <h2 id="工作过程"><a class="header" href="#工作过程">工作过程</a></h2>
+<p>PA = F(streamID, substreamID, Address)</p>
 <p>step1.master（假设为pcie controller）使用VA中发起了一个transaction</p>
-<p>step2.SMMU收到了VA，转换成PA</p>
+<p>step2.SMMU收到了VA，根据SMMU_CRO.SMMUEN判断是否启用SMMU,如果没开启则直接bypass,把VA作为PA执行 DMA请求,否则根据StreamlD查找对应STE;</p>
+<p>根据STE.Config确定是否执行Stage1翻译,如果不需要则把VA直接当成IPA输入到Stage2翻译处,否则根据 STE.S1ContextPtr 以及 SubStreamID找到对应CD,并据此找到 Stage 1 translation table以及 ASID,执行Stage 1 translation table walk,将VA翻译成IPA并当成 Stage 2的输入;</p>
+<p>根据STE.Config确定是否执行Stage2翻译,如果不需要则把IPA直接当成PA作为SMMU的输出,否则应根据STE.S2TTB 找到 Stage 2 translation table 以及 VMID,执行 Stage 2 translation table walk,将 IPA翻译成 PA并作为SMMU的输出,结 末翻译。</p>
+<p>Note:在执行Stage 1/2 translation table walk前,需要查询SMMU的TLB以确定是否在缓存中有该请求的翻译结果,如果 有则直接返回对应结果,不进行translation table walk。否则需要执行translation table walk并在结束后将翻译结果存入TLB 中以备后续查询使用。</p>
+<p>这种主要是针对 untranslated transaction, PCle的ATS translation request/PRI流程与其不同。</p>
+<p>转换成PA</p>
 <ul>
 <li>TBU从TLB获取转换结果成功，输出PA</li>
 <li>TBU从TLB获取转换结果失败，TBU就会告知TCU必须执行transaction table walk，在memory获取translation table去获得VA到PA的转换</li>
 </ul>
 <p>step3.SMMU使用PA发起transaction</p>
-<p>1）外设输入VA、StreamID和SubStreamID给SMMU；</p>
-<p>2）SMMU查表STE和CD，找到stage1和stage2页表转换信息；</p>
-<p>3）先通过TLB查找页表，找到则计算对应PA地址，没找到则根据STE和CD计算PA；</p>
-<p>4）将PA地址输出；</p>
 <p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/01_SMMU/images/SMMU/image-20240704185719424.png" alt="image-20240704185719424" /></p>
 <p>有两级页表，可以配置寄存器，来控制是否进行这一级的翻译。</p>
 <p>还有SMMU enable开关，如果关上了，就相当于没有SMMU这个东西，不进行翻译。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="amba"><a class="header" href="#amba">AMBA</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>术语</th><th>概念</th></tr></thead><tbody>
+<tr><td>StreamID</td><td>一个平台上可以有多个SMMU设备，每个SMMU设备下面可能连接着多个Endpoint， 多个设备互相之间可能不会复用同一个页表，需要加以区分，SMMU用StreamID来做这个区分( SubstreamID的概念和PCIe PASID是等效的)</td></tr>
+<tr><td>STE</td><td>Stream Table Entry, STE里面包含一个指向stage2地址翻译表的指针，并且同时还包含一个指向CD（Context Descriptor）的指针.</td></tr>
+<tr><td>CD</td><td>Context Descriptor, 是一个特定格式的数据结构，包含了指向stage1地址翻译表的基地址指针</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="amba"><a class="header" href="#amba">AMBA</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="axi"><a class="header" href="#axi">AXI</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="chi"><a class="header" href="#chi">CHI</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie"><a class="header" href="#pcie">PCIe</a></h1>
