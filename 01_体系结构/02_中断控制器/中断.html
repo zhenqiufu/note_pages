@@ -1,0 +1,367 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>异常与中断 - NoteBook</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">MyNote</a></li><li class="chapter-item expanded affix "><li class="part-title">工作</li><li class="chapter-item expanded "><a href="../../01_体系结构/index.html"><strong aria-hidden="true">1.</strong> 体系结构</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/ARM固件启动顺序.html"><strong aria-hidden="true">1.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SMMU.html"><strong aria-hidden="true">1.2.</strong> SMMU</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SVA.html"><strong aria-hidden="true">1.3.</strong> 异构内存管理SVA</a></li><li class="chapter-item expanded "><a href="../../07_CMN/index.html"><strong aria-hidden="true">1.4.</strong> CMN</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/概述.html"><strong aria-hidden="true">1.5.</strong> Cortex M3 MCU</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/中断.html" class="active"><strong aria-hidden="true">1.6.</strong> 异常与中断</a></li></ol></li><li class="chapter-item expanded "><a href="../../02_AMBA/index.html"><strong aria-hidden="true">2.</strong> AMBA</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../02_AMBA/AXI.html"><strong aria-hidden="true">2.1.</strong> AXI</a></li><li class="chapter-item expanded "><a href="../../02_AMBA/CHI.html"><strong aria-hidden="true">2.2.</strong> CHI</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/index.html"><strong aria-hidden="true">3.</strong> PCIe</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/index.html"><strong aria-hidden="true">3.1.</strong> 协议学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/physical_layer.html"><strong aria-hidden="true">3.1.1.</strong> Physical Layer</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/data_link_layer.html"><strong aria-hidden="true">3.1.2.</strong> Data Link Layer</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/TransactionLayer.html"><strong aria-hidden="true">3.1.3.</strong> Transaction Layer</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">3.2.</strong> ARM N2 参考设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/01_PCIe子系统简介/01_PCIe子系统.html"><strong aria-hidden="true">3.2.1.</strong> 01_PCIe子系统.md</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/02_PCIe枚举与资源分配/index.html"><strong aria-hidden="true">3.3.</strong> PCIe 枚举与资源分配</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/02_PCIe枚举与资源分配/枚举过程中的资源降级.html"><strong aria-hidden="true">3.3.1.</strong> 枚举过程中的资源降级</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/02_PCIe枚举与资源分配/EDK2对optionRom的支持.html"><strong aria-hidden="true">3.3.2.</strong> EDK2对optionRom的支持</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/index.html"><strong aria-hidden="true">3.4.</strong> PCIe 高级特性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_AER.html"><strong aria-hidden="true">3.4.1.</strong> PCIe AER</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_Interrupt.html"><strong aria-hidden="true">3.4.2.</strong> PCIe Interrupt</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_Hot_Plug.html"><strong aria-hidden="true">3.4.3.</strong> PCIe Hot-Plug</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_Power_management.html"><strong aria-hidden="true">3.4.4.</strong> PCIe Power Management</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_DPC.html"><strong aria-hidden="true">3.4.5.</strong> PCIe_DPC.md</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../06_CXL/index.html"><strong aria-hidden="true">4.</strong> CXL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../06_CXL/cxl_reg.html"><strong aria-hidden="true">4.1.</strong> CXL 寄存器</a></li><li class="chapter-item expanded "><a href="../../06_CXL/CXL_in_CMN.html"><strong aria-hidden="true">4.2.</strong> CXL_in_CMN</a></li><li class="chapter-item expanded "><a href="../../06_CXL/CXL_in_SCP.html"><strong aria-hidden="true">4.3.</strong> CXL_in_SCP</a></li><li class="chapter-item expanded "><a href="../../06_CXL/cxl枚举.html"><strong aria-hidden="true">4.4.</strong> CXL 枚举</a></li></ol></li><li class="chapter-item expanded "><a href="../../04_Silicon_IP/index.html"><strong aria-hidden="true">5.</strong> Silicon IP</a></li><li class="chapter-item expanded "><a href="../../05_LeetCode/LeetCode.html"><strong aria-hidden="true">6.</strong> LeetCode</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../05_LeetCode/二分法.html"><strong aria-hidden="true">6.1.</strong> 二分法</a></li></ol></li><li class="chapter-item expanded "><a href="../../08_tool/index.html"><strong aria-hidden="true">7.</strong> Tool</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../08_tool/git.html"><strong aria-hidden="true">7.1.</strong> Git</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">读书</li><li class="chapter-item expanded "><a href="../../0a_reading/工作中的好习惯.html"><strong aria-hidden="true">8.</strong> 工作中的好习惯</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">NoteBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="中断"><a class="header" href="#中断">中断</a></h1>
+<p>[toc]</p>
+<h2 id="中断与异常区别"><a class="header" href="#中断与异常区别">中断与异常区别</a></h2>
+<h3 id="中断interrupt"><a class="header" href="#中断interrupt">中断（Interrupt）</a></h3>
+<p><strong>中断</strong>是由外部设备（如I/O设备、定时器等）发出的信号，通知处理器需要处理某个事件。中断通常是异步的，即它们可以在任何时间发生，并且与处理器当前执行的指令无关。</p>
+<h4 id="特点"><a class="header" href="#特点">特点：</a></h4>
+<ol>
+<li><strong>异步性</strong>：中断可以在任何时间发生，不依赖于当前指令的执行状态。</li>
+<li><strong>外部事件触发</strong>：通常由外部硬件设备触发，例如键盘输入、中断请求线（IRQ）等。</li>
+<li><strong>中断向量</strong>：每个中断通常都有一个对应的中断向量，用于指向相应的中断处理程序。</li>
+<li><strong>优先级和嵌套</strong>：中断控制器（如NVIC或GIC）可以管理中断的优先级和嵌套。</li>
+<li><strong>响应中断</strong>：处理器在中断发生时，会保存当前的执行状态，然后跳转到相应的中断处理程序。</li>
+</ol>
+<h4 id="示例"><a class="header" href="#示例">示例：</a></h4>
+<ul>
+<li>定时器中断</li>
+<li>键盘中断</li>
+<li>网络中断</li>
+</ul>
+<h3 id="异常exception"><a class="header" href="#异常exception">异常（Exception）</a></h3>
+<p><strong>异常</strong>是由处理器在执行指令过程中检测到的特殊情况或错误条件。这些情况通常是同步的，即在执行特定指令时发生。</p>
+<h4 id="特点-1"><a class="header" href="#特点-1">特点：</a></h4>
+<ol>
+<li><strong>同步性</strong>：异常在特定指令执行过程中发生，是指令执行的结果。</li>
+<li><strong>内部事件触发</strong>：由处理器内部条件触发，例如非法指令、除零错误、页面错误等。</li>
+<li><strong>异常向量</strong>：每种异常类型都有一个对应的异常向量，用于指向相应的异常处理程序。</li>
+<li><strong>处理机制</strong>：处理器在检测到异常时，会停止当前指令的执行，保存状态，并跳转到相应的异常处理程序。</li>
+<li><strong>恢复执行</strong>：在处理完异常后，通常会尝试恢复执行被中断的指令或进行适当的错误处理。</li>
+</ol>
+<h4 id="示例-1"><a class="header" href="#示例-1">示例：</a></h4>
+<ul>
+<li>未定义指令异常</li>
+<li>除零错误</li>
+<li>页面错误</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>特点</th><th>中断（Interrupt）</th><th>异常（Exception）</th></tr></thead><tbody>
+<tr><td>触发源</td><td>外部设备</td><td>处理器内部</td></tr>
+<tr><td>时间</td><td>异步</td><td>同步</td></tr>
+<tr><td>处理方式</td><td>中断处理程序</td><td>异常处理程序</td></tr>
+<tr><td>优先级</td><td>可以有优先级和嵌套</td><td>一般没有嵌套处理</td></tr>
+<tr><td>保存状态</td><td>保存处理器状态</td><td>保存处理器状态</td></tr>
+<tr><td>恢复执行</td><td>处理完中断后恢复执行</td><td>处理完异常后尝试恢复执行或终止程序</td></tr>
+</tbody></table>
+</div>
+<h2 id="nvic与gic"><a class="header" href="#nvic与gic">NVIC与GIC</a></h2>
+<h3 id="nvicnested-vectored-interrupt-controller"><a class="header" href="#nvicnested-vectored-interrupt-controller">NVIC（Nested Vectored Interrupt Controller）</a></h3>
+<p><strong>NVIC</strong> 是一种嵌套向量中断控制器，主要用于Cortex-M系列处理器。这些处理器通常用于微控制器和低功耗设备。NVIC的主要特点包括：</p>
+<ol>
+<li><strong>嵌套中断</strong>：
+<ul>
+<li>支持中断嵌套，中断优先级可以设置，使高优先级中断可以打断低优先级中断。</li>
+<li>每个中断都有一个唯一的优先级，可以通过编程设置。</li>
+</ul>
+</li>
+<li><strong>集成度高</strong>：
+<ul>
+<li>NVIC是Cortex-M处理器内核的一部分，紧密集成在处理器内部。</li>
+<li>通过内存映射的寄存器控制。</li>
+</ul>
+</li>
+<li><strong>低延迟</strong>：
+<ul>
+<li>由于NVIC是处理器内核的一部分，中断响应时间非常快，适合实时应用。</li>
+</ul>
+</li>
+<li><strong>特性</strong>：
+<ul>
+<li>提供向量表偏移寄存器（VTOR）以支持动态中断向量表。</li>
+<li>支持多达240个中断（具体数量取决于具体的Cortex-M型号）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="gicgeneric-interrupt-controller"><a class="header" href="#gicgeneric-interrupt-controller">GIC（Generic Interrupt Controller）</a></h3>
+<p><strong>GIC</strong> 是一种通用中断控制器，主要用于Cortex-A系列处理器，这些处理器通常用于高性能应用，如嵌入式系统、智能手机和服务器。GIC的主要特点包括：</p>
+<ol>
+<li><strong>支持多个处理器</strong>：
+<ul>
+<li>GIC支持多核系统，可以在多个处理器之间分发中断。</li>
+<li>包括两个主要组件：分配器（Distributor）和CPU接口（CPU Interface）。</li>
+</ul>
+</li>
+<li><strong>高级中断管理</strong>：
+<ul>
+<li>支持更复杂的中断管理机制，包括中断优先级、中断屏蔽和中断路由。</li>
+<li>可以配置每个中断的目标处理器和优先级。</li>
+</ul>
+</li>
+<li><strong>扩展性强</strong>：
+<ul>
+<li>设计用于处理大量中断，可以支持多达1020个中断（具体数量取决于具体实现）。</li>
+<li>GICv3和GICv4进一步增加了中断管理能力，支持更多的中断和更复杂的配置。</li>
+</ul>
+</li>
+<li><strong>独立于处理器内核</strong>：
+<ul>
+<li>GIC是一个独立的模块，通常与处理器分开实现，可以放置在片上系统（SoC）的不同位置。</li>
+<li>通过内存映射的寄存器进行配置和控制。</li>
+</ul>
+</li>
+</ol>
+<h3 id="总结"><a class="header" href="#总结">总结</a></h3>
+<ul>
+<li><strong>NVIC</strong>：
+<ul>
+<li>主要用于<strong>Cortex-M</strong>系列处理器。</li>
+<li>高度集成，低延迟，适合实时应用。</li>
+<li>支持嵌套中断和优先级管理。</li>
+</ul>
+</li>
+<li><strong>GIC</strong>：
+<ul>
+<li>主要用于<strong>Cortex-A</strong>系列处理器。</li>
+<li>支持<strong>多核系统和复杂的中断管理</strong>。</li>
+<li>独立于处理器内核，实现灵活的中断分发和配置。</li>
+</ul>
+</li>
+</ul>
+<h2 id="异常向量表"><a class="header" href="#异常向量表">异常向量表</a></h2>
+<p>当异常发生时，处理器必须跳转和执行与异常相关的处理指令。异常相关的处理指令通常
+存储在内存中， 这个存储位置称为异常向量。 在 ARM 体系结构中， 异常向量存储在一个表中，
+称为异常向量表。在 ARMv8 体系结构中，每个异常级别都有自己的向量表，即 EL3、 EL2 和
+EL1 各有一个异常向量表。</p>
+<p><strong>ARMv7 体系结构的异常向量表比较简单，ARMv7架构中的异常向量表地址从0x00000000开始， 每个表项是 4 字节， 每个表项里存放了一条跳转指令。</strong> 但是 ARMv8 的异常向量表发生了变化， 每一个表项是 128 字节， 这样可以存放 32 条指
+令。注意， ARMv8 指令集支持 64 位指令集，但是每一条指令的位宽是 32 位，而不是 64 位。</p>
+<p>ARMv8 的异常向量表存放的基地址可以通过向量基址寄存器（ Vector Base Address Register， VBAR）来设置。</p>
+<p><strong>ARM M7 是Arm v7架构，32位。</strong></p>
+<p>一个示例：</p>
+<p><img src="images/%E4%B8%AD%E6%96%AD/image-20240710140146524.png" alt="image-20240710140146524" /></p>
+<pre><code class="language-c">Address       Exception Type
+0x00000000    Reset
+0x00000004    Undefined Instruction
+0x00000008    Software Interrupt (SWI)
+0x0000000C    Prefetch Abort
+0x00000010    Data Abort
+0x00000014    Reserved
+0x00000018    IRQ
+0x0000001C    FIQ
+
+</code></pre>
+<p>跳入异常向量表操作是异常发生时，硬件自动完成的，剩下的异常处理任务完全交给了程序员。由上表可知，异常向量是一个固定的内存地址，我们可以通过向该地址处写一条跳转指令，让它跳向我们自己定义的异常处理程序的入口，就可以完成异常处理了。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../01_体系结构/05_CortexM3/概述.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../02_AMBA/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../01_体系结构/05_CortexM3/概述.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../02_AMBA/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
