@@ -174,7 +174,58 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="cmn700"><a class="header" href="#cmn700">CMN700</a></h1>
-
+<p>[toc]</p>
+<h2 id="cmn-700-中hnfhnihnp区别"><a class="header" href="#cmn-700-中hnfhnihnp区别">CMN-700 中HNF/HNI/HNP区别</a></h2>
+<h3 id="home-node-基础"><a class="header" href="#home-node-基础">Home Node 基础</a></h3>
+<p>每个HN（Home Node）负责管理全部地址空间中的部分地址空间。每个HN具体管理哪个地址空间是由SAM表来决定的。每个节点管理若干个地址，而每个地址只属于一个唯一的HNF节点。HN节点负责管理这些地址对应的缓存一致性信息，并按序处理发生在这些地址上的一致性请求。</p>
+<h3 id="hnf"><a class="header" href="#hnf">HNF</a></h3>
+<p>全部的DRAM空间由所有的HNF来管理。</p>
+<p>HNF：</p>
+<ol>
+<li><strong>System Level Cache</strong> ： The System Level Cache (SLC) is a last-level cache. The SLC allocation policy is exclusive for data lines, except where sharing patterns are detected and pseudo-inclusive for code lines, as indicated by the RN‑Fs. All code lines can be allocated into the SLC on the initial request. When MTE is enabled, SLC stores data and tags.</li>
+<li><strong>Combined PoS/PoC</strong> ： The combined Point-of-Serialization/Point-of-Coherency (PoS/PoC) is responsible for the ordering of all memory requests sent to the HN‑F. Ordering includes serialization of multiple outstanding requests and actions to the same line, and request ordering as required by the RN‑F.</li>
+<li><strong>Snoop Filter</strong> ： The Snoop Filter (SF) tracks cachelines that are present in the RN‑Fs. It reduces snoop traffic in the system by favoring directed snoops over snoop broadcasts when possible. This approach substantially reduces the snoop response traffic that might otherwise be required.</li>
+</ol>
+<p>问题：按照基本概念理解，基于snoop的缓存一致性协议，会产生多播或广播，占用较大的片内带宽，而基于目录的缓存一致性协议按道理只需要单播通信，占用网络带宽较低。为什么基于目录的缓存一致性协议还需要Snoop Filter？</p>
+<p>Ans：基于目录的缓存一致性协议不能完全杜绝一对多的多播通信。例如，HN 可能会对多有共享某个缓存数据块的节点发送invalid操作。</p>
+<h3 id="hni"><a class="header" href="#hni">HNI</a></h3>
+<p>The I/O coherent Home Node (HN‑I) is a Home Node for all CHI transactions targeting AMBA subordinate devices</p>
+<p>The HN‑I acts as a proxy for all the RNs of CMN‑700, converting CHI transactions to ACE5-Lite transactions. The HN‑I includes support for the correct ordering of Arm device types.</p>
+<p>The HN‑I does not support caching of any data read from or written to the downstream ACE5-Lite I/O subordinate subsystem. Any cacheable request that is sent to the HN‑I does not result in any snoops being sent to RN‑Fs in the system. Instead, the request is converted to the appropriate ACE5-Lite read or write command and sent to the downstream ACE5-Lite subsystem.</p>
+<p>If an RN‑F caches data that is read from or written to the downstream ACE5-Lite I/O subordinate subsystem, coherency is not maintained. Any subsequent access to that data reads from or writes to the ACE5-Lite I/O subordinate subsystem directly, ignoring the cached data</p>
+<p>There are HN‑I types with extra functionality. These types include:</p>
+<ul>
+<li>
+<p>HN-T
+HN-I that has a debug trace controller and DVM Node.
+CMN‑700 can have zero or more HN‑I and HN‑T instances.</p>
+</li>
+<li>
+<p>HN-D
+HN-I that has a debug trace controller, DVM Node, and configuration subordinate.
+CMN‑700 must have exactly one HN‑D instance.</p>
+</li>
+<li>
+<p>HN-P
+HN‑I that is optimized for peer-to-peer PCIe traffic.</p>
+</li>
+<li>
+<p>HN-V
+A device that includes an HN‑I and DVM Node (DN).</p>
+</li>
+</ul>
+<h3 id="hnp"><a class="header" href="#hnp">HNP</a></h3>
+<p>The I/O coherent Home Node with PCIe optimization (HN‑P) is a device that includes the HN‑I
+functionality and dedicated trackers for PCIe peer-to-peer traffic.
+HN‑P can only be used to connect to PCIe subordinates.</p>
+<div class="table-wrapper"><table><thead><tr><th>节点类型</th><th>HNF</th><th>HNI</th><th>HNP</th></tr></thead><tbody>
+<tr><td><strong>功能</strong></td><td>System Level Cache Combined PoS/PoC Snoop Filter</td><td>充当所有下游节点的代理，转换 CHI 事务为 ACE5-Lite</td><td>包含 HNI 功能，专为 PCIe  P2P流量设计</td></tr>
+<tr><td><strong>缓存一致性</strong></td><td>Yes</td><td>不维护缓存一致性，直接访问下游设备</td><td>不维护缓存一致性，直接访问 PCIe 从属设备</td></tr>
+<tr><td><strong>数据处理</strong></td><td>缓存并影响数据访问</td><td>直接翻译请求为 ACE5-Lite 命令</td><td>跟踪并优化 PCIe 相关的数据交换</td></tr>
+<tr><td><strong>连接目标</strong></td><td>NA</td><td>可连接 AMBA 从属设备</td><td>仅连接 PCIe 从属设备</td></tr>
+<tr><td><strong>复杂性</strong></td><td>增加缓存一致性维护的复杂性</td><td>简化处理，避免缓存一致性问题</td><td>简化处理，优化 PCIe 相关流量</td></tr>
+</tbody></table>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

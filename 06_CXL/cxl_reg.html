@@ -177,6 +177,7 @@
 <p>按照寄存器所在的位置进行分类，CXL 相关控制及状态寄存器可分为两类：</p>
 <p>一类位于 PCIe 配置空间 （Configuration Space），只能通过配置读写请求来访问；
 一类位于 MMIO 区域 （Memory Mapped Space），只能通过 Memory 读写请求进行访问。</p>
+<p><img src="images/cxl_reg/image-20240718140347127.png" alt="image-20240718140347127" /></p>
 <h2 id="dvsec"><a class="header" href="#dvsec">DVSEC</a></h2>
 <p>在 PCIe 配置空间中，以 DVSEC 的形式实现了 CXL 相关的能力结构。这个原本是为厂商预留的，正好CXL可以使用，且为CXL分配了一个 vendor ID 0x1E98.</p>
 <p>截至 CXL 3.0 共定义了以下 9 组 CXL 相关的 DVSEC：</p>
