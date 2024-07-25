@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>FreeRTOS - NoteBook</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">NoteBook</a></li><li class="chapter-item expanded affix "><li class="part-title">工作</li><li class="chapter-item expanded "><a href="../01_体系结构/index.html"><strong aria-hidden="true">1.</strong> 体系结构</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/01_SMMU/index.html"><strong aria-hidden="true">1.1.</strong> 内存管理</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/01_SMMU/内存管理基础.html"><strong aria-hidden="true">1.1.1.</strong> 内存管理基础</a></li><li class="chapter-item expanded "><a href="../01_体系结构/01_SMMU/SMMU.html"><strong aria-hidden="true">1.1.2.</strong> SMMU</a></li><li class="chapter-item expanded "><a href="../01_体系结构/01_SMMU/SVA.html"><strong aria-hidden="true">1.1.3.</strong> 异构内存管理SVA</a></li></ol></li><li class="chapter-item expanded "><a href="../01_体系结构/04_NoC片内互连总线/index.html"><strong aria-hidden="true">1.2.</strong> NoC片上互连</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/04_NoC片内互连总线/CHI.html"><strong aria-hidden="true">1.2.1.</strong> CHI协议</a></li><li class="chapter-item expanded "><a href="../01_体系结构/04_NoC片内互连总线/NoC_introduction.html"><strong aria-hidden="true">1.2.2.</strong> NoC</a></li><li class="chapter-item expanded "><a href="../01_体系结构/04_NoC片内互连总线/CMN700.html"><strong aria-hidden="true">1.2.3.</strong> CMN700</a></li><li class="chapter-item expanded "><a href="../01_体系结构/04_NoC片内互连总线/NI_700.html"><strong aria-hidden="true">1.2.4.</strong> NI-700</a></li></ol></li><li class="chapter-item expanded "><a href="../01_体系结构/02_中断控制器/index.html"><strong aria-hidden="true">1.3.</strong> 异常与中断</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/02_中断控制器/中断.html"><strong aria-hidden="true">1.3.1.</strong> 异常与中断</a></li><li class="chapter-item expanded "><a href="../01_体系结构/02_中断控制器/GIC.html"><strong aria-hidden="true">1.3.2.</strong> ARM GIC</a></li><li class="chapter-item expanded "><a href="../01_体系结构/02_中断控制器/X86_APIC.html"><strong aria-hidden="true">1.3.3.</strong> X86 APIC</a></li><li class="chapter-item expanded "><a href="../01_体系结构/02_中断控制器/RISCV_AIA.html"><strong aria-hidden="true">1.3.4.</strong> RISCV AIA</a></li></ol></li><li class="chapter-item expanded "><a href="../01_体系结构/05_CortexM3/index.html"><strong aria-hidden="true">1.4.</strong> SoC</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/05_CortexM3/概述.html"><strong aria-hidden="true">1.4.1.</strong> Cortex M3 MCU</a></li><li class="chapter-item expanded "><a href="../03_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">1.4.2.</strong> ARM N2 参考设计</a></li></ol></li><li class="chapter-item expanded "><a href="../01_体系结构/06_固件/index.html"><strong aria-hidden="true">1.5.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/06_固件/ARM固件启动顺序.html"><strong aria-hidden="true">1.5.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../01_体系结构/06_固件/RISCV_firmware.html"><strong aria-hidden="true">1.5.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../01_体系结构/06_固件/EDK2_EVENT.html"><strong aria-hidden="true">1.5.3.</strong> EDK2 Event</a></li></ol></li><li class="chapter-item expanded "><a href="../01_体系结构/07_存储/index.html"><strong aria-hidden="true">1.6.</strong> 存储</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/07_存储/file_system.html"><strong aria-hidden="true">1.6.1.</strong> 文件系统</a></li><li class="chapter-item expanded "><a href="../01_体系结构/07_存储/RAID.html"><strong aria-hidden="true">1.6.2.</strong> RAID</a></li><li class="chapter-item expanded "><a href="../01_体系结构/07_存储/ssd.html"><strong aria-hidden="true">1.6.3.</strong> SSD</a></li><li class="chapter-item expanded "><a href="../01_体系结构/07_存储/分布式存储.html"><strong aria-hidden="true">1.6.4.</strong> 分布式存储系统</a></li></ol></li><li class="chapter-item expanded "><a href="../01_体系结构/08_虚拟化与分布式/index.html"><strong aria-hidden="true">1.7.</strong> 虚拟化与分布式</a></li><li class="chapter-item expanded "><a href="../01_体系结构/09_Memory_Consistency/index.html"><strong aria-hidden="true">1.8.</strong> Memory consistency and cache coherence</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01_体系结构/09_Memory_Consistency/memory_consistency.html"><strong aria-hidden="true">1.8.1.</strong> Memory consistency</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../02_AMBA/index.html"><strong aria-hidden="true">2.</strong> AMBA</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../02_AMBA/AXI.html"><strong aria-hidden="true">2.1.</strong> AXI</a></li><li class="chapter-item expanded "><a href="../02_AMBA/CHI.html"><strong aria-hidden="true">2.2.</strong> CHI</a></li></ol></li><li class="chapter-item expanded "><a href="../03_PCIe/index.html"><strong aria-hidden="true">3.</strong> PCIe</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03_PCIe/index.html"><strong aria-hidden="true">3.1.</strong> 协议学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03_PCIe/00_PCIe协议/physical_layer.html"><strong aria-hidden="true">3.1.1.</strong> Physical Layer</a></li><li class="chapter-item expanded "><a href="../03_PCIe/00_PCIe协议/data_link_layer.html"><strong aria-hidden="true">3.1.2.</strong> Data Link Layer</a></li><li class="chapter-item expanded "><a href="../03_PCIe/00_PCIe协议/TransactionLayer.html"><strong aria-hidden="true">3.1.3.</strong> Transaction Layer</a></li></ol></li><li class="chapter-item expanded "><a href="../03_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">3.2.</strong> ARM N2 参考设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03_PCIe/01_PCIe子系统简介/01_PCIe子系统.html"><strong aria-hidden="true">3.2.1.</strong> 01_PCIe子系统.md</a></li></ol></li><li class="chapter-item expanded "><a href="../03_PCIe/02_PCIe枚举与资源分配/index.html"><strong aria-hidden="true">3.3.</strong> PCIe 枚举与资源分配</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03_PCIe/02_PCIe枚举与资源分配/枚举过程中的资源降级.html"><strong aria-hidden="true">3.3.1.</strong> 枚举过程中的资源降级</a></li><li class="chapter-item expanded "><a href="../03_PCIe/02_PCIe枚举与资源分配/EDK2对optionRom的支持.html"><strong aria-hidden="true">3.3.2.</strong> EDK2对optionRom的支持</a></li></ol></li><li class="chapter-item expanded "><a href="../03_PCIe/03_PCIe高级特性/index.html"><strong aria-hidden="true">3.4.</strong> PCIe 高级特性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03_PCIe/03_PCIe高级特性/PCIe_AER.html"><strong aria-hidden="true">3.4.1.</strong> PCIe AER</a></li><li class="chapter-item expanded "><a href="../03_PCIe/03_PCIe高级特性/PCIe_Interrupt.html"><strong aria-hidden="true">3.4.2.</strong> PCIe Interrupt</a></li><li class="chapter-item expanded "><a href="../03_PCIe/03_PCIe高级特性/PCIe_Hot_Plug.html"><strong aria-hidden="true">3.4.3.</strong> PCIe Hot-Plug</a></li><li class="chapter-item expanded "><a href="../03_PCIe/03_PCIe高级特性/PCIe_Power_management.html"><strong aria-hidden="true">3.4.4.</strong> PCIe Power Management</a></li><li class="chapter-item expanded "><a href="../03_PCIe/03_PCIe高级特性/PCIe_DPC.html"><strong aria-hidden="true">3.4.5.</strong> PCIe_DPC.md</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../06_CXL/index.html"><strong aria-hidden="true">4.</strong> CXL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../06_CXL/01_cxl.html"><strong aria-hidden="true">4.1.</strong> CXL Overview</a></li><li class="chapter-item expanded "><a href="../06_CXL/cxl_reg.html"><strong aria-hidden="true">4.2.</strong> CXL 寄存器</a></li><li class="chapter-item expanded "><a href="../06_CXL/CXL_in_CMN.html"><strong aria-hidden="true">4.3.</strong> CXL_in_CMN</a></li><li class="chapter-item expanded "><a href="../06_CXL/CXL_in_SCP.html"><strong aria-hidden="true">4.4.</strong> CXL_in_SCP</a></li><li class="chapter-item expanded "><a href="../06_CXL/cxl枚举.html"><strong aria-hidden="true">4.5.</strong> CXL 枚举</a></li></ol></li><li class="chapter-item expanded "><a href="../07_DDR/index.html"><strong aria-hidden="true">5.</strong> DDR</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../07_DDR/01_Introduction.html"><strong aria-hidden="true">5.1.</strong> DDR Introduction</a></li></ol></li><li class="chapter-item expanded "><a href="../04_Silicon_IP/index.html"><strong aria-hidden="true">6.</strong> Silicon IP</a></li><li class="chapter-item expanded "><a href="../09_OS/index.html"><strong aria-hidden="true">7.</strong> OS</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../09_OS/FreeRTOS.html" class="active"><strong aria-hidden="true">7.1.</strong> FreeRTOS</a></li></ol></li><li class="chapter-item expanded "><a href="../05_LeetCode/LeetCode.html"><strong aria-hidden="true">8.</strong> LeetCode</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05_LeetCode/二分法.html"><strong aria-hidden="true">8.1.</strong> 二分法</a></li></ol></li><li class="chapter-item expanded "><a href="../08_tool/index.html"><strong aria-hidden="true">9.</strong> Tool</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../08_tool/git.html"><strong aria-hidden="true">9.1.</strong> Git</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">读书</li><li class="chapter-item expanded "><a href="../0a_reading/工作中的好习惯.html"><strong aria-hidden="true">10.</strong> 工作中的好习惯</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">NoteBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="freertos"><a class="header" href="#freertos">FreeRTOS</a></h1>
+<p>[TOC]</p>
+<p>实时性，优先级高的先做，优先级一样的交替做。</p>
+<h2 id="实时性"><a class="header" href="#实时性">实时性</a></h2>
+<p>实时性主要体现在以下几个方面：</p>
+<h3 id="1-确定性determinism"><a class="header" href="#1-确定性determinism">1. <strong>确定性（Determinism）</strong></a></h3>
+<p>RTOS能够在严格规定的时间内完成任务。无论系统负载如何，RTOS都能保证任务在预定的时间内完成。这种确定性对于控制系统和安全关键应用（如航空航天、医疗设备等）至关重要。</p>
+<h3 id="2-低延迟low-latency"><a class="header" href="#2-低延迟low-latency">2. <strong>低延迟（Low Latency）</strong></a></h3>
+<p>RTOS能够迅速响应外部事件。低延迟意味着系统能够在很短的时间内从中断处理切换到任务处理，这对于需要快速反应的应用（如自动化控制、实时数据处理等）非常重要。</p>
+<h3 id="3-优先级调度priority-scheduling"><a class="header" href="#3-优先级调度priority-scheduling">3. <strong>优先级调度（Priority Scheduling）</strong></a></h3>
+<p>RTOS通常采用优先级调度算法，确保高优先级任务能够优先获得CPU资源。常见的调度算法包括优先级抢占调度（Priority Preemptive Scheduling）和循环优先级调度（Round-Robin Scheduling）。</p>
+<h3 id="4-中断处理interrupt-handling"><a class="header" href="#4-中断处理interrupt-handling">4. <strong>中断处理（Interrupt Handling）</strong></a></h3>
+<p>RTOS优化了中断处理机制，使得中断服务程序（ISR）能够迅速响应硬件中断并迅速切换到相应的任务。这种快速的中断处理能力使得系统能够及时响应外部事件。</p>
+<h3 id="5-时间管理time-management"><a class="header" href="#5-时间管理time-management">5. <strong>时间管理（Time Management）</strong></a></h3>
+<p>RTOS提供精确的时间管理功能，包括定时器和延迟机制，确保任务能够在指定时间内启动或延迟执行。这对于周期性任务和延迟任务的管理至关重要。</p>
+<h3 id="6-资源管理resource-management"><a class="header" href="#6-资源管理resource-management">6. <strong>资源管理（Resource Management）</strong></a></h3>
+<p>RTOS通过提供互斥锁、信号量、消息队列等同步机制，确保多个任务之间的资源访问不会导致竞争和冲突，从而维持系统的稳定性和实时性。</p>
+<h2 id="linux-为什么不是实时操作系统"><a class="header" href="#linux-为什么不是实时操作系统">Linux 为什么不是实时操作系统</a></h2>
+<p>详细原因：</p>
+<h3 id="1-内核的设计"><a class="header" href="#1-内核的设计">1. <strong>内核的设计</strong></a></h3>
+<ul>
+<li><strong>抢占性和优先级反转问题</strong>：虽然 Linux 支持内核抢占，但它的抢占并不完全适合实时应用。内核态的代码可能会禁用中断或锁住资源，导致高优先级任务被低优先级任务阻塞，产生优先级反转问题。</li>
+<li><strong>中断处理</strong>：在 Linux 中，中断处理有时是不可抢占的，某些关键部分可能会长时间禁用中断，这会增加系统的响应时间。</li>
+</ul>
+<h3 id="2-调度器"><a class="header" href="#2-调度器">2. <strong>调度器</strong></a></h3>
+<ul>
+<li><strong>调度策略</strong>：Linux 的调度策略设计是为了公平和高效地利用 CPU 资源，而不是为了实时性。虽然 Linux 提供了实时调度类（SCHED_FIFO 和 SCHED_RR），但整体调度器并不是为确定性的实时性设计的。</li>
+<li><strong>上下文切换</strong>：Linux 的调度器在处理上下文切换时，可能引入不可预期的延迟，无法保证实时任务在严格时间内被调度。</li>
+</ul>
+<h3 id="3-内存管理"><a class="header" href="#3-内存管理">3. <strong>内存管理</strong></a></h3>
+<ul>
+<li><strong>内存分配延迟</strong>：Linux 的内存管理子系统在分配和释放内存时，可能会引入不可预期的延迟，特别是在内存紧张时。</li>
+<li><strong>页交换（Swapping）</strong>：Linux 使用虚拟内存和交换空间，这意味着在高负载情况下，内存页面可能会被交换到磁盘，进一步增加延迟。</li>
+</ul>
+<h3 id="4-内核锁和同步机制"><a class="header" href="#4-内核锁和同步机制">4. <strong>内核锁和同步机制</strong></a></h3>
+<ul>
+<li><strong>锁争用</strong>：Linux 内核中大量使用锁来保护共享资源，但在高负载或并发访问时，锁争用会增加延迟和不确定性。</li>
+<li><strong>不可中断的部分</strong>：某些内核代码在运行时不能被中断或抢占，这会导致高优先级的实时任务不得不等待，增加延迟。</li>
+</ul>
+<h3 id="5-设备驱动"><a class="header" href="#5-设备驱动">5. <strong>设备驱动</strong></a></h3>
+<ul>
+<li><strong>驱动模型</strong>：Linux 的设备驱动模型并不是为实时性优化的，某些设备驱动可能会长时间占用 CPU，导致高优先级任务的延迟。</li>
+<li><strong>中断处理延迟</strong>：设备驱动的中断处理机制可能会引入额外的延迟，无法保证及时响应硬件中断。</li>
+</ul>
+<h3 id="6-缺乏硬实时保障"><a class="header" href="#6-缺乏硬实时保障">6. <strong>缺乏硬实时保障</strong></a></h3>
+<ul>
+<li><strong>软实时 vs 硬实时</strong>：Linux 能够满足某些软实时要求（即任务通常能在规定时间内完成，但不保证每次都能完成），但不能满足硬实时要求（即任务必须在规定时间内完成）。硬实时系统需要严格的时间约束，Linux 无法提供这种保障。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../09_OS/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../05_LeetCode/LeetCode.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../09_OS/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../05_LeetCode/LeetCode.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
