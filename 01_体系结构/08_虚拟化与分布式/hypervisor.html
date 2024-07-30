@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Hypervisor - NoteBook</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">NoteBook</a></li><li class="chapter-item expanded affix "><li class="part-title">工作</li><li class="chapter-item expanded "><a href="../../01_体系结构/index.html"><strong aria-hidden="true">1.</strong> 体系结构</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/index.html"><strong aria-hidden="true">1.1.</strong> 内存管理</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/内存管理基础.html"><strong aria-hidden="true">1.1.1.</strong> 内存管理基础</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SMMU.html"><strong aria-hidden="true">1.1.2.</strong> SMMU</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SVA.html"><strong aria-hidden="true">1.1.3.</strong> 异构内存管理SVA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/index.html"><strong aria-hidden="true">1.2.</strong> NoC片上互连</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CHI.html"><strong aria-hidden="true">1.2.1.</strong> CHI协议</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NoC_introduction.html"><strong aria-hidden="true">1.2.2.</strong> NoC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CMN700.html"><strong aria-hidden="true">1.2.3.</strong> CMN700</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NI_700.html"><strong aria-hidden="true">1.2.4.</strong> NI-700</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/index.html"><strong aria-hidden="true">1.3.</strong> 异常与中断</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/中断.html"><strong aria-hidden="true">1.3.1.</strong> 异常与中断</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/GIC.html"><strong aria-hidden="true">1.3.2.</strong> ARM GIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/X86_APIC.html"><strong aria-hidden="true">1.3.3.</strong> X86 APIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/RISCV_AIA.html"><strong aria-hidden="true">1.3.4.</strong> RISCV AIA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/index.html"><strong aria-hidden="true">1.4.</strong> SoC</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/概述.html"><strong aria-hidden="true">1.4.1.</strong> Cortex M3 MCU</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">1.4.2.</strong> ARM N2 参考设计</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/index.html"><strong aria-hidden="true">1.5.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/ARM固件启动顺序.html"><strong aria-hidden="true">1.5.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/RISCV_firmware.html"><strong aria-hidden="true">1.5.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/Cache_as_ram.html"><strong aria-hidden="true">1.5.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">1.5.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_EVENT.html"><strong aria-hidden="true">1.5.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_memmap.html"><strong aria-hidden="true">1.5.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/index.html"><strong aria-hidden="true">1.6.</strong> 存储</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/file_system.html"><strong aria-hidden="true">1.6.1.</strong> 文件系统</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/RAID.html"><strong aria-hidden="true">1.6.2.</strong> RAID</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/ssd.html"><strong aria-hidden="true">1.6.3.</strong> SSD</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/分布式存储.html"><strong aria-hidden="true">1.6.4.</strong> 分布式存储系统</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/index.html"><strong aria-hidden="true">1.7.</strong> 虚拟化与分布式</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/hypervisor.html" class="active"><strong aria-hidden="true">1.7.1.</strong> Hypervisor</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/MIT6824.html"><strong aria-hidden="true">1.7.2.</strong> MIT6824</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/index.html"><strong aria-hidden="true">1.8.</strong> Memory consistency and cache coherence</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/memory_consistency.html"><strong aria-hidden="true">1.8.1.</strong> Memory consistency</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../02_AMBA/index.html"><strong aria-hidden="true">2.</strong> AMBA</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../02_AMBA/AXI.html"><strong aria-hidden="true">2.1.</strong> AXI</a></li><li class="chapter-item expanded "><a href="../../02_AMBA/CHI.html"><strong aria-hidden="true">2.2.</strong> CHI</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/index.html"><strong aria-hidden="true">3.</strong> PCIe</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/index.html"><strong aria-hidden="true">3.1.</strong> 协议学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/physical_layer.html"><strong aria-hidden="true">3.1.1.</strong> Physical Layer</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/data_link_layer.html"><strong aria-hidden="true">3.1.2.</strong> Data Link Layer</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/TransactionLayer.html"><strong aria-hidden="true">3.1.3.</strong> Transaction Layer</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/00_PCIe协议/03_pcie_eq.html"><strong aria-hidden="true">3.1.4.</strong> PCIe 均衡技术</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">3.2.</strong> ARM N2 参考设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/01_PCIe子系统简介/01_PCIe子系统.html"><strong aria-hidden="true">3.2.1.</strong> 01_PCIe子系统.md</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/02_PCIe枚举与资源分配/index.html"><strong aria-hidden="true">3.3.</strong> PCIe 枚举与资源分配</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/02_PCIe枚举与资源分配/枚举过程中的资源降级.html"><strong aria-hidden="true">3.3.1.</strong> 枚举过程中的资源降级</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/02_PCIe枚举与资源分配/EDK2对optionRom的支持.html"><strong aria-hidden="true">3.3.2.</strong> EDK2对optionRom的支持</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/index.html"><strong aria-hidden="true">3.4.</strong> PCIe 高级特性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_AER.html"><strong aria-hidden="true">3.4.1.</strong> PCIe AER</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_Interrupt.html"><strong aria-hidden="true">3.4.2.</strong> PCIe Interrupt</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_Hot_Plug.html"><strong aria-hidden="true">3.4.3.</strong> PCIe Hot-Plug</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_Power_management.html"><strong aria-hidden="true">3.4.4.</strong> PCIe Power Management</a></li><li class="chapter-item expanded "><a href="../../03_PCIe/03_PCIe高级特性/PCIe_DPC.html"><strong aria-hidden="true">3.4.5.</strong> PCIe_DPC.md</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../06_CXL/index.html"><strong aria-hidden="true">4.</strong> CXL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../06_CXL/01_cxl.html"><strong aria-hidden="true">4.1.</strong> CXL Overview</a></li><li class="chapter-item expanded "><a href="../../06_CXL/cxl_reg.html"><strong aria-hidden="true">4.2.</strong> CXL 寄存器</a></li><li class="chapter-item expanded "><a href="../../06_CXL/CXL_in_CMN.html"><strong aria-hidden="true">4.3.</strong> CXL_in_CMN</a></li><li class="chapter-item expanded "><a href="../../06_CXL/CXL_in_SCP.html"><strong aria-hidden="true">4.4.</strong> CXL_in_SCP</a></li><li class="chapter-item expanded "><a href="../../06_CXL/cxl枚举.html"><strong aria-hidden="true">4.5.</strong> CXL 枚举</a></li></ol></li><li class="chapter-item expanded "><a href="../../07_DDR/index.html"><strong aria-hidden="true">5.</strong> DDR</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../07_DDR/01_Introduction.html"><strong aria-hidden="true">5.1.</strong> DDR Introduction</a></li></ol></li><li class="chapter-item expanded "><a href="../../04_ACPI/index.html"><strong aria-hidden="true">6.</strong> ACPI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../04_ACPI/ACPI_overview.html"><strong aria-hidden="true">6.1.</strong> ACPI Overview</a></li><li class="chapter-item expanded "><a href="../../04_ACPI/CEDT.html"><strong aria-hidden="true">6.2.</strong> CEDT</a></li></ol></li><li class="chapter-item expanded "><a href="../../09_OS/index.html"><strong aria-hidden="true">7.</strong> OS</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../09_OS/FreeRTOS.html"><strong aria-hidden="true">7.1.</strong> FreeRTOS</a></li></ol></li><li class="chapter-item expanded "><a href="../../05_LeetCode/LeetCode.html"><strong aria-hidden="true">8.</strong> LeetCode</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../05_LeetCode/c_basic.html"><strong aria-hidden="true">8.1.</strong> C语言基础</a></li><li class="chapter-item expanded "><a href="../../05_LeetCode/04_bitmap.html"><strong aria-hidden="true">8.2.</strong> Bit Map</a></li><li class="chapter-item expanded "><a href="../../05_LeetCode/01_二分法.html"><strong aria-hidden="true">8.3.</strong> 二分法</a></li><li class="chapter-item expanded "><a href="../../05_LeetCode/02_链表.html"><strong aria-hidden="true">8.4.</strong> 链表</a></li><li class="chapter-item expanded "><a href="../../05_LeetCode/03_字符串.html"><strong aria-hidden="true">8.5.</strong> 字符串</a></li></ol></li><li class="chapter-item expanded "><a href="../../08_tool/index.html"><strong aria-hidden="true">9.</strong> Tool</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../08_tool/git.html"><strong aria-hidden="true">9.1.</strong> Git</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">读书</li><li class="chapter-item expanded "><a href="../../0a_reading/工作中的好习惯.html"><strong aria-hidden="true">10.</strong> 工作中的好习惯</a></li><li class="chapter-item expanded "><a href="../../0a_reading/2024_reading.html"><strong aria-hidden="true">11.</strong> 2024 Reading</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">NoteBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="hypervisor"><a class="header" href="#hypervisor">Hypervisor</a></h1>
+<p>[toc]</p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<h4 id="type-1-hypervisor"><a class="header" href="#type-1-hypervisor">Type 1 Hypervisor</a></h4>
+<p>可以本地安装并直接在物理主机上运行的Hypervisor称为Type 1 Hypervisor。</p>
+<h6 id="关键指标"><a class="header" href="#关键指标">关键指标</a></h6>
+<ul>
+<li>Type 1 Hypervisor可以直接安装在裸机系统或物理主机上。</li>
+<li><strong>它不需要先安装或可用的操作系统 (OS)</strong>，即可将自身部署在服务器上。</li>
+<li>直接访问 CPU、内存、网络、物理存储。</li>
+<li>硬件利用效率更高，提供最佳性能。</li>
+<li>由于没有任何额外的硬件访问层，因此安全性更高。</li>
+<li>每个Type 1 Hypervisor始终需要专用的物理机。</li>
+<li>可以成本更高，更适合企业级解决方案。</li>
+<li>VMware ESXi、Citrix Hypervisor和Microsoft Hyper-V是Type 1 Hypervisor的一些示例。</li>
+</ul>
+<h4 id="type-2-hypervisor"><a class="header" href="#type-2-hypervisor">Type 2 Hypervisor</a></h4>
+<p>无法本地安装且需要操作系统才能在物理主机上运行的管理程序称为类型 2 管理程序。</p>
+<h6 id="关键指标-1"><a class="header" href="#关键指标-1">关键指标</a></h6>
+<ul>
+<li>Type 2 hypervisor 不能直接安装在裸机系统或物理主机上。</li>
+<li><strong>它需要首先安装或可用的操作系统，以便部署自己。</strong></li>
+<li>间接访问 CPU、内存、网络、物理存储。</li>
+<li>由于需要额外的层 (OS) 来访问资源，因此硬件利用率可能会降低并导致性能滞后。</li>
+<li>由于主机操作系统的可用性，潜在的安全风险。</li>
+<li>每个Type 2 hypervisor不需要专用的物理机。单个主机上可以有多个。</li>
+<li>成本更低，更适合小型企业解决方案。</li>
+<li>VMware Workstation Player、VMware Workstation Pro和VirtualBox是Type 2 hypervisor的一些示例。</li>
+</ul>
+<p><img src="images/hypervisor/image-20240718133210715.png" alt="image-20240718133210715" /></p>
+<h2 id="行业发展"><a class="header" href="#行业发展">行业发展</a></h2>
+<p>截取自：<a href="https://zhuanlan.zhihu.com/p/672508870">基于 RISC-V 的 Type-1 Hypervisor 的设计与实现</a></p>
+<h3 id="rvirt"><a class="header" href="#rvirt">RVirt</a></h3>
+<p>RVirt 是由 MIT PDOS 在 2018 年使用 Rust 开发的一个 <strong>RISC-V Type-1 hypervisor</strong>。RVirt 诞生时 RISC-V 虚拟化扩展仍然没有被提出，因此 MIT PDOS 采用了纯软件虚拟化的技术，RVirt 运行在 S-mode，客户操作系统运行在 U-mode，当客户操作系统执行特权指令或者读写 CSR 时将会陷入 hypervisor，hypervisor 会为客户操作系统维护影子状态。RVirt 可以在 QEMU virt 和 Hifive Unleased 开发板上运行 fedora 操作系统。RVirt 的优点是可以在任何实现了 M，S，U 特权级的 RISC-V 芯片上运行，缺点是性能低。</p>
+<h3 id="bao-hypervisor"><a class="header" href="#bao-hypervisor">Bao-hypervisor</a></h3>
+<p>Bao hypervisor是一个轻量级、安全、可靠、高效并且开源的 hypervisor 解决方案，旨在为现代多核嵌入式系统提供强大的虚拟化能力。与传统虚拟化解决方案相比，Bao hypervisor 可以更好地满足嵌入式系统对实时性、安全性和可靠性等方面的要求。</p>
+<p>Bao 的架构采用静态分区架构，并支持硬件辅助虚拟化技术。每个分区都被分配了一组硬件资源，并且这些资源在运行时不会发生变化。这种方法可以提高系统的可预测性和安全性，并减少了虚拟化开销。</p>
+<p>Bao 是一个轻量级 hypervisor，具有小巧、高效、可裁剪等特点，并且可以提供强大的空间和时间隔离。作者进行了一些实验来评估 Bao 的性能。实验结果表明，Bao 启动速度快、内存占用率低，并且中断延迟较小。</p>
+<p>目前 Bao 已经支持了 RISC-V 虚拟化技术并且成功在添加了 Hypervisor Extension 的 rocket chip 以及 CVA6 软核上成功运行。</p>
+<h3 id="xvisor"><a class="header" href="#xvisor">Xvisor</a></h3>
+<p>Xvisor 是一个完整的单体式虚拟化管理程序，支持全虚拟化和半虚拟化。它旨在提供一个轻量级的虚拟化管理程序，可用于嵌入式系统，具有较小的开销和内存占用。Xvisor 主要提供全虚拟化客户机，并通过可选的 VirtIO 设备提供半虚拟化。所有核心组件都作为单个软件层运行，包括 CPU 虚拟化、客户机 IO 模拟、后台线程、半虚拟化服务、管理服务和设备驱动程序。客户操作系统运行在 Xvisor 实现者称之为 Normal vCPUs 的特权较低的环境中。</p>
+<p>在 2019 年 Xvisor 根据当时的 RISC-V 虚拟化草案支持了 RISC-V 虚拟化，后续更新到 RISC-V Hypervisor Extension 1.0，不过目前 Xvisor 作者对于 Xvisor 已经疏于维护。</p>
+<h3 id="sel4"><a class="header" href="#sel4">seL4</a></h3>
+<p>seL4 是一种基于保密性和高度安全的微内核操作系统，由澳大利亚国立大学的 NICTA（现在成为CSIRO data61）团队开发。seL4具有严格的形式化验证，保证了其内核的功能正确性和安全性。这使得seL4成为在实时和安全领域进行高度可信和高保密度的应用的理想平台。</p>
+<p>seL4的特点包括以下几点：</p>
+<ul>
+<li>高度安全性：seL4的内核采用严格的数学证明，保证内核的正确性和安全性。</li>
+<li>微内核设计：seL4采用微内核设计，只包含操作系统最基本的功能。这使得它具有高度的可扩展性、可配置性和可移植性。</li>
+<li>高性能：由于seL4是一个精简的微内核，它不会附加额外的功能和复杂度，这使得它能够在嵌入式和高性能计算领域具有优势。</li>
+<li>开放源代码：seL4采用 GPLv2 开源协议，完全开放源代码。</li>
+<li>应用领域广泛：由于其高度安全和可信度，seL4在许多领域中得到广泛应用，如智能网联汽车、航空航天、国防、金融、医疗等。</li>
+<li>目前 seL4 已经为 RISC-V 虚拟化提供了支持。</li>
+</ul>
+<h3 id="kvm"><a class="header" href="#kvm">KVM</a></h3>
+<p>KVM（Kernel-based Virtual Machine）是一种基于Linux内核的虚拟化技术，它允许在相同的物理硬件上运行多个虚拟机（VM），每个VM都可以运行不同的操作系统。KVM利用虚拟化技术中的硬件辅助虚拟化技术（如Intel VT和AMD-V）来提高VM性能和安全性。</p>
+<p>KVM是一种开放源代码软件，它被许多组织和公司使用和支持，例如Red Hat、IBM、Intel等。KVM支持多种操作系统，包括Linux、Windows和BSD。此外，KVM还提供了一些管理工具，如virt-manager和virsh，使用户能够轻松创建、配置和管理虚拟机。</p>
+<p>KVM的优点包括可靠性、高性能、高安全性、灵活性和可扩展性。它可以在不同的硬件架构上运行。另外，由于它是Linux内核的一部分，因此它保持了与Linux内核的紧密集成，可以受益于Linux社区提供的驱动程序、功能和补丁。</p>
+<p>一些比较好的文章</p>
+<p><a href="https://zhuanlan.zhihu.com/p/672508870">基于 RISC-V 的 Type-1 Hypervisor 的设计与实现</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../01_体系结构/08_虚拟化与分布式/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../01_体系结构/08_虚拟化与分布式/MIT6824.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../01_体系结构/08_虚拟化与分布式/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../01_体系结构/08_虚拟化与分布式/MIT6824.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
