@@ -359,7 +359,105 @@ public:
         }
     }
 </code></pre>
+<h2 id="24-两两交换链表中的节点"><a class="header" href="#24-两两交换链表中的节点"><a href="https://leetcode.cn/problems/swap-nodes-in-pairs/">24. 两两交换链表中的节点</a></a></h2>
+<p>递归：</p>
+<ol>
+<li>返回值</li>
+<li>做什么</li>
+<li>终止条件</li>
+</ol>
+<pre><code class="language-c++">class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (head == nullptr || head-&gt;next == nullptr) {
+            return head;
+        }
+        // 两两反转，新的头就是第二个节点
+        ListNode* newHead = head-&gt;next;
+        // 递归调用，把第三个节点，也就是newhead的下一个作为参数
+        head-&gt;next = swapPairs(newHead-&gt;next);
+        // 新的头，也就是是第二个节点，反向指向第一个节点
+        newHead-&gt;next = head;
+        // 第二个节点作为新的头，返回
+        return newHead;
+    }
+};
+
+</code></pre>
+<h2 id="25-k-个一组翻转链表"><a class="header" href="#25-k-个一组翻转链表"><a href="https://leetcode.cn/problems/reverse-nodes-in-k-group/">25. K 个一组翻转链表</a></a></h2>
+<p>首先判断链表是否有<em>K</em>个数，不足则直接返回head。</p>
+<p>否则对前<em>K</em>个数进行反转，然后进行递归处理。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode *p = head;
+        // 首先判断链表是否有*K*个数，不足则直接返回head。
+        // 同时记录下第K个节点，方便后面反转
+        for(int i = 0; i &lt; k; i++) {
+            if(!p) return head;
+            p = p-&gt;next;
+        }
+
+        // *K*个数进行反转
+        ListNode *q = head;
+        ListNode *pre = nullptr;
+        while(q != p) {
+            ListNode *tmp = q-&gt;next;
+            q-&gt;next = pre;
+            pre = q;
+            q = tmp;
+        }
+
+        // 递归
+        head-&gt;next = reverseKGroup(p, k);
+        return pre;
+    }
+};
+</code></pre>
 <h2 id="2-两数相加"><a class="header" href="#2-两数相加"><a href="https://leetcode.cn/problems/add-two-numbers/">2. 两数相加</a></a></h2>
+<p>将数字逆序存储在链表中</p>
+<pre><code>输入：l1 = [2,4,3], l2 = [5,6,4]
+输出：[7,0,8]
+解释：342 + 465 = 807.
+</code></pre>
+<p>从头开始相加，有进位记录下来，下一个数用。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode *head = nullptr, *tail = nullptr;
+        int carry = 0;
+        while (l1 || l2) { //遍历链表
+            // 任何一个节点中有值的话，就提取出来，没有的话就取0
+            int n1 = l1 ? l1-&gt;val: 0;
+            int n2 = l2 ? l2-&gt;val: 0;
+            // 两值相加，同时考虑是否有进位
+            int sum = n1 + n2 + carry;
+            // 如果head为空，说明是第一个节点
+            // 对10取余，是因为大于10会被进位，只需要保留余数即可
+            if (!head) {
+                head = tail = new ListNode(sum % 10);
+            } else {
+                tail-&gt;next = new ListNode(sum % 10);
+                tail = tail-&gt;next;
+            }
+            // 记录进位信息
+            carry = sum / 10;
+            // 节点不空的话，继续向下一个走
+            if (l1) {
+                l1 = l1-&gt;next;
+            }
+            if (l2) {
+                l2 = l2-&gt;next;
+            }
+        }
+        // 如果存在进位，在最前面加一个节点
+        if (carry &gt; 0) {
+            tail-&gt;next = new ListNode(carry);
+        }
+        return head;
+    }
+};
+</code></pre>
 <h2 id="19-删除链表的倒数第-n-个结点"><a class="header" href="#19-删除链表的倒数第-n-个结点"><a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/">19. 删除链表的倒数第 N 个结点</a></a></h2>
 <p>有可能把头结点给删掉，所以要用一个dummy head</p>
 <pre><code class="language-c++">class Solution {
@@ -393,6 +491,85 @@ public:
 </code></pre>
 <h2 id="146-lru-缓存"><a class="header" href="#146-lru-缓存"><a href="https://leetcode.cn/problems/lru-cache/">146. LRU 缓存</a></a></h2>
 <p>最近最少使用</p>
+<h2 id="138-随机链表的复制"><a class="header" href="#138-随机链表的复制"><a href="https://leetcode.cn/problems/copy-list-with-random-pointer/">138. 随机链表的复制</a></a></h2>
+<p>两次循环，先放哈希表中，再从头遍历确定指针。</p>
+<p>先把两个链表放到hash表中；新表只存value，指针先不管；</p>
+<p>从头开始遍历，把复制的新表中两个指针挨个确定好；</p>
+<p>用哈希表真是巧妙啊！类似DNA双螺旋结构。</p>
+<pre><code class="language-c++">class Solution {
+public:
+	unordered_map&lt;Node*,Node*&gt;hmap;
+    Node* copyRandomList(Node* head) {
+        Node *p=head;
+        // 把每个节点放到哈希表中，类似复制DNA碱基对
+        // 先只复制value，指针后面再更新
+        while(p){
+			hmap.insert({p,new Node(p-&gt;val)});
+            p=p-&gt;next;
+		}
+        // 更新两个指针的指向
+		p=head;
+		while(p){
+            // 新节点的next指针
+			hmap[p]-&gt;next=hmap[p-&gt;next];
+            // 新节点的random指针
+			hmap[p]-&gt;random=hmap[p-&gt;random];
+            p=p-&gt;next;
+		}
+		return hmap[head];
+    }
+};
+</code></pre>
+<h2 id="147-对链表进行插入排序"><a class="header" href="#147-对链表进行插入排序"><a href="https://leetcode-cn.com/problems/insertion-sort-list">147. 对链表进行插入排序</a></a></h2>
+<pre><code class="language-c++">class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        // 检查链表是否为空
+        if (head == nullptr) {
+            return head;
+        }
+        
+        // 创建虚拟头节点来简化插入操作
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead-&gt;next = head; // 将虚拟头节点连接到原始链表上
+        
+        ListNode* lastSorted = head; // 指向已排序部分的最后一个节点
+        ListNode* curr = head-&gt;next; // 指向待插入的节点
+        
+        // 遍历未排序部分的链表
+        while (curr != nullptr) {
+            // 如果当前节点的值大于等于已排序部分的最后一个节点的值，将lastSorted向后移动
+            if (lastSorted-&gt;val &lt;= curr-&gt;val) {
+                lastSorted = lastSorted-&gt;next;
+            } else {
+                // 在已排序部分中找到合适的插入位置
+                ListNode* prev = dummyHead;
+                while (prev-&gt;next-&gt;val &lt;= curr-&gt;val) {
+                    prev = prev-&gt;next;
+                }
+                
+                // 调整指针以插入当前节点
+                lastSorted-&gt;next = curr-&gt;next;
+                curr-&gt;next = prev-&gt;next;
+                prev-&gt;next = curr;
+            }
+            
+            // 移动到下一个待插入节点
+            curr = lastSorted-&gt;next;
+        }
+        
+        // 返回排序后的链表（不包括虚拟头节点）
+        return dummyHead-&gt;next;
+    }
+};
+
+</code></pre>
+<p>PCIe枚举中用到过这个，收集到的内存块信息存储在链表中，分配内存之前，需要从大到小排序。但那个是按照插入排序，每次插入新的节点，直接找到合适的位置即可。</p>
+<h2 id="148-排序链表"><a class="header" href="#148-排序链表"><a href="https://leetcode.cn/problems/sort-list/">148. 排序链表</a></a></h2>
+<pre><code>输入：head = [4,2,1,3]
+输出：[1,2,3,4]
+</code></pre>
+<h2 id="23-合并-k-个升序链表"><a class="header" href="#23-合并-k-个升序链表"><a href="https://leetcode.cn/problems/merge-k-sorted-lists/">23. 合并 K 个升序链表</a></a></h2>
 
                     </main>
 
