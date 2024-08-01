@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PCIe_DPC.md - NoteBook</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">NoteBook</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/index.html"><strong aria-hidden="true">1.</strong> 体系结构</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/index.html"><strong aria-hidden="true">1.1.</strong> 内存管理</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/内存管理基础.html"><strong aria-hidden="true">1.1.1.</strong> 内存管理基础</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SMMU.html"><strong aria-hidden="true">1.1.2.</strong> SMMU</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SVA.html"><strong aria-hidden="true">1.1.3.</strong> 异构内存管理SVA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/index.html"><strong aria-hidden="true">1.2.</strong> NoC片上互连</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CHI.html"><strong aria-hidden="true">1.2.1.</strong> CHI协议</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NoC_introduction.html"><strong aria-hidden="true">1.2.2.</strong> NoC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CMN700.html"><strong aria-hidden="true">1.2.3.</strong> CMN700</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NI_700.html"><strong aria-hidden="true">1.2.4.</strong> NI-700</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/index.html"><strong aria-hidden="true">1.3.</strong> 异常与中断</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/中断.html"><strong aria-hidden="true">1.3.1.</strong> 异常与中断</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/GIC.html"><strong aria-hidden="true">1.3.2.</strong> ARM GIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/X86_APIC.html"><strong aria-hidden="true">1.3.3.</strong> X86 APIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/RISCV_AIA.html"><strong aria-hidden="true">1.3.4.</strong> RISCV AIA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/index.html"><strong aria-hidden="true">1.4.</strong> SoC</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/概述.html"><strong aria-hidden="true">1.4.1.</strong> Cortex M3 MCU</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">1.4.2.</strong> ARM N2 参考设计</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/index.html"><strong aria-hidden="true">1.5.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/ARM固件启动顺序.html"><strong aria-hidden="true">1.5.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/RISCV_firmware.html"><strong aria-hidden="true">1.5.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/Cache_as_ram.html"><strong aria-hidden="true">1.5.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">1.5.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_EVENT.html"><strong aria-hidden="true">1.5.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_memmap.html"><strong aria-hidden="true">1.5.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/index.html"><strong aria-hidden="true">1.6.</strong> 存储</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/file_system.html"><strong aria-hidden="true">1.6.1.</strong> 文件系统</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/RAID.html"><strong aria-hidden="true">1.6.2.</strong> RAID</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/ssd.html"><strong aria-hidden="true">1.6.3.</strong> SSD</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/分布式存储.html"><strong aria-hidden="true">1.6.4.</strong> 分布式存储系统</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/index.html"><strong aria-hidden="true">1.7.</strong> 虚拟化与分布式</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/hypervisor.html"><strong aria-hidden="true">1.7.1.</strong> Hypervisor</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/MIT6824.html"><strong aria-hidden="true">1.7.2.</strong> MIT6824</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/index.html"><strong aria-hidden="true">1.8.</strong> Memory consistency and cache coherence</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/memory_consistency.html"><strong aria-hidden="true">1.8.1.</strong> Memory consistency</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../02_固件/index.html"><strong aria-hidden="true">2.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../02_固件/ARM固件启动顺序.html"><strong aria-hidden="true">2.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../02_固件/RISCV_firmware.html"><strong aria-hidden="true">2.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../02_固件/Cache_as_ram.html"><strong aria-hidden="true">2.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">2.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_EVENT.html"><strong aria-hidden="true">2.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_memmap.html"><strong aria-hidden="true">2.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_OS/index.html"><strong aria-hidden="true">3.</strong> OS</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_OS/FreeRTOS.html"><strong aria-hidden="true">3.1.</strong> FreeRTOS</a></li></ol></li><li class="chapter-item expanded "><a href="../../10_ACPI/index.html"><strong aria-hidden="true">4.</strong> ACPI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../10_ACPI/ACPI_overview.html"><strong aria-hidden="true">4.1.</strong> ACPI Overview</a></li><li class="chapter-item expanded "><a href="../../10_ACPI/CEDT.html"><strong aria-hidden="true">4.2.</strong> CEDT</a></li></ol></li><li class="chapter-item expanded "><a href="../../11_PCIe/index.html"><strong aria-hidden="true">5.</strong> AMBA</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/index.html"><strong aria-hidden="true">6.</strong> PCIe</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/index.html"><strong aria-hidden="true">6.1.</strong> 协议学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/physical_layer.html"><strong aria-hidden="true">6.1.1.</strong> Physical Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/data_link_layer.html"><strong aria-hidden="true">6.1.2.</strong> Data Link Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/TransactionLayer.html"><strong aria-hidden="true">6.1.3.</strong> Transaction Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/03_pcie_eq.html"><strong aria-hidden="true">6.1.4.</strong> PCIe 均衡技术</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">6.2.</strong> ARM N2 参考设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/01_PCIe子系统.html"><strong aria-hidden="true">6.2.1.</strong> 01_PCIe子系统.md</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/index.html"><strong aria-hidden="true">6.3.</strong> PCIe 枚举与资源分配</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/枚举过程中的资源降级.html"><strong aria-hidden="true">6.3.1.</strong> 枚举过程中的资源降级</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/EDK2对optionRom的支持.html"><strong aria-hidden="true">6.3.2.</strong> EDK2对optionRom的支持</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/index.html"><strong aria-hidden="true">6.4.</strong> PCIe 高级特性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_AER.html"><strong aria-hidden="true">6.4.1.</strong> PCIe AER</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Interrupt.html"><strong aria-hidden="true">6.4.2.</strong> PCIe Interrupt</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Hot_Plug.html"><strong aria-hidden="true">6.4.3.</strong> PCIe Hot-Plug</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Power_management.html"><strong aria-hidden="true">6.4.4.</strong> PCIe Power Management</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_DPC.html" class="active"><strong aria-hidden="true">6.4.5.</strong> PCIe_DPC.md</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../13_CXL/index.html"><strong aria-hidden="true">7.</strong> CXL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../13_CXL/01_cxl.html"><strong aria-hidden="true">7.1.</strong> CXL Overview</a></li><li class="chapter-item expanded "><a href="../../13_CXL/cxl_reg.html"><strong aria-hidden="true">7.2.</strong> CXL 寄存器</a></li><li class="chapter-item expanded "><a href="../../13_CXL/CXL_in_CMN.html"><strong aria-hidden="true">7.3.</strong> CXL_in_CMN</a></li><li class="chapter-item expanded "><a href="../../13_CXL/CXL_in_SCP.html"><strong aria-hidden="true">7.4.</strong> CXL_in_SCP</a></li><li class="chapter-item expanded "><a href="../../13_CXL/cxl枚举.html"><strong aria-hidden="true">7.5.</strong> CXL 枚举</a></li></ol></li><li class="chapter-item expanded "><a href="../../14_DDR/index.html"><strong aria-hidden="true">8.</strong> DDR</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../14_DDR/01_Introduction.html"><strong aria-hidden="true">8.1.</strong> DDR Introduction</a></li></ol></li><li class="chapter-item expanded "><a href="../../21_LeetCode/LeetCode.html"><strong aria-hidden="true">9.</strong> LeetCode</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../21_LeetCode/c_basic.html"><strong aria-hidden="true">9.1.</strong> C语言基础</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/04_bitmap.html"><strong aria-hidden="true">9.2.</strong> Bit Map</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/01_二分法.html"><strong aria-hidden="true">9.3.</strong> 二分法</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/02_链表.html"><strong aria-hidden="true">9.4.</strong> 链表</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/03_字符串.html"><strong aria-hidden="true">9.5.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/05_hashmap.html"><strong aria-hidden="true">9.6.</strong> 哈希表</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/06_doubleptr.html"><strong aria-hidden="true">9.7.</strong> 双指针</a></li></ol></li><li class="chapter-item expanded "><a href="../../22_System_design/index.html"><strong aria-hidden="true">10.</strong> System Design</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../22_System_design/System_Design_Overview.html"><strong aria-hidden="true">10.1.</strong> System Design Overview</a></li></ol></li><li class="chapter-item expanded "><a href="../../20_tool/index.html"><strong aria-hidden="true">11.</strong> Tool</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../20_tool/git.html"><strong aria-hidden="true">11.1.</strong> Git</a></li></ol></li><li class="chapter-item expanded "><a href="../../30_reading/工作中的好习惯.html"><strong aria-hidden="true">12.</strong> 工作中的好习惯</a></li><li class="chapter-item expanded "><a href="../../30_reading/2024_reading.html"><strong aria-hidden="true">13.</strong> 2024 Reading</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">NoteBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="dpc梳理"><a class="header" href="#dpc梳理"><em>DPC梳理</em></a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>DPC的全称是downstream port containment，是PCIe Spec 3.1 中新引入的一个功能，是针对root port和pcie switch检测到不可修正错误时候，就会halt下游端口的数据通路，以防止数据损坏的扩散。DPC 提供的这种机制，使软件有机会修正错误。</p>
+<p>DPC触发条件是检测到unmasked uncorrectable error 或者是接收到下游发送的ERR_FATAL 或者 ERR_NONFATAL 信息，此外，还提供了一种软件触发DPC的方式，该方式可以为系统软件或者固件提供测试的接口。</p>
+<p>当DPC 被触发，它会做出的动作为，DP会立刻设置DPC Trigger Status bit and DPC Trigger Reason field，并且通过设置LTSSM到disable状态来切断当前的link。LTSSM会一直处于disable状态，直到DPC Trigger Status bit 被清除。</p>
+<p>当退出DPC以后，LTSSM必须切换到detect 状态，尝试恢复链路。</p>
+<p>当DPC被触发后，它会发出的信号为DPC中断或者ERR_COR message。</p>
+<p><img src="images/PCIe_DPC/image-20240704131847187.png" alt="image-20240704131847187" /></p>
+<p><strong>DPC Extended Capability structure</strong></p>
+<p><img src="images/PCIe_DPC/image-20240704131926844.png" alt="image-20240704131926844" /></p>
+<p>上图列出了DPC extended capability 的结构，其ID 为 1Dh。</p>
+<p>其主要包括一组能力、控制和状态寄存器，以及一组RP PIO功能的寄存器。</p>
+<p>寄存器具体的功能在后续的章节会陆续涉及到。</p>
+<h2 id="dpc-功能的开启"><a class="header" href="#dpc-功能的开启"><strong>DPC 功能的开启</strong></a></h2>
+<p>DPC功能默认是关闭的，如需开启这个功能，可以通过DPC control register进行控制。</p>
+<p><img src="images/PCIe_DPC/image-20240704132016601.png" alt="image-20240704132016601" /></p>
+<p>通过向DPC Trigger Enable写入不同的数据，可以配置DPC不同的触发条件。</p>
+<p><img src="images/PCIe_DPC/image-20240704132045698.png" alt="image-20240704132045698" /></p>
+<p>● 当 DPC Trigger Enable field配置 01b，DPC使能，当检测到未屏蔽的不可纠正错误或者收到ERR_FATAL Message则触发DPC。</p>
+<p>● 当 DPC Trigger Enable field配置 10b，DPC使能，当检测到未屏蔽的不可纠正错误或者收到ERR_NONFATAL or ERR_FATAL Message则触发DPC</p>
+<h2 id="软件触发dpc"><a class="header" href="#软件触发dpc"><strong>软件触发DPC</strong></a></h2>
+<p>DPC 为软件或者固件的开发测试提供了一种软件触发机制。软件触发DPC的前提条件是：</p>
+<p>● DPC 处于enable 状态，</p>
+<p>● 并且当前Port不处于DPC中，</p>
+<p>● DPC Software Triggering Supported bit in DPC Capability register为0x1，</p>
+<p><img src="images/PCIe_DPC/image-20240704132111525.png" alt="image-20240704132111525" /></p>
+<p>那么就可以使用软件来触发DPC。</p>
+<p>写1b 到DPC Software Trigger bit in the DPC Control Register，那么该Port就会进入DPC 模式。</p>
+<p><img src="images/PCIe_DPC/image-20240704132124832.png" alt="image-20240704132124832" /></p>
+<p>可以读取DPC Status Register寄存器来判断当前触发是否成功。</p>
+<p><img src="images/PCIe_DPC/image-20240704132148504.png" alt="image-20240704132148504" /></p>
+<p>如果触发成功，</p>
+<p>DPC Trigger Status为1，表示当前处于DPC状态；</p>
+<p>DPC Trigger Reason为0x11，表示当前触发状态由DPC Trigger Reason Extension来表示</p>
+<p>DPC Trigger Reason Extension为0x01，表示当前是由DPC software Trigger 触发</p>
+<h2 id="dpc-中断"><a class="header" href="#dpc-中断"><strong>DPC 中断</strong></a></h2>
+<p>支持DPC的DSP必须支持DPC中断产生。</p>
+<p>DPC中断配置 DPC Control Register内DPC Interrupt Enable bit使能。</p>
+<p><img src="images/PCIe_DPC/image-20240704132231738.png" alt="image-20240704132231738" /></p>
+<p>DPC中断状态通过 DPC Status Register内DPC Interrupt Status bit反映。</p>
+<p><img src="images/PCIe_DPC/image-20240704132253717.png" alt="image-20240704132253717" /></p>
+<p><img src="images/PCIe_DPC/image-20240704132308721.png" alt="image-20240704132308721" /></p>
+<h2 id="dpc-err_cor-signaling"><a class="header" href="#dpc-err_cor-signaling"><strong>DPC ERR_COR signaling</strong></a></h2>
+<p>支持DPC的DSP必须支持 ERR_COR 信号，不管是否支持 Advanced Error Reporting (AER)。</p>
+<p>DPC ERR_COR信号独立于DPC中断进行管理，并且允许同时使用这两种机制。</p>
+<p>DPC ERR_COR signaling is enabled by the DPC ERR_COR Enable bit in the DPC Control Register.</p>
+<p><img src="images/PCIe_DPC/image-20240704132336098.png" alt="image-20240704132336098" /></p>
+<p>其他要求：</p>
+<p>● the Correctable Error Reporting Enable bit in the Device Control Register</p>
+<p>● <strong>or</strong> the DPC SIG_SFW Enable bit in the DPC Control Register is Set</p>
+<p>PCIe Spec 建议OS 使用DPC中断，FW 使用ERR_COR signaling</p>
+<h2 id="退出dpc"><a class="header" href="#退出dpc"><strong>退出DPC</strong></a></h2>
+<p>软件可以通过清除DPC Trigger Status bit in DPC Status Register 使当前Root port退出DPC。</p>
+<p>为保证LTSSM 有足够时间进入到disbale状态，软件必须等到Data Link Layer Link Active bit in the Link Status Register reads 0b才可以离开DPC。</p>
+<p><img src="images/PCIe_DPC/image-20240704132410187.png" alt="image-20240704132410187" /></p>
+<p>同时为了保证Root Port 有足够时间来完全清理内部的活动，RP 离开DPC时候也要确保DPC RP Busy bit reads 0b.</p>
+<p><img src="images/PCIe_DPC/image-20240704132418536.png" alt="image-20240704132418536" /></p>
+<h2 id="dl_active-err_cor-signaling"><a class="header" href="#dl_active-err_cor-signaling"><strong>DL_Active ERR_COR signaling</strong></a></h2>
+<p>当退出DPC以后，链路会尝试重新恢复。如果恢复到active状态，可以选择发送DL_Active ERR_COR 信号。</p>
+<p>DL_Active 状态可以通过读取 the Data Link Layer Link Active bit in the Link Status Register得知。就是前文中退出DPC的前置条件中提到的那个bit。</p>
+<p>数据链路状态改变也是有中断信号的，这个ERR_COR信号和中断不冲突，可以同时使用。只是ERR_COR信号只能表示链路恢复到active状态，而中断表示的是状态改变。</p>
+<p>开启 DL_Active ERR_COR signaling 需要在DPC control寄存器中进行设置:</p>
+<p><img src="images/PCIe_DPC/image-20240704132518904.png" alt="image-20240704132518904" /></p>
+<p>和DPC ERR_COR 信号一样，它也需要额外的要求：</p>
+<p>● the Correctable Error Reporting Enable bit in the Device Control Register</p>
+<p>● <strong>or</strong> the DPC SIG_SFW Enable bit in the DPC Control Register is Set</p>
+<p>对于给定的DL_ACTIVE事件，如果端口要发送ERR_COR消息和MSI/MSI-X事务，则端口必须在发送MSI/MSI-X事务之前发送ERR_COR消息。</p>
+<p>如果使用INTx机制发出DL_ACTIVE中断信号，则没有相应的要求，因为在路由时，INTx消息不一定保持相对于ERR_COR消息的顺序。</p>
+<h1 id="edpc"><a class="header" href="#edpc"><strong>eDPC</strong></a></h1>
+<h2 id="简介"><a class="header" href="#简介"><strong>简介</strong></a></h2>
+<p>eDPC 与DPC功能同样是PCIe Spec 3.1中引入的新功能，其是 在DPC功能引入后，是对DPC功能增加了新的扩展功能，其扩展功能主要实现了对RP PIO（Root Port Programmed I/O）错误的控制。</p>
+<p>RP PIO错误控制功能是指PCIe设备在使用RP PIO模式进行数据传输时，对数据传输过程中出现的错误进行控制和处理的功能。</p>
+<p>通过DPC capability 寄存器的bit5 我们可以知道当前RP是否支持eDPC功能。</p>
+<p><img src="images/PCIe_DPC/image-20240704132607043.png" alt="image-20240704132607043" /></p>
+<h2 id="pcie三种传输模型"><a class="header" href="#pcie三种传输模型"><strong>PCIe三种传输模型</strong></a></h2>
+<p>PIO 是PCIe 三种传输模型之一，另外两种是DMA和P2P。可以通过下方三个图来简要了解三种传输方式的区别。</p>
+<p><img src="images/PCIe_DPC/image-20240704132910411.png" alt="image-20240704132910411" /></p>
+<p><img src="images/PCIe_DPC/image-20240704132921038.png" alt="image-20240704132921038" /></p>
+<p><img src="images/PCIe_DPC/image-20240704132935032.png" alt="image-20240704132935032" /></p>
+<h2 id="rp-pio处理错误类型"><a class="header" href="#rp-pio处理错误类型"><strong>RP PIO处理错误类型</strong></a></h2>
+<p>主要管理三种错误：</p>
+<p>Completion with Unsupported Request status (UR Cpl)</p>
+<p>Completion with Completer Abort status (CA Cpl)</p>
+<p>Completion Timeout (CTO) errors</p>
+<p>每种类型又可以具体分为，Configuration Requests， I/O Requests， Memory Requests， 因此RP PIO一共有9种错误需要关注。</p>
+<p><img src="images/PCIe_DPC/image-20240704133039272.png" alt="image-20240704133039272" /></p>
+<p>AER对UR CA 和CTO类型的错误也有相应的处理机制，但是其和RP PIO error control 并不冲突，我们可以通过下面两幅图来加以区分。</p>
+<p>当RP作为Completer时， UR 和 CA error会被记录在AER中。</p>
+<p>当RP作为Requester时， UR 和 CA error会被记录在RP PIO中，而CTO error 既可以记录在AER中也可以记录在RP PIO中，或者同时记录。</p>
+<p>规范建议，如果软件没有在RP PIO中屏蔽CTO error，那么软件应该在AER 中屏蔽CTO error，以避免意外交互。</p>
+<p><img src="images/PCIe_DPC/image-20240704133101020.png" alt="image-20240704133101020" /></p>
+<p><img src="images/PCIe_DPC/image-20240704133108266.png" alt="image-20240704133108266" /></p>
+<h2 id="错误处理方式"><a class="header" href="#错误处理方式"><strong>错误处理方式</strong></a></h2>
+<p><img src="images/PCIe_DPC/image-20240704133134383.png" alt="image-20240704133134383" /></p>
+<p>RP PIO error control机制主要通过DPC extended capability中的一系列寄存器来实现。可以看出红框中RP PIO 相关寄存器和AER capability中的寄存器非常相似，其工作原理也非常相似。</p>
+<p>The RP PIO Status, Mask, and Severity registers 行为类似于 AER 中的the Uncorrectable Error Status, Mask, and Severity registers。</p>
+<p>当一个RP PIO错误被检测到时，且该错误未屏蔽，RP PIO Status Register中的相关位被设置，并且错误被记录在RP PIO log registers（假设RP PIO错误日志资源可用）。</p>
+<p>当一个RP PIO错误被检测到，而它被屏蔽时，相关的状态位仍然在RP PIO Status Register中设置，但是这个错误不会触发DPC，也不会记录在RP PIO log registers中。</p>
+<p>每个未被屏蔽的RP PIO错误被处理为uncorrectable or advisory（警告），由 RP PIO Severity Register中相应位的值决定。</p>
+<p>如果相关的 Severity bit被设置，错误被处理为uncorrectable，触发DPC(假设DPC被启用)，并用DPC中断和/或ERR_COR(if enabled)发送此事件的信号。</p>
+<p>如果相关的Severity bit为Clear，则错误作为警告处理(不触发DPC)，并使用ERR_COR(if enabled)发出信号。</p>
+<p>The RP PIO Header Log Register, RP PIO ImpSpec Log Register, and RP PIO TLP Prefix Log Registers统称为 RP PIO log registers。</p>
+<p>The RP PIO First Error Pointer, RP PIO Header Log, and RP PIO TLP Prefix Log行为类似于 AER 中的the First Error Pointer, Header Log, and TLP Prefix Log。</p>
+<p>RP PIO Header Log用来记录发生RP PIO error的 TLP header;</p>
+<p>RP PIO ImpSpec Log Register是一个可选实现寄存器 ，用来记录request TLP 源，当DPC capability寄存器中的RP Log Size field大于5，表明这个寄存器需要实现；</p>
+<p>RP PIO TLP Prefix Log Register是一个可选实现寄存器，用来记录发生RP PIO error的 TLP Prefix，这个寄存器具体实现几个DW，由DPC capability寄存器中的RP Log Size field 来确定：</p>
+<p>● Number = RP Log Size - 5； if RP Log Size &lt;=9;</p>
+<p>● Number =4；if RP Log Size &gt;9;</p>
+<h1 id="linux-kernel-中对dpc的处理"><a class="header" href="#linux-kernel-中对dpc的处理"><strong>Linux Kernel 中对DPC的处理</strong></a></h1>
+<h2 id="初始化dpc与注册中断"><a class="header" href="#初始化dpc与注册中断"><strong>初始化DPC与注册中断</strong></a></h2>
+<p>梳理了一下Linux kernel 5.10.201 中DPC RAS的相关流程，为验证、开发C2000 固件中 DPC RAS 做一些参考。</p>
+<p><img src="images/PCIe_DPC/image-20240704133341302.png" alt="image-20240704133341302" /></p>
+<p>从dpc_probe 开始看起，这里开始初始化DPC并注册中断处理函数。</p>
+<p><img src="images/PCIe_DPC/image-20240704133356801.png" alt="image-20240704133356801" /></p>
+<p>● line356：检查是否支持 PCIe AER，以及 DPC 功能是否支持。如果不支持，返回错误代码 -ENOTSUPP。</p>
+<p>● line359：调用函数 devm_request_threaded_irq 来请求指定 dev-&gt;irq 的中断处理程序。如果成功，将结果赋给 status 变量。</p>
+<p>注：devm_request_threaded_irq 是 Linux 设备驱动中的一个函数，用于请求中断处理程序（IRQ）并将其与线程绑定。这里最重要的两个回调函数dpc_irq 和 dpc_handler。前一个为顶半，后一个为底半。这个翻译很糟糕。英文是top half 和 bottom half，感觉英文更好理解一下。就是把中断处理函数分为两部分，前一半的回调函数放比较重要、优先级比较高的内容，后一半放优先级比较低的部分。底半部可以被新的中断打断，这与顶半部的不同之处在于，顶半部往往被设计成不可中断。<strong>顶半部和底半部的结合能够在中断处理中找到平衡点，使系统具有更好的响应能力。</strong></p>
+<p>● line362：注册完中断处理函数还会检查一下注册的状态，如果失败了就返回，如果成功了就继续往下跑；</p>
+<p>● line368：这里读取DPC capability和control 寄存器，并存下来；</p>
+<p>● line371：配置control寄存器，忽略原来寄存器中的中断位和enable位，重新设置为Fatal error 触发，开启中断，并将结果写回到control寄存器；</p>
+<h2 id="上半部中断处理函数"><a class="header" href="#上半部中断处理函数"><strong>上半部中断处理函数</strong></a></h2>
+<p>dpc_irq是上半部中断处理函数，这部分内容不会被其他中断打断。</p>
+<p><img src="images/PCIe_DPC/image-20240704133458974.png" alt="image-20240704133458974" /></p>
+<p>● 这部分首先读取DPC status 寄存器，判断是否真的有中断发生，或者status寄存器全部为1，如果满足其中之一，那么就直接返回，认为没有中断；</p>
+<p>● 如果有中断，就向status寄存器写0x8，将dpc中断清除（写1b 清除）。</p>
+<p>● 如果 DPC 状态寄存器中的触发位被置位，则执行return IRQ_WAKE_THREAD;</p>
+<p>返回 IRQ_WAKE_THREAD，表示需要唤醒一个线程来处理中断。</p>
+<p>● 如果触发位没有被置位，返回 IRQ_HANDLED，表示中断已经被处理。</p>
+<h2 id="下半部中断处理函数"><a class="header" href="#下半部中断处理函数"><strong>下半部中断处理函数</strong></a></h2>
+<p>dpc_handler是下半部中断处理函数，上半部处理完会开始跑这个函数。</p>
+<p><img src="images/PCIe_DPC/image-20240704133532559.png" alt="image-20240704133532559" /></p>
+<p>● 调用了一个名为 dpc_process_error 的函数，并传入了 pdev 作为参数。这个函数的作用是初步处理 DPC 错误。</p>
+<p>● 调用了一个名为 pcie_do_recovery 的函数，并传入了三个参数：pdev、pci_channel_io_frozen 和 dpc_reset_link。这个函数的作用是执行 DPC 的具体恢复操作。</p>
+<p>● 返回 IRQ_HANDLED，表示中断已经被处理。</p>
+<h4 id="错误处理函数"><a class="header" href="#错误处理函数"><strong>错误处理函数</strong></a></h4>
+<p><img src="images/PCIe_DPC/image-20240704133555716.png" alt="image-20240704133555716" /></p>
+<p>● 首先读取status 和 source ID 寄存器；</p>
+<p>● 打印寄存器raw data，再解析并打印出错的原因；</p>
+<p>● line287：如果设备支持 DPC RP 扩展，并且 reason 为 3，ext_reason 为 0，表示当前进入DPC的原因是检测到RP PIO错误，则执行dpc_process_rp_pio_error。</p>
+<p>● line289：否则，如果 reason 为 0 （unmasked uncorrectable error），并且能够获取 AER（Advanced Error Reporting）uce严重性信息和设备错误信息，则打印错误信息后，清除AER非致命错误状态和致命错误状态。</p>
+<p>● dpc_process_rp_pio_error （待整理）</p>
+<h4 id="错误恢复函数"><a class="header" href="#错误恢复函数"><strong>错误恢复函数</strong></a></h4>
+<p><strong>pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);</strong></p>
+<p>这个函数具体实现在err.c 中，用于执行 PCIe 设备的错误恢复。函数的具体梳理，稍后补充。</p>
+<p>简单来说，它会执行以下步骤：</p>
+<p>○ 通知所有受影响的设备驱动程序，包括多功能卡上的多个实例，以避免在自旋循环中死锁。</p>
+<p>○ 根据每个驱动程序的要求，执行重置操作（例如重新启用 I/O 或请求槽位重置）。</p>
+<p>○ 在重置和/或重新启用 I/O 后，再次通知所有驱动程序，以便它们可以执行所需的设备设置/配置。</p>
+<p>○ 最后，发送“恢复正常操作”事件。</p>
+<p>可以看到第三个参数是 <strong>dpc_reset_link</strong> 这个函数是在dpc.c 中实现的，与DPC 相关。</p>
+<p>第三个参数名字是 reset_subordinates，它的作用是用于执行设备的子设备重置操作。具体来说：</p>
+<p>● 当发生 PCIe 错误时，pcie_do_recovery 函数会根据错误类型和设备类型执行不同的恢复操作。</p>
+<p>● 对于一些设备，例如 Root Port、Downstream Port 或 RCEC，错误恢复会在设备本身上执行，同时也包括其下属的子设备。</p>
+<p>● 但对于其他设备，例如 Endpoint 等，错误恢复会在设备本身以及同一 Port 下的其他设备上执行。</p>
+<p>● 如果存在需要重置子设备的情况，reset_subordinates 参数会传递一个函数指针，用于执行子设备的重置操作</p>
+<p>dpc_reset_link 就是传递进去的函数指针，先梳理一下该函数的内容：</p>
+<p><img src="images/PCIe_DPC/image-20240704133630816.png" alt="image-20240704133630816" /></p>
+<p>line151：设置一个标志位，表示正在进行 DPC 恢复。</p>
+<p>line163：等待链路处于非活动状态，然后清除 DPC 触发状态。pcie_wait_for_link 函数会等待链路变为指定的状态（这里就是inactive状态），最多等待 100 毫秒。如果在这个时间内链路达到了指定状态，就返回 true，否则返回 false。</p>
+<p>如果链路没有达到我们想要的状态，打印一条警告信息，表明我们在规定的时间内没有等到期望的状态。</p>
+<p>打印完就继续执行后面的内容了。</p>
+<p>line172：向status寄存器bit0写1b，清除DPC 状态；（<strong>这里和PCIe 5.0 Spec 有点不相符，当然也可以理解为对于异常情况的一种处理策略，spec 中说要等到链路处于disabled 状态再清DPC，但是这里等了100ms，即使没等到，打印了warning就继续清DPC 状态了。 固件中也可以参考这种策略。</strong>）</p>
+<p><img src="images/PCIe_DPC/image-20240704133648074.png" alt="image-20240704133648074" /></p>
+<p>line175：如果等待次级总线准备就绪失败，清除PCI_DPC_RECOVERED 状态，返回值设置为PCI_ERS_RESULT_DISCONNECT；</p>
+<p>line179：设置PCI_DPC_RECOVERED 状态，返回值设置为PCI_ERS_RESULT_RECOVERED ；</p>
+<p>line184：清除 DPC 恢复标志位，唤醒等待队列中的所有进程。然后返回。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../12_PCIe/03_PCIe高级特性/PCIe_Power_management.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../13_CXL/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../12_PCIe/03_PCIe高级特性/PCIe_Power_management.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../13_CXL/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
