@@ -1,0 +1,772 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>EDK2 Event - NoteBook</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">NoteBook</a></li><li class="chapter-item expanded affix "><li class="part-title">计算机体系结构</li><li class="chapter-item expanded "><a href="../../01_体系结构/index.html"><strong aria-hidden="true">1.</strong> 体系结构</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/index.html"><strong aria-hidden="true">1.1.</strong> 内存管理</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/内存管理基础.html"><strong aria-hidden="true">1.1.1.</strong> 内存管理基础</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SMMU.html"><strong aria-hidden="true">1.1.2.</strong> SMMU</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SVA.html"><strong aria-hidden="true">1.1.3.</strong> 异构内存管理SVA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/index.html"><strong aria-hidden="true">1.2.</strong> NoC片上互连</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CHI.html"><strong aria-hidden="true">1.2.1.</strong> CHI协议</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NoC_introduction.html"><strong aria-hidden="true">1.2.2.</strong> NoC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CMN700.html"><strong aria-hidden="true">1.2.3.</strong> CMN700</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NI_700.html"><strong aria-hidden="true">1.2.4.</strong> NI-700</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/index.html"><strong aria-hidden="true">1.3.</strong> 异常与中断</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/中断.html"><strong aria-hidden="true">1.3.1.</strong> 异常与中断</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/GIC.html"><strong aria-hidden="true">1.3.2.</strong> ARM GIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/X86_APIC.html"><strong aria-hidden="true">1.3.3.</strong> X86 APIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/RISCV_AIA.html"><strong aria-hidden="true">1.3.4.</strong> RISCV AIA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/index.html"><strong aria-hidden="true">1.4.</strong> SoC</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/概述.html"><strong aria-hidden="true">1.4.1.</strong> Cortex M3 MCU</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">1.4.2.</strong> ARM N2 参考设计</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/index.html"><strong aria-hidden="true">1.5.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/ARM固件启动顺序.html"><strong aria-hidden="true">1.5.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/RISCV_firmware.html"><strong aria-hidden="true">1.5.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/Cache_as_ram.html"><strong aria-hidden="true">1.5.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">1.5.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_EVENT.html" class="active"><strong aria-hidden="true">1.5.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_memmap.html"><strong aria-hidden="true">1.5.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/index.html"><strong aria-hidden="true">1.6.</strong> 存储</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/file_system.html"><strong aria-hidden="true">1.6.1.</strong> 文件系统</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/RAID.html"><strong aria-hidden="true">1.6.2.</strong> RAID</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/ssd.html"><strong aria-hidden="true">1.6.3.</strong> SSD</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/分布式存储.html"><strong aria-hidden="true">1.6.4.</strong> 分布式存储系统</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/index.html"><strong aria-hidden="true">1.7.</strong> 虚拟化与分布式</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/hypervisor.html"><strong aria-hidden="true">1.7.1.</strong> Hypervisor</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/MIT6824.html"><strong aria-hidden="true">1.7.2.</strong> MIT6824</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/index.html"><strong aria-hidden="true">1.8.</strong> Memory consistency and cache coherence</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/memory_consistency.html"><strong aria-hidden="true">1.8.1.</strong> Memory consistency</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../02_固件/index.html"><strong aria-hidden="true">2.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../02_固件/ARM固件启动顺序.html"><strong aria-hidden="true">2.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../02_固件/RISCV_firmware.html"><strong aria-hidden="true">2.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../02_固件/Cache_as_ram.html"><strong aria-hidden="true">2.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">2.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_EVENT.html"><strong aria-hidden="true">2.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_memmap.html"><strong aria-hidden="true">2.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_OS/index.html"><strong aria-hidden="true">3.</strong> OS</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_OS/FreeRTOS.html"><strong aria-hidden="true">3.1.</strong> FreeRTOS</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">计算机工业标准</li><li class="chapter-item expanded "><a href="../../10_ACPI/index.html"><strong aria-hidden="true">4.</strong> ACPI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../10_ACPI/ACPI_overview.html"><strong aria-hidden="true">4.1.</strong> ACPI Overview</a></li><li class="chapter-item expanded "><a href="../../10_ACPI/CEDT.html"><strong aria-hidden="true">4.2.</strong> CEDT</a></li></ol></li><li class="chapter-item expanded "><a href="../../11_PCIe/index.html"><strong aria-hidden="true">5.</strong> AMBA</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/index.html"><strong aria-hidden="true">6.</strong> PCIe</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/index.html"><strong aria-hidden="true">6.1.</strong> 协议学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/physical_layer.html"><strong aria-hidden="true">6.1.1.</strong> Physical Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/data_link_layer.html"><strong aria-hidden="true">6.1.2.</strong> Data Link Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/TransactionLayer.html"><strong aria-hidden="true">6.1.3.</strong> Transaction Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/03_pcie_eq.html"><strong aria-hidden="true">6.1.4.</strong> PCIe 均衡技术</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">6.2.</strong> ARM N2 参考设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/01_PCIe子系统.html"><strong aria-hidden="true">6.2.1.</strong> 01_PCIe子系统.md</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/index.html"><strong aria-hidden="true">6.3.</strong> PCIe 枚举与资源分配</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/枚举过程中的资源降级.html"><strong aria-hidden="true">6.3.1.</strong> 枚举过程中的资源降级</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/EDK2对optionRom的支持.html"><strong aria-hidden="true">6.3.2.</strong> EDK2对optionRom的支持</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/index.html"><strong aria-hidden="true">6.4.</strong> PCIe 高级特性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_AER.html"><strong aria-hidden="true">6.4.1.</strong> PCIe AER</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Interrupt.html"><strong aria-hidden="true">6.4.2.</strong> PCIe Interrupt</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Hot_Plug.html"><strong aria-hidden="true">6.4.3.</strong> PCIe Hot-Plug</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Power_management.html"><strong aria-hidden="true">6.4.4.</strong> PCIe Power Management</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_DPC.html"><strong aria-hidden="true">6.4.5.</strong> PCIe_DPC.md</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../13_CXL/index.html"><strong aria-hidden="true">7.</strong> CXL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../13_CXL/01_cxl.html"><strong aria-hidden="true">7.1.</strong> CXL Overview</a></li><li class="chapter-item expanded "><a href="../../13_CXL/cxl_reg.html"><strong aria-hidden="true">7.2.</strong> CXL 寄存器</a></li><li class="chapter-item expanded "><a href="../../13_CXL/CXL_in_CMN.html"><strong aria-hidden="true">7.3.</strong> CXL_in_CMN</a></li><li class="chapter-item expanded "><a href="../../13_CXL/CXL_in_SCP.html"><strong aria-hidden="true">7.4.</strong> CXL_in_SCP</a></li><li class="chapter-item expanded "><a href="../../13_CXL/cxl枚举.html"><strong aria-hidden="true">7.5.</strong> CXL 枚举</a></li></ol></li><li class="chapter-item expanded "><a href="../../14_DDR/index.html"><strong aria-hidden="true">8.</strong> DDR</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../14_DDR/01_Introduction.html"><strong aria-hidden="true">8.1.</strong> DDR Introduction</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">代码实现与工具</li><li class="chapter-item expanded "><a href="../../21_LeetCode/LeetCode.html"><strong aria-hidden="true">9.</strong> LeetCode</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../21_LeetCode/c_basic.html"><strong aria-hidden="true">9.1.</strong> C语言基础</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/04_bitmap.html"><strong aria-hidden="true">9.2.</strong> Bit Map</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/01_二分法.html"><strong aria-hidden="true">9.3.</strong> 二分法</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/02_链表.html"><strong aria-hidden="true">9.4.</strong> 链表</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/03_字符串.html"><strong aria-hidden="true">9.5.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/05_hashmap.html"><strong aria-hidden="true">9.6.</strong> 哈希表</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/06_double_ptr.html"><strong aria-hidden="true">9.7.</strong> 双指针</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/07_stack.html"><strong aria-hidden="true">9.8.</strong> 栈</a></li></ol></li><li class="chapter-item expanded "><a href="../../22_System_design/index.html"><strong aria-hidden="true">10.</strong> System Design</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../22_System_design/System_Design_Overview.html"><strong aria-hidden="true">10.1.</strong> System Design Overview</a></li></ol></li><li class="chapter-item expanded "><a href="../../20_tool/index.html"><strong aria-hidden="true">11.</strong> Tool</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../20_tool/git.html"><strong aria-hidden="true">11.1.</strong> Git</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">读书</li><li class="chapter-item expanded "><a href="../../30_reading/工作中的好习惯.html"><strong aria-hidden="true">12.</strong> 工作中的好习惯</a></li><li class="chapter-item expanded "><a href="../../30_reading/2024_reading.html"><strong aria-hidden="true">13.</strong> 2024 Reading</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">NoteBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="edk2-event"><a class="header" href="#edk2-event">EDK2 EVENT</a></h1>
+<p>[toc]</p>
+<h2 id="简介"><a class="header" href="#简介">简介</a></h2>
+<p>先来回顾一下中断处理的过程。正常执行代码，中断进来了，执行中断处理函数，中断处理函数结束后，继续执行未完成的代码。</p>
+<p>异步操作，就是中断。UEFI 不支持中断，是个单核单线程的架构。只有时钟中断。</p>
+<p>说到 做定时/计数器 ，最经典的当数intel兼容的8253/8254定时器，它几乎是所有的PC必须兼容支持的一颗IC，当然在其他的微处理器系统当中也是支持的，比如MSC8051,以及其他的微处理器当中。</p>
+<p>几乎所有的Timer都能在不需要外力干涉的情况下在系统的时钟脉冲的驱动之下，自动计数，并且在计数值到达预设值的时候会通知cpu去执行特定的动作，并且在处理完之后能自动接着计数，不辞辛劳做着机械性的无差错的动作。</p>
+<p>在PC/AT架构UEFI当中我们通常会使用8254来作为核心心跳Timer，它工作在mode 3，时钟频率是1.1931816MHz，设定的tick（mTimerPeriod）间隔，默认是1ms（10000个tick基础计数单位=10000*100ns），并且打开CPU中断IRQ0。当计数器减到0的时候，就会通过OUT pin给8259的IRQ0发送中断，这个时候CPU就会中断当前操作，进行Timer的中断处理服务。</p>
+<p>当然前提是我们在此之前有准备好cpu archprotocol和Legacy8259Protocol，设置好中断向量表,当中断到来的时候，cpu会从IDT表中依据中断号，调用Timer中断服务TimerInterruptHandler。</p>
+<h2 id="timer中断"><a class="header" href="#timer中断">Timer中断</a></h2>
+<p>现在再来看Timer中断异常是怎么做的，它会提供哪些服务，以下是简单的列举。</p>
+<p>**1.**关中断</p>
+<p>**2.**清除中断源</p>
+<p>**3.**获取系统时间锁（关中断，虽然中断此时是关的）</p>
+<p>**4.**调用注册的具体的Timer服务，这里我们称之为CoreTimerTick(mTimerPeriod)/CoreTimerTick(100ms)，它是在TimerArchprotocol被install的时候由EVT_NOTIFY_SIGNAL类型的Event来触发注册的。</p>
+<p>**5.**全局Sytem time累加mEfiSystemTime =mEfiSystemTime+ 1Tick(100ms)</p>
+<p><strong>6.</strong> 在timer event list双向链表当中查找已经到时间了的event，如果找到，就使用BS-&gt;SignalEvent去signal它们。</p>
+<p>BS-&gt;SignalEvent---&gt;CoreNotifyEvent--&gt;CoreRestoreTpl--&gt;CoreDispatchEventNotifies--&gt;A.如果是EVT_NOTIFY_SIGNAL类型，就清除count（Event-&gt;SignalCount = 0），然后嵌套直接调用Event-&gt;NotifyFunction (Event, Event-&gt;NotifyContext)函数，此时中断是开的，然后清除该Tpl的gEventPending mask bit，清除该event。</p>
+<p>**7.**释放系统时间锁（开中断，虽然中断此时是关的）</p>
+<p>**8.**开中断</p>
+<p>注：在完成上面的步骤之前，我们需要先初始化一些数据结构：</p>
+<p>​    <strong>1.</strong> gEventQueue--- 双向链表数组，A list of event's to notify for each priority level，被触发，待执行的；</p>
+<p>​    <strong>2.</strong> mEfiTimerList----双向链表，所有的等待timer触发的event列表。</p>
+<p>​    <strong>3.</strong> gEventSignalQueue ---双向链表A list of events to signal based on EventGroup type</p>
+<p>​    <strong>4.</strong> 对于EVT_NOTIFY_WAIT类型的event，我们使用BS-&gt; <strong>CoreCheckEvent</strong>-&gt;CoreNotifyEvent--&gt;CoreRestoreTpl--&gt;CoreDispatchEventNotifies来激活，它同样是往 gEventQueue插入IEvent的节点。</p>
+<p>gEventPending  使用位图来保存gEventQueue是否含有某个优先级的链表（就是个索引，哪个优先级有就置1，不然置0）</p>
+<p>gEventPending是一个32位的二进制串，置1说明此位有事件已经被触发，等着你执行</p>
+<p>在传统 x86 体系结构中，中断请求线（IRQ）与中断向量之间的映射通常如下：</p>
+<ul>
+<li>IRQ0: 定时器（时钟滴答）主要用来<strong>操作系统调度</strong>和<strong>系统时间维护</strong></li>
+<li>IRQ1: 键盘</li>
+<li>IRQ2: 级联中断控制器（用于从片级中断）</li>
+<li>IRQ3: 串行端口 2（COM2）</li>
+<li>IRQ4: 串行端口 1（COM1）</li>
+<li>IRQ5: 通常是备用或用户定义</li>
+<li>IRQ6: 软盘控制器</li>
+<li>IRQ7: 并行端口 1（LPT1）</li>
+<li>其他 IRQ 线路连接到其他设备，如硬盘控制器、声卡、网卡等。</li>
+</ul>
+<h2 id="event-优先级"><a class="header" href="#event-优先级">event 优先级</a></h2>
+<pre><code class="language-c">
+//
+// Task priority level
+//
+#define TPL_APPLICATION       4
+#define TPL_CALLBACK          8
+#define TPL_NOTIFY            16
+#define TPL_HIGH_LEVEL        31
+</code></pre>
+<p>31这个等级就是用来加锁的，直接拉到最高，就没有中断进来了。</p>
+<h2 id="初始化流程"><a class="header" href="#初始化流程">初始化流程</a></h2>
+<p><img src="images/EDK2_EVENT/image-20240716144753316.png" alt="image-20240716144753316" /></p>
+<p>从DXE main 开始看起</p>
+<pre><code class="language-c">  //
+  // Initialize the Event Services
+  //
+  Status = CoreInitializeEventServices ();
+
+...
+
+  //
+  // Register for the GUIDs of the Architectural Protocols, so the rest of the
+  // EFI Boot Services and EFI Runtime Services tables can be filled in.
+  // Also register for the GUIDs of optional protocols.
+  //
+  CoreNotifyOnProtocolInstallation ();
+
+</code></pre>
+<p>上面干了两个事，一个是初始化event 相关的结构，一个是初始化时钟中断处理函数。</p>
+<p>先看时钟中断处理函数</p>
+<pre><code class="language-c">/**
+  Called by the platform code to process a tick.
+
+  @param  Duration               The number of 100ns elapsed since the last call
+                                 to TimerTick
+
+**/
+VOID
+EFIAPI
+CoreTimerTick (
+  IN UINT64   Duration
+  )
+{
+  IEVENT          *Event;
+
+  //
+  // Check runtiem flag in case there are ticks while exiting boot services
+  //
+  CoreAcquireLock (&amp;mEfiSystemTimeLock);
+
+  //
+  // Update the system time
+  //
+  mEfiSystemTime += Duration;
+
+  //
+  // If the head of the list is expired, fire the timer event
+  // to process it
+  //
+  if (!IsListEmpty (&amp;mEfiTimerList)) {
+    Event = CR (mEfiTimerList.ForwardLink, IEVENT, Timer.Link, EVENT_SIGNATURE);
+
+    if (Event-&gt;Timer.TriggerTime &lt;= mEfiSystemTime) {
+      CoreSignalEvent (mEfiCheckTimerEvent);
+    }
+  }
+
+  CoreReleaseLock (&amp;mEfiSystemTimeLock);
+}
+</code></pre>
+<p>上锁，更新系统时间，处理所有的等待timer触发的event，把到期的事件处理一下。</p>
+<pre><code class="language-c">/**
+  Initializes "event" support.
+
+  @retval EFI_SUCCESS            Always return success
+
+**/
+EFI_STATUS
+CoreInitializeEventServices (
+  VOID
+  )
+{
+  UINTN        Index;
+
+  for (Index=0; Index &lt;= TPL_HIGH_LEVEL; Index++) {
+    InitializeListHead (&amp;gEventQueue[Index]);
+  }
+
+  CoreInitializeTimer ();
+
+  CoreCreateEventEx (
+    EVT_NOTIFY_SIGNAL,
+    TPL_NOTIFY,
+    EfiEventEmptyFunction,
+    NULL,
+    &amp;gIdleLoopEventGuid,
+    &amp;gIdleLoopEvent
+    );
+
+  return EFI_SUCCESS;
+}
+</code></pre>
+<ul>
+<li>初始化全局变量 gEventQueue--- 双向链表数组，A list of event's to notify for each priority level</li>
+<li>CoreInitializeTimer 注册一个事件</li>
+</ul>
+<pre><code class="language-c">/**
+  Initializes timer support.
+
+**/
+VOID
+CoreInitializeTimer (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+
+  Status = CoreCreateEventInternal (
+             EVT_NOTIFY_SIGNAL,
+             TPL_HIGH_LEVEL - 1,
+             CoreCheckTimers,
+             NULL,
+             NULL,
+             &amp;mEfiCheckTimerEvent
+             );
+  ASSERT_EFI_ERROR (Status);
+}
+</code></pre>
+<h2 id="事件完整生命周期"><a class="header" href="#事件完整生命周期">事件完整生命周期</a></h2>
+<h3 id="创建"><a class="header" href="#创建">创建</a></h3>
+<pre><code class="language-c">#include &lt;Uefi.h&gt;
+#include &lt;Library/UefiBootServicesTableLib.h&gt;
+#include &lt;Library/UefiLib.h&gt;
+
+EFI_EVENT TimerEvent;
+EFI_EVENT ExitBootServicesEvent;
+BOOLEAN TimerTriggered = FALSE;
+
+VOID EFIAPI TimerEventHandler(
+    IN EFI_EVENT Event,
+    IN VOID *Context
+) {
+    TimerTriggered = TRUE;
+    Print(L"Timer event triggered!\n");
+}
+
+EFI_STATUS
+EFIAPI
+UefiMain(
+    IN EFI_HANDLE ImageHandle,
+    IN EFI_SYSTEM_TABLE *SystemTable
+) {
+    EFI_STATUS Status;
+    
+    // 创建一个定时器事件，定时器在10000000 100ns (1秒)后触发
+    Status = gBS-&gt;CreateEvent(
+        EVT_TIMER | EVT_NOTIFY_SIGNAL,
+        TPL_CALLBACK,
+        TimerEventHandler,
+        NULL,
+        &amp;TimerEvent
+    );
+    if (EFI_ERROR(Status)) {
+        Print(L"Failed to create event: %r\n", Status);
+        return Status;
+    }
+
+    // 设置定时器，1秒后触发
+    Status = gBS-&gt;SetTimer(
+        TimerEvent,
+        TimerRelative,
+        10000000 // 100ns单位，10000000 = 1秒
+    );
+    if (EFI_ERROR(Status)) {
+        Print(L"Failed to set timer: %r\n", Status);
+        gBS-&gt;CloseEvent(TimerEvent);
+        return Status;
+    }
+
+    // 等待事件触发
+    while (!TimerTriggered) {
+        gBS-&gt;Stall(100000); // 暂停100ms
+    }
+
+    // 清理
+    gBS-&gt;CloseEvent(TimerEvent);
+
+    return EFI_SUCCESS;
+}
+
+</code></pre>
+<p>上面创建了一个定时器事件，1秒后触发。</p>
+<p>然后看一下gBS-&gt;CreateEvent这个函数，如何把这个事件放到全局队列中去的。</p>
+<pre><code class="language-c">typedef struct {
+    UINT32 Type;
+    EFI_TPL NotifyTpl;
+    EFI_EVENT_NOTIFY NotifyFunction;
+    VOID *NotifyContext;
+    BOOLEAN Triggered;
+} EFI_EVENT_INTERNAL;
+
+EFI_STATUS
+EFIAPI
+CreateEvent (
+    IN UINT32 Type,
+    IN EFI_TPL NotifyTpl,
+    IN EFI_EVENT_NOTIFY NotifyFunction,
+    IN VOID *NotifyContext,
+    OUT EFI_EVENT *Event
+) {
+    EFI_STATUS Status;
+    EFI_EVENT_INTERNAL *NewEvent;
+
+    // 参数验证
+    if (Event == NULL || (Type &amp; EVT_NOTIFY_SIGNAL &amp;&amp; NotifyFunction == NULL)) {
+        return EFI_INVALID_PARAMETER;
+    }
+
+    // 分配内存
+    NewEvent = AllocateZeroPool(sizeof(EFI_EVENT_INTERNAL));
+    if (NewEvent == NULL) {
+        return EFI_OUT_OF_RESOURCES;
+    }
+
+    // 初始化事件对象
+    NewEvent-&gt;Type = Type;
+    NewEvent-&gt;NotifyTpl = NotifyTpl;
+    NewEvent-&gt;NotifyFunction = NotifyFunction;
+    NewEvent-&gt;NotifyContext = NotifyContext;
+    NewEvent-&gt;Triggered = FALSE;
+
+    // 注册事件到事件调度队列中（这里用简化的方式表示）
+    Status = RegisterEvent(NewEvent);
+    if (EFI_ERROR(Status)) {
+        FreePool(NewEvent);
+        return Status;
+    }
+
+    // 返回事件句柄
+    *Event = (EFI_EVENT)NewEvent;
+
+    return EFI_SUCCESS;
+}
+</code></pre>
+<p>大概就是分配内存，把传进去的参数，赋值给event结构体中的元素。</p>
+<p>把event 存到全局变量中。</p>
+<pre><code class="language-c">  if ((Type &amp; EVT_NOTIFY_SIGNAL) != 0x00000000) {
+    //
+    // The Event's NotifyFunction must be queued whenever the event is signaled
+    //
+    InsertHeadList (&amp;gEventSignalQueue, &amp;IEvent-&gt;SignalLink);
+  }
+</code></pre>
+<p>然后就是触发，如果触发了，会往32位的bitmap变量里置1。先标记好，还没执行。</p>
+<h3 id="触发"><a class="header" href="#触发">触发</a></h3>
+<p>SignalEvent函数会将该event从全局链表里拿出来，放到32个链表中之一去，等待后面被执行。</p>
+<pre><code class="language-c">/**
+  Signals the event.  Queues the event to be notified if needed.
+
+  @param  UserEvent              The event to signal .
+
+  @retval EFI_INVALID_PARAMETER  Parameters are not valid.
+  @retval EFI_SUCCESS            The event was signaled.
+
+**/
+EFI_STATUS
+EFIAPI
+CoreSignalEvent (
+  IN EFI_EVENT    UserEvent
+  )
+</code></pre>
+<pre><code class="language-c">/**
+  Queues the event's notification function to fire.
+
+  @param  Event                  The Event to notify
+
+**/
+VOID
+CoreNotifyEvent (
+  IN  IEVENT      *Event
+  )
+{
+
+  //
+  // Event database must be locked
+  //
+  ASSERT_LOCKED (&amp;gEventQueueLock);
+
+  //
+  // If the event is queued somewhere, remove it
+  //
+
+  if (Event-&gt;NotifyLink.ForwardLink != NULL) {
+    RemoveEntryList (&amp;Event-&gt;NotifyLink);
+    Event-&gt;NotifyLink.ForwardLink = NULL;
+  }
+
+  //
+  // Queue the event to the pending notification list
+  //
+
+  InsertTailList (&amp;gEventQueue[Event-&gt;NotifyTpl], &amp;Event-&gt;NotifyLink);
+  gEventPending |= (UINTN)(1 &lt;&lt; Event-&gt;NotifyTpl);
+}
+</code></pre>
+<h3 id="调度"><a class="header" href="#调度">调度</a></h3>
+<p><strong>Duang</strong>，时钟中断来了。上面看过了，CoreTimerTick函数进来就上锁，上锁就是升级TPL，然后把时间中断都给处理了，最后就是restore TPL。</p>
+<p>在处理timer触发的event（mEfiTimerList）时候，同样也是先上锁，处理，解锁。</p>
+<p>这个解锁的时候，就是恢复TPL时候，会去调度所有的链表。</p>
+<pre><code class="language-c">  while (gEventPending != 0) 
+{
+    PendingTpl = (UINTN) HighBitSet64 (gEventPending);
+    if (PendingTpl &lt;= NewTpl) {
+      break;
+    }
+    gEfiCurrentTpl = PendingTpl;
+    if (gEfiCurrentTpl &lt; TPL_HIGH_LEVEL) {
+      CoreSetInterruptState (TRUE);
+    }
+    CoreDispatchEventNotifies (gEfiCurrentTpl);
+    //执行gEventQueue [gEfiCurrentTpl]队列里所有event的Notification函数
+  }
+</code></pre>
+<p>之前提过，gEventPending是一个32位的二进制串，置1说明此位有事件已经被触发，等着你执行</p>
+<p>那么这段就很好理解了</p>
+<ol>
+<li>
+<p>取出当前等待执行队列中优先级最高的，和准备恢复的优先级比较；</p>
+</li>
+<li>
+<p>如果队列中最大的TPL比要恢复的TPL小或者相同，退出函数；因为你还不够级别，不用执行队列里的。比如，当前队列最大的是16，当前任务要恢复的是17，那16这个TPL就没机会被执行，先执行17那一组。</p>
+</li>
+<li>
+<p>如果pending比要恢复的大，说明pending队列里最高TPL这个队列，就可以被执行了。比如，当前队列最大的是16，当前进程要恢复的是15，那么就可以执行16这个了。</p>
+</li>
+</ol>
+<p>这样，当一个事件恢复自己的优先级，系统里比它优先级高的事件全都执行了——至于这些事件什么时候触发，是的，在时钟中断里触发。</p>
+<p>时间中断和waitforevent的优先级都是4。以时钟中断为例，时钟每10ms中断一次，每次中断先把自己的优先级拉到31，再调用RestoreTpl把自己的优先级降回4, 按照上面的描述，从31降到4的时候，会把30到5中被触发的队列，挨个撸一遍，最终到4 的结束。</p>
+<h4 id="coretimertick函数定义"><a class="header" href="#coretimertick函数定义">CoreTimerTick函数定义</a></h4>
+<h5 id="函数定义"><a class="header" href="#函数定义">函数定义</a></h5>
+<pre><code class="language-c">/**
+  Lowers the task priority to the previous value.   If the new
+  priority unmasks events at a higher priority, they are dispatched.
+
+  @param  NewTpl  New, lower, task priority
+
+**/
+VOID
+EFIAPI
+CoreRestoreTpl (
+  IN EFI_TPL NewTpl
+  )
+</code></pre>
+<h5 id="变量声明"><a class="header" href="#变量声明">变量声明</a></h5>
+<pre><code class="language-c">{
+  EFI_TPL     OldTpl;
+  EFI_TPL     PendingTpl;
+</code></pre>
+<ul>
+<li><code>OldTpl</code>: 记录当前任务优先级。</li>
+<li><code>PendingTpl</code>: 用于记录挂起事件的最高优先级。</li>
+</ul>
+<h5 id="检查新优先级"><a class="header" href="#检查新优先级">检查新优先级</a></h5>
+<pre><code class="language-c">  OldTpl = gEfiCurrentTpl;
+  if (NewTpl &gt; OldTpl) {
+    DEBUG ((EFI_D_ERROR, "FATAL ERROR - RestoreTpl with NewTpl(0x%x) &gt; OldTpl(0x%x)\n", NewTpl, OldTpl));
+    ASSERT (FALSE);
+  }
+  ASSERT (VALID_TPL (NewTpl));
+</code></pre>
+<ul>
+<li><code>OldTpl = gEfiCurrentTpl</code>: 保存当前任务优先级。</li>
+<li>检查<code>NewTpl</code>是否有效以及是否低于当前优先级。如果<code>NewTpl</code>高于<code>OldTpl</code>，则记录错误并触发断言失败。</li>
+</ul>
+<h5 id="确保中断使能"><a class="header" href="#确保中断使能">确保中断使能</a></h5>
+<pre><code class="language-c">  if (OldTpl &gt;= TPL_HIGH_LEVEL  &amp;&amp;  NewTpl &lt; TPL_HIGH_LEVEL) {
+    gEfiCurrentTpl = TPL_HIGH_LEVEL;
+  }
+</code></pre>
+<ul>
+<li>如果当前优先级为高优先级（<code>TPL_HIGH_LEVEL</code>）及以上，并且新优先级低于<code>TPL_HIGH_LEVEL</code>，则将当前优先级设置为<code>TPL_HIGH_LEVEL</code>，确保中断使能状态。</li>
+</ul>
+<h5 id="调度挂起的事件"><a class="header" href="#调度挂起的事件">调度挂起的事件</a></h5>
+<pre><code class="language-c">  while (gEventPending != 0) {
+    PendingTpl = (UINTN) HighBitSet64 (gEventPending);
+    if (PendingTpl &lt;= NewTpl) {
+      break;
+    }
+
+    gEfiCurrentTpl = PendingTpl;
+    if (gEfiCurrentTpl &lt; TPL_HIGH_LEVEL) {
+      CoreSetInterruptState (TRUE);
+    }
+    CoreDispatchEventNotifies (gEfiCurrentTpl);
+  }
+</code></pre>
+<ul>
+<li><code>while (gEventPending != 0)</code>: 当存在挂起事件时循环处理。</li>
+<li><code>PendingTpl = (UINTN) HighBitSet64 (gEventPending)</code>: 获取挂起事件的最高优先级。</li>
+<li>如果<code>PendingTpl</code>低于或等于<code>NewTpl</code>，则退出循环。</li>
+<li>设置当前优先级为<code>PendingTpl</code>，并在优先级低于<code>TPL_HIGH_LEVEL</code>时启用中断。</li>
+<li>调用<code>CoreDispatchEventNotifies</code>处理该优先级的挂起事件。</li>
+</ul>
+<h5 id="设置新的优先级并确保中断使能"><a class="header" href="#设置新的优先级并确保中断使能">设置新的优先级并确保中断使能</a></h5>
+<pre><code class="language-c">  gEfiCurrentTpl = NewTpl;
+
+  if (gEfiCurrentTpl &lt; TPL_HIGH_LEVEL) {
+    CoreSetInterruptState (TRUE);
+  }
+
+}
+</code></pre>
+<ul>
+<li>最后，设置当前任务优先级为<code>NewTpl</code>。</li>
+<li>如果新的优先级低于<code>TPL_HIGH_LEVEL</code>，确保中断使能状态。</li>
+</ul>
+<h4 id="coredispatcheventnotifies函数定义"><a class="header" href="#coredispatcheventnotifies函数定义">CoreDispatchEventNotifies函数定义</a></h4>
+<pre><code class="language-c">/**
+  Dispatches all pending events.
+
+  @param  Priority               The task priority level of event notifications
+                                 to dispatch
+
+**/
+VOID
+CoreDispatchEventNotifies (
+  IN EFI_TPL      Priority
+  )
+</code></pre>
+<h5 id="变量声明-1"><a class="header" href="#变量声明-1">变量声明</a></h5>
+<pre><code class="language-c">{
+  IEVENT          *Event;
+  LIST_ENTRY      *Head;
+</code></pre>
+<ul>
+<li><code>Event</code>: 指向当前处理的事件。</li>
+<li><code>Head</code>: 指向指定优先级事件队列的头部。</li>
+</ul>
+<h5 id="获取全局事件锁"><a class="header" href="#获取全局事件锁">获取全局事件锁</a></h5>
+<pre><code class="language-c">  CoreAcquireEventLock ();
+  ASSERT (gEventQueueLock.OwnerTpl == Priority);
+  Head = &amp;gEventQueue[Priority];
+</code></pre>
+<ul>
+<li><code>CoreAcquireEventLock ()</code>: 获取全局事件锁，以确保对全局事件队列的访问是线程安全的。</li>
+<li><code>ASSERT (gEventQueueLock.OwnerTpl == Priority)</code>: 确保当前的任务优先级与传入的优先级一致。</li>
+<li><code>Head = &amp;gEventQueue[Priority]</code>: 获取指定优先级的事件队列的头部。</li>
+</ul>
+<h5 id="循环处理挂起事件"><a class="header" href="#循环处理挂起事件">循环处理挂起事件</a></h5>
+<pre><code class="language-c">  while (!IsListEmpty (Head)) {
+
+    Event = CR (Head-&gt;ForwardLink, IEVENT, NotifyLink, EVENT_SIGNATURE);
+    RemoveEntryList (&amp;Event-&gt;NotifyLink);
+
+    Event-&gt;NotifyLink.ForwardLink = NULL;
+</code></pre>
+<ul>
+<li><code>while (!IsListEmpty (Head))</code>: 循环遍历队列中的所有挂起事件，直到队列为空。</li>
+<li><code>Event = CR (Head-&gt;ForwardLink, IEVENT, NotifyLink, EVENT_SIGNATURE)</code>: 从队列中取出第一个事件。</li>
+<li><code>RemoveEntryList (&amp;Event-&gt;NotifyLink)</code>: 从队列中移除该事件。</li>
+<li><code>Event-&gt;NotifyLink.ForwardLink = NULL</code>: 标记事件已经从通知队列中移除。</li>
+</ul>
+<h5 id="处理signal类型事件"><a class="header" href="#处理signal类型事件">处理SIGNAL类型事件</a></h5>
+<pre><code class="language-c">    if ((Event-&gt;Type &amp; EVT_NOTIFY_SIGNAL) != 0) {
+      Event-&gt;SignalCount = 0;
+    }
+</code></pre>
+<ul>
+<li>如果事件类型包含<code>EVT_NOTIFY_SIGNAL</code>，则清除其<code>SignalCount</code>，即将其标记为未触发。</li>
+</ul>
+<h5 id="释放全局事件锁并调用事件回调函数"><a class="header" href="#释放全局事件锁并调用事件回调函数">释放全局事件锁并调用事件回调函数</a></h5>
+<pre><code class="language-c">    CoreReleaseEventLock ();
+
+    ASSERT (Event-&gt;NotifyFunction != NULL);
+    Event-&gt;NotifyFunction (Event, Event-&gt;NotifyContext);
+</code></pre>
+<ul>
+<li><code>CoreReleaseEventLock ()</code>: 释放全局事件锁，使得其他线程可以访问全局事件队列。</li>
+<li><code>ASSERT (Event-&gt;NotifyFunction != NULL)</code>: 确保事件的回调函数不为空。</li>
+<li><code>Event-&gt;NotifyFunction (Event, Event-&gt;NotifyContext)</code>: 调用事件的回调函数，处理事件。</li>
+</ul>
+<h5 id="重新获取全局事件锁以处理下一个事件"><a class="header" href="#重新获取全局事件锁以处理下一个事件">重新获取全局事件锁以处理下一个事件</a></h5>
+<pre><code class="language-c">    CoreAcquireEventLock ();
+  }
+</code></pre>
+<ul>
+<li><code>CoreAcquireEventLock ()</code>: 重新获取全局事件锁，以处理下一个挂起的事件。</li>
+</ul>
+<h5 id="清除挂起事件标志并释放全局事件锁"><a class="header" href="#清除挂起事件标志并释放全局事件锁">清除挂起事件标志并释放全局事件锁</a></h5>
+<pre><code class="language-c">  gEventPending &amp;= ~(UINTN)(1 &lt;&lt; Priority);
+  CoreReleaseEventLock ();
+}
+</code></pre>
+<ul>
+<li><code>gEventPending &amp;= ~(UINTN)(1 &lt;&lt; Priority)</code>: 清除对应优先级的挂起事件标志，表示该优先级的事件已经处理完毕。</li>
+<li><code>CoreReleaseEventLock ()</code>: 最后一次释放全局事件锁。</li>
+</ul>
+<h2 id="一些其他"><a class="header" href="#一些其他">一些其他</a></h2>
+<ul>
+<li>不能全拉到31TPL，会死锁；</li>
+<li></li>
+</ul>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/hammerqiu/p/10701348.html">Blog</a></p>
+<p><a href="https://blog.csdn.net/Hannle/article/details/124084678">Blog</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../01_体系结构/06_固件/EDK2_SYS_TABLE.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../01_体系结构/06_固件/EDK2_memmap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../01_体系结构/06_固件/EDK2_SYS_TABLE.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../01_体系结构/06_固件/EDK2_memmap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
