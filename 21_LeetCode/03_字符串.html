@@ -225,6 +225,116 @@ public:
 
 };
 </code></pre>
+<h2 id="5-最长回文子串"><a class="header" href="#5-最长回文子串"><a href="https://leetcode.cn/problems/longest-palindromic-substring/">5. 最长回文子串</a></a></h2>
+<pre><code class="language-c++">string longestPalindrome(string s) {
+    int n = s.size();
+    if (n &lt; 2) {
+        return s;
+    }
+
+    int maxLen = 1; // 最长回文子串的长度
+    int begin = 0; // 最长回文子串的起始位置
+
+    // dp[i][j] 表示 s[i..j] 是否是回文串
+    vector&lt;vector&lt;int&gt;&gt; dp(n, vector&lt;int&gt;(n));
+
+    // 初始化：所有长度为 1 的子串都是回文串
+    for (int i = 0; i &lt; n; i++) {
+        dp[i][i] = true;
+    }
+
+    // 递推开始
+    // 先枚举子串长度 L
+    for (int L = 2; L &lt;= n; L++) {
+        // 枚举左边界 i
+        for (int i = 0; i &lt; n; i++) {
+            // 由 L 和 i 可以确定右边界 j
+            int j = L + i - 1;
+            // 如果右边界 j 超出字符串长度，就结束当前循环
+            if (j &gt;= n) {
+                break;
+            }
+
+            // 根据 s[i] 和 s[j] 是否相等分情况讨论
+            if (s[i] != s[j]) {
+                dp[i][j] = false;
+            } else {
+                // 当 s[i] == s[j] 时，根据子串长度决定是否为回文
+                if (j - i &lt; 3) {
+                    // 长度为 2 或 3 的子串，直接是回文
+                    dp[i][j] = true;
+                } else {
+                    // 更长的子串，取决于去掉首尾字符后的子串是否为回文
+                    dp[i][j] = dp[i + 1][j - 1];
+                }
+            }
+
+            // 如果 s[i..j] 是回文串，并且长度大于当前记录的最大长度
+            if (dp[i][j] &amp;&amp; j - i + 1 &gt; maxLen) {
+                maxLen = j - i + 1; // 更新最大长度
+                begin = i; // 更新起始位置
+            }
+        }
+    }
+
+    // 返回最长回文子串
+    return s.substr(begin, maxLen);
+}
+
+</code></pre>
+<p>每个部分：</p>
+<ol>
+<li>
+<p><code>int n = s.size();</code>：获取字符串 <code>s</code> 的长度，如果长度小于 2，则直接返回原字符串，因为单字符或空字符串本身就是回文。</p>
+</li>
+<li>
+<p><code>int maxLen = 1;</code> 和 <code>int begin = 0;</code>：初始化最长回文子串的长度为 1，起始位置为 0。</p>
+</li>
+<li>
+<p><code>vector&lt;vector&lt;int&gt;&gt; dp(n, vector&lt;int&gt;(n));</code>：创建二维动态规划数组 <code>dp</code>，<code>dp[i][j]</code> 表示子串 <code>s[i..j]</code> 是否为回文串。</p>
+</li>
+<li>
+<p>初始化阶段：</p>
+<ul>
+<li>所有长度为 1 的子串 <code>s[i..i]</code> 都是回文串，因此 <code>dp[i][i] = true;</code>。</li>
+</ul>
+</li>
+<li>
+<p>递推阶段：</p>
+<ul>
+<li>外层循环 <code>L</code> 表示子串长度，从 2 开始递增到 <code>n</code>。</li>
+<li>内层循环 <code>i</code> 表示子串的起始位置。</li>
+<li>计算右边界 <code>j</code>，根据 <code>L</code> 和 <code>i</code> 计算得出。</li>
+</ul>
+</li>
+<li>
+<p>回文判断：</p>
+<ul>
+<li>
+<p>如果 <code>s[i] != s[j]</code>，则 <code>s[i..j]</code> 不是回文串。</p>
+</li>
+<li>
+<p>如果</p>
+<pre><code>s[i] == s[j]
+</code></pre>
+<p>，则根据子串长度讨论是否为回文：</p>
+<ul>
+<li>长度为 2 或 3 的子串直接判定为回文。</li>
+<li>更长的子串则依赖于去掉首尾字符后的子串是否为回文。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>更新最长回文子串：</p>
+<ul>
+<li>如果 <code>dp[i][j]</code> 是回文串，并且长度大于当前记录的 <code>maxLen</code>，则更新 <code>maxLen</code> 和 <code>begin</code>。</li>
+</ul>
+</li>
+<li>
+<p>最后返回 <code>s.substr(begin, maxLen)</code>，即最长的回文子串。</p>
+</li>
+</ol>
 <h2 id="125-验证回文串"><a class="header" href="#125-验证回文串"><a href="https://leetcode.cn/problems/valid-palindrome/">125. 验证回文串</a></a></h2>
 <pre><code>输入: s = "A man, a plan, a canal: Panama"
 输出：true
