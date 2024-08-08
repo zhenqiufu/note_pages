@@ -7346,9 +7346,648 @@ public:
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="二叉树"><a class="header" href="#二叉树">二叉树</a></h1>
 <p>[toc]</p>
-<p>前序遍历</p>
-<p>中序遍历</p>
-<p>后序遍历</p>
+<h2 id="144-二叉树的前序遍历"><a class="header" href="#144-二叉树的前序遍历"><a href="https://leetcode.cn/problems/binary-tree-preorder-traversal/">144. 二叉树的前序遍历</a></a></h2>
+<p>先访问根节点，然后递归地访问左子树和右子树。</p>
+<p>对于二叉树 <code>[1, 2, 3, 4, 5, 6, 7]</code> 的前序遍历顺序是：<code>[1, 2, 4, 5, 3, 6, 7]</code>。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    // 前序遍历：根节点 -&gt; 左子树 -&gt; 右子树
+    vector&lt;int&gt; preorderTraversal(TreeNode* root) {
+        vector&lt;int&gt; result;
+        stack&lt;TreeNode*&gt; s;
+        TreeNode* curr = root;
+        
+        // 两种情况需要继续，一是当前指针不为空，二是栈里还有元素
+        while (curr != nullptr || !s.empty()) {
+            // 不为空就要压栈，存储结果
+            while (curr != nullptr) {
+                result.push_back(curr-&gt;val); // 先访问根节点
+                s.push(curr);
+                curr = curr-&gt;left; // 递归访问左子树
+            }
+            // 为空的话就要弹栈，切换到右边
+            curr = s.top();
+            s.pop();
+            curr = curr-&gt;right; // 访问右子树
+        }
+        
+        return result;
+    }
+};
+</code></pre>
+<h2 id="94-二叉树的中序遍历"><a class="header" href="#94-二叉树的中序遍历"><a href="https://leetcode.cn/problems/binary-tree-inorder-traversal/">94. 二叉树的中序遍历</a></a></h2>
+<p>先递归地访问左子树，然后访问根节点，最后访问右子树。</p>
+<p>对于二叉树 <code>[1, 2, 3, 4, 5, 6, 7]</code> 的中序遍历顺序是：<code>[4, 2, 5, 1, 6, 3, 7]</code>。</p>
+<pre><code class="language-c++">// 中序遍历：左子树 -&gt; 根节点 -&gt; 右子树
+    vector&lt;int&gt; inorderTraversal(TreeNode* root) {
+        vector&lt;int&gt; result;
+        stack&lt;TreeNode*&gt; s;
+        TreeNode* curr = root;
+        
+        while (curr != nullptr || !s.empty()) {
+            while (curr != nullptr) {
+                s.push(curr);
+                curr = curr-&gt;left; // 递归访问左子树
+            }
+            curr = s.top();
+            s.pop();
+            result.push_back(curr-&gt;val); // 访问根节点
+            curr = curr-&gt;right; // 访问右子树
+        }
+        
+        return result;
+    }
+</code></pre>
+<h2 id="145-二叉树的后序遍历"><a class="header" href="#145-二叉树的后序遍历"><a href="https://leetcode.cn/problems/binary-tree-postorder-traversal/">145. 二叉树的后序遍历</a></a></h2>
+<p>先递归地访问左子树，然后递归地访问右子树，最后访问根节点。</p>
+<p>与中序的不同之处在于：</p>
+<ul>
+<li>中序遍历中，从栈中弹出的节点，其左子树是访问完了，可以直接访问该节点，然后接下来访问右子树。</li>
+<li>后序遍历中，从栈中弹出的节点，我们只能确定其左子树肯定访问完了，但是无法确定右子树是否访问过。</li>
+</ul>
+<p>因此，我们在后序遍历中，引入了一个prev来记录历史访问记录。</p>
+<pre><code class="language-c++">// 后序遍历：左子树 -&gt; 右子树 -&gt; 根节点
+    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
+        vector&lt;int&gt; result;
+        stack&lt;TreeNode*&gt; s;
+        TreeNode* curr = root;
+        // 上一个访问过的节点指针，用于判断右子树是否访问完毕
+        TreeNode* prev = nullptr;
+        
+        while (curr != nullptr || !s.empty()) {
+            while (curr != nullptr) {
+                s.push(curr);
+                curr = curr-&gt;left; // 递归访问左子树
+            }
+            
+            curr = s.top();
+            
+            // 检查右子树为空或已访问过
+            //现在需要确定的是是否有右子树，或者右子树是否访问过
+            //如果没有右子树，或者右子树访问完了，也就是上一个访问的节点是右子节点时
+            //说明可以访问当前节点
+            // 到底了，如果右子树为空，将左子树记录到ans中，将左子树从栈中弹出
+            if (curr-&gt;right == nullptr || curr-&gt;right == prev) {
+                result.push_back(curr-&gt;val); // 访问根节点
+                s.pop(); // 弹出根节点
+                prev = curr; 
+                 // 当前节点置空，保证下一次循环不会立即再次处理根节点
+                curr = nullptr;
+            } else {
+                curr = curr-&gt;right; // 访问右子树
+            }
+        }
+        
+        return result;
+    }
+</code></pre>
+<p>假设这棵二叉树的结构是：</p>
+<pre><code>    1
+   / \
+  2   3
+ / \ / \
+4  5 6  7
+</code></pre>
+<p><strong>初始状态：</strong></p>
+<ul>
+<li><code>result</code>: 空向量</li>
+<li><code>s</code>: 空栈</li>
+<li><code>curr</code>: 指向根节点 <code>1</code></li>
+<li><code>prev</code>: <code>nullptr</code></li>
+</ul>
+<p><strong>第一步：</strong></p>
+<ol>
+<li>将 <code>1</code> 入栈，访问左子树：
+<ul>
+<li>栈 <code>s</code>: [1]</li>
+<li><code>curr</code>: 指向 <code>2</code></li>
+</ul>
+</li>
+<li>将 <code>2</code> 入栈，访问左子树：
+<ul>
+<li>栈 <code>s</code>: [1, 2]</li>
+<li><code>curr</code>: 指向 <code>4</code></li>
+</ul>
+</li>
+<li><code>4</code> 的左子树为空，将 <code>4</code> 入栈后，访问左子树结束：
+<ul>
+<li>栈 <code>s</code>: [1, 2, 4]</li>
+<li><code>curr</code>: <code>nullptr</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>第二步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>4</code>，检查右子树为空或已访问过，可以访问 <code>4</code>：</p>
+<ul>
+<li>将 <code>4</code> 加入 <code>result</code></li>
+<li>弹出 <code>4</code>，更新 <code>prev = 4</code></li>
+<li><code>curr</code> 置空，以防止立即处理该节点</li>
+</ul>
+<p>现在，栈 <code>s</code> 变为 [1, 2]，<code>curr</code> 指向 <code>2</code></p>
+</li>
+</ol>
+<p><strong>第三步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>2</code>，尝试访问右子树 <code>5</code>：</p>
+<ul>
+<li>
+<p>将5入栈，访问左子树：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 5]</li>
+<li><code>curr</code>: 指向 <code>nullptr</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>5</code> 的左子树为空，将 <code>5</code> 入栈后，访问左子树结束：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 5]</li>
+<li><code>curr</code>: <code>nullptr</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>第四步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>5</code>，检查右子树为空或已访问过，可以访问 <code>5</code>：</p>
+<ul>
+<li>将 <code>5</code> 加入 <code>result</code></li>
+<li>弹出 <code>5</code>，更新 <code>prev = 5</code></li>
+<li><code>curr</code> 置空</li>
+</ul>
+<p>现在，栈 <code>s</code> 变为 [1, 2]，<code>curr</code> 指向 <code>2</code></p>
+</li>
+</ol>
+<p><strong>第五步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>2</code>，尝试访问右子树 <code>3</code>：</p>
+<ul>
+<li>
+<p>将3入栈，访问左子树：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 3]</li>
+<li><code>curr</code>: 指向 <code>6</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>6</code> 的左子树为空，将 <code>6</code> 入栈后，访问左子树结束：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 3, 6]</li>
+<li><code>curr</code>: <code>nullptr</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>第六步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>6</code>，尝试访问右子树 <code>7</code>：</p>
+<ul>
+<li>
+<p>将7入栈，访问左子树：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 3, 6, 7]</li>
+<li><code>curr</code>: 指向 <code>nullptr</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>7</code> 的左子树为空，将 <code>7</code> 入栈后，访问左子树结束：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 3, 6, 7]</li>
+<li><code>curr</code>: <code>nullptr</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>第七步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>7</code>，检查右子树为空或已访问过，可以访问 <code>7</code>：</p>
+<ul>
+<li>将 <code>7</code> 加入 <code>result</code></li>
+<li>弹出 <code>7</code>，更新 <code>prev = 7</code></li>
+<li><code>curr</code> 置空</li>
+</ul>
+<p>现在，栈 <code>s</code> 变为 [1, 2, 3, 6]，<code>curr</code> 指向 <code>6</code></p>
+</li>
+</ol>
+<p><strong>第八步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>6</code>，检查右子树为空或已访问过，可以访问 <code>6</code>：</p>
+<ul>
+<li>将 <code>6</code> 加入 <code>result</code></li>
+<li>弹出 <code>6</code>，更新 <code>prev = 6</code></li>
+<li><code>curr</code> 置空</li>
+</ul>
+<p>现在，栈 <code>s</code> 变为 [1, 2, 3]，<code>curr</code> 指向 <code>3</code></p>
+</li>
+</ol>
+<p><strong>第九步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>3</code>，尝试访问右子树 <code>3</code>：</p>
+<ul>
+<li>
+<p>将3入栈，访问左子树：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 3]</li>
+<li><code>curr</code>: 指向 <code>nullptr</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>3</code> 的左子树为空，将 <code>3</code> 入栈后，访问左子树结束：</p>
+<ul>
+<li>栈 <code>s</code>: [1, 2, 3]</li>
+<li><code>curr</code>: <code>nullptr</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>第十步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>3</code>，尝试访问右子树 <code>nullptr</code>：</p>
+<ul>
+<li>
+<p>3的右子树已访问过（<code>prev = 3</code>），可以访问3：</p>
+<ul>
+<li>将 <code>3</code> 加入 <code>result</code></li>
+<li>弹出 <code>3</code>，更新 <code>prev = 3</code></li>
+<li><code>curr</code> 置空</li>
+</ul>
+</li>
+</ul>
+<p>现在，栈 <code>s</code> 变为 [1, 2]，<code>curr</code> 指向 <code>2</code></p>
+</li>
+</ol>
+<p><strong>第十一步：</strong></p>
+<ol>
+<li>
+<p>栈顶为 <code>2</code>，尝试访问右子树 <code>2</code>：</p>
+<ul>
+<li>
+<p>2的右子树已访问过（prev = 2），可以访问2：</p>
+<ul>
+<li>将 <code>2</code> 加入 <code>result</code></li>
+<li>弹出 <code>2</code>，更新 <code>prev = 2</code></li>
+<li><code>curr</code> 置空</li>
+</ul>
+</li>
+</ul>
+<p>现在，栈 <code>s</code> 变为 [1]，<code>curr</code> 指向 <code>1</code></p>
+</li>
+</ol>
+<p><strong>第十二步：</strong></p>
+<ol>
+<li>
+<p>栈顶为<code>1</code> ，尝试访问右子树<code>1</code> ：</p>
+<ul>
+<li>
+<p>1的右子树已访问过（prev = 1 ），可以访问1：</p>
+<ul>
+<li>将 <code>1</code> 加入 <code>result</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>弹出 <code>1</code>，更新 <code>prev = 1</code>
+<ul>
+<li><code>curr</code> 置空</li>
+</ul>
+</li>
+</ul>
+<p><strong>最终结果：</strong></p>
+<p>根据后序遍历的顺序，最终 <code>result</code> 的内容为 <code>[4, 5, 2, 6, 7, 3, 1]</code>。</p>
+<h2 id="102-二叉树的层序遍历"><a class="header" href="#102-二叉树的层序遍历"><a href="https://leetcode.cn/problems/binary-tree-level-order-traversal/">102. 二叉树的层序遍历</a></a></h2>
+<p>使用队列辅助，不断入队，出队，直到队列为空。</p>
+<pre><code class="language-c++">vector&lt;vector&lt;int&gt;&gt; levelOrder(TreeNode* root) {
+    vector&lt;vector&lt;int&gt;&gt; result; // 存储层序遍历的结果
+    if (root == nullptr) {
+        return result; // 如果根节点为空，直接返回空结果
+    }
+    
+    queue&lt;TreeNode*&gt; q; // 辅助队列用于层序遍历
+    q.push(root); // 将根节点入队
+    
+    while (!q.empty()) { // 循环直到队列为空
+        int currentLevelSize = q.size(); // 当前层的节点数
+        vector&lt;int&gt; currentLevel; // 存储当前层节点值
+        
+        for (int i = 0; i &lt; currentLevelSize; ++i) {
+            TreeNode* node = q.front(); // 取出队首节点
+            q.pop(); // 出队
+            
+            currentLevel.push_back(node-&gt;val); // 将节点值加入当前层的向量
+            
+            if (node-&gt;left != nullptr) {
+                q.push(node-&gt;left); // 左子节点入队
+            }
+            
+            if (node-&gt;right != nullptr) {
+                q.push(node-&gt;right); // 右子节点入队
+            }
+        }
+        
+        result.push_back(currentLevel); // 将当前层的向量加入结果中
+    }
+    
+    return result; // 返回层序遍历的结果
+}
+
+</code></pre>
+<h2 id="100-相同的树"><a class="header" href="#100-相同的树"><a href="https://leetcode.cn/problems/same-tree/">100. 相同的树</a></a></h2>
+<pre><code class="language-c++">bool isSameTree(TreeNode* p, TreeNode* q) {
+        // If both trees are empty, they are identical
+        if (p == nullptr &amp;&amp; q == nullptr)
+            return true;
+        
+        // If one of the trees is empty and the other is not, they are not identical
+        if (p == nullptr || q == nullptr)
+            return false;
+        
+        // Check if current nodes have the same value
+        if (p-&gt;val != q-&gt;val)
+            return false;
+        
+        // Recursively check left and right subtrees
+        return isSameTree(p-&gt;left, q-&gt;left) &amp;&amp; isSameTree(p-&gt;right, q-&gt;right);
+    }
+</code></pre>
+<h2 id="101-对称二叉树"><a class="header" href="#101-对称二叉树"><a href="https://leetcode.cn/problems/symmetric-tree/">101. 对称二叉树</a></a></h2>
+<pre><code class="language-c++">bool isSymmetric(TreeNode* root) {
+        if (root == nullptr)
+            return true;
+        
+        return isMirror(root-&gt;left, root-&gt;right);
+    }
+    
+private:
+    bool isMirror(TreeNode* leftSubtree, TreeNode* rightSubtree) {
+        // If both are nullptr, they are symmetric
+        if (leftSubtree == nullptr &amp;&amp; rightSubtree == nullptr)
+            return true;
+        
+        // If one of them is nullptr and the other is not, they are not symmetric
+        if (leftSubtree == nullptr || rightSubtree == nullptr)
+            return false;
+        
+        // Check if current nodes have the same value
+        if (leftSubtree-&gt;val != rightSubtree-&gt;val)
+            return false;
+        
+        // Recursively check inner structure
+        return isMirror(leftSubtree-&gt;left, rightSubtree-&gt;right) &amp;&amp; 
+               isMirror(leftSubtree-&gt;right, rightSubtree-&gt;left);
+    }
+</code></pre>
+<h2 id="104-二叉树的最大深度"><a class="header" href="#104-二叉树的最大深度"><a href="https://leetcode.cn/problems/maximum-depth-of-binary-tree/">104. 二叉树的最大深度</a></a></h2>
+<pre><code class="language-c++">int maxDepth(TreeNode* root) {
+        if (root == nullptr) return 0;
+
+        int leftDepth = maxDepth(root-&gt;left);
+        int rightDepth = maxDepth(root-&gt;right);
+
+        return 1 + std::max(leftDepth, rightDepth);
+
+    }
+</code></pre>
+<h2 id="108-将有序数组转换为二叉搜索树"><a class="header" href="#108-将有序数组转换为二叉搜索树"><a href="https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/">108. 将有序数组转换为二叉搜索树</a></a></h2>
+<p>给你一个整数数组 <code>nums</code> ，其中元素已经按 <strong>升序</strong> 排列，请你将其转换为一棵 平衡 二叉搜索树。</p>
+<p><strong>平衡二叉树</strong> 是指该树所有节点的左右子树的深度相差不超过 1。</p>
+<p>二分搜索树（英语：Binary Search Tree），也称为 二叉查找树 、二叉搜索树 、有序二叉树或排序二叉树。满足以下几个条件：</p>
+<ul>
+<li>若它的左子树不为空，左子树上所有节点的值都小于它的根节点。</li>
+<li>若它的右子树不为空，右子树上所有的节点的值都大于它的根节点。</li>
+</ul>
+<p>拎起中间的数，作为根，然后左右区间分别递归。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector&lt;int&gt;&amp; nums) {
+        // 调用辅助函数，传入数组、起始索引和结束索引
+        return helper(nums, 0, nums.size() - 1);
+    }
+
+    TreeNode* helper(vector&lt;int&gt;&amp; nums, int left, int right) {
+        // 边界条件，如果左边界大于右边界，则返回空指针
+        if (left &gt; right) {
+            return nullptr;
+        }
+
+        // 计算中间节点的索引
+        int mid = (left + right) / 2;
+
+        // 创建当前中间节点作为根节点
+        TreeNode* root = new TreeNode(nums[mid]);
+
+        // 递归构建左子树和右子树
+        root-&gt;left = helper(nums, left, mid - 1);
+        root-&gt;right = helper(nums, mid + 1, right);
+
+        // 返回当前根节点
+        return root;
+    }
+};
+</code></pre>
+<h2 id="98-验证二叉搜索树"><a class="header" href="#98-验证二叉搜索树"><a href="https://leetcode.cn/problems/validate-binary-search-tree/">98. 验证二叉搜索树</a></a></h2>
+<p>构造一个辅助函数，然后递归。</p>
+<p>root 值介于左右之间。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    bool helper(TreeNode* root, long long lower, long long upper) {
+        if (root == nullptr) return true;
+
+        if (root-&gt;val &lt;= lower || root-&gt;val &gt;= upper) {
+            return false;
+        }
+
+        return helper(root-&gt;left, lower, root-&gt;val) \
+               &amp;&amp; helper(root-&gt;right, root-&gt;val, upper);
+    }
+    bool isValidBST(TreeNode* root) {
+        return helper(root, LONG_MIN, LONG_MAX);
+
+    }
+};
+</code></pre>
+<h2 id="110-平衡二叉树"><a class="header" href="#110-平衡二叉树"><a href="https://leetcode.cn/problems/balanced-binary-tree">110. 平衡二叉树</a></a></h2>
+<p><strong>平衡二叉树</strong> 是指该树所有节点的左右子树的深度相差不超过 1。</p>
+<p>把所有的高度都算一遍。和最大最小深度都类似。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int height(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        } else {
+            return max(height(root-&gt;left), height(root-&gt;right)) + 1;
+        }
+    }
+
+    bool isBalanced(TreeNode* root) {
+        if (root == nullptr) {
+            return true;
+        } else {
+            return abs(height(root-&gt;left) - height(root-&gt;right)) &lt;= 1 \
+                   &amp;&amp; isBalanced(root-&gt;left) \
+                   &amp;&amp; isBalanced(root-&gt;right);
+        }
+
+    }
+};
+</code></pre>
+<h2 id="111-二叉树的最小深度"><a class="header" href="#111-二叉树的最小深度"><a href="https://leetcode.cn/problems/minimum-depth-of-binary-tree">111. 二叉树的最小深度</a></a></h2>
+<pre><code class="language-c++">int minDepth(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {
+            return 1;
+        }
+
+        int min_depth = INT_MAX;
+
+        if (root-&gt;left != nullptr) {
+            min_depth = min(min_depth, minDepth(root-&gt;left));
+        }
+        if (root-&gt;right != nullptr) {
+            min_depth = min(min_depth, minDepth(root-&gt;right));
+        }
+
+        return min_depth + 1;
+
+    }
+</code></pre>
+<h2 id="112-路径总和"><a class="header" href="#112-路径总和"><a href="https://leetcode.cn/problems/path-sum">112. 路径总和</a></a></h2>
+<p>判断是否有等于目标值的路径。</p>
+<p>递归</p>
+<pre><code class="language-c++">class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) {
+            return false;
+        }
+
+        if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {
+            return targetSum == root-&gt;val;
+        }
+
+        return hasPathSum(root-&gt;left, targetSum - root-&gt;val) \
+               || hasPathSum(root-&gt;right, targetSum - root-&gt;val);
+
+    }
+};
+</code></pre>
+<h2 id="114-二叉树展开为链表"><a class="header" href="#114-二叉树展开为链表"><a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list">114. 二叉树展开为链表</a></a></h2>
+<p>给你二叉树的根结点 <code>root</code> ，请你将它展开为一个单链表：</p>
+<ul>
+<li>展开后的单链表应该同样使用 <code>TreeNode</code> ，其中 <code>right</code> 子指针指向链表中下一个结点，而左子指针始终为 <code>null</code> 。</li>
+<li>展开后的单链表应该与二叉树 <a href="https://baike.baidu.com/item/%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86/6442839?fr=aladdin"><strong>先序遍历</strong></a> 顺序相同。</li>
+</ul>
+<p>先前序遍历，然后再修改二叉树节点信息。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    void flatten(TreeNode* root) {
+        vector&lt;TreeNode*&gt; result;
+        stack&lt;TreeNode*&gt; stk;
+        TreeNode* curr = root;
+        
+        while (curr != nullptr || !stk.empty()) {
+            while (curr != nullptr) {
+                result.push_back(curr);
+                stk.push(curr);
+                curr = curr-&gt;left;
+            }
+
+            curr = stk.top();
+            stk.pop();
+            curr = curr-&gt;right;
+        }
+
+        int size = result.size();
+
+        for (int i = 1; i &lt; size; i++) {
+            auto prev = result[i - 1];
+            auto curr = result[i];
+
+            prev-&gt;left = nullptr;
+            prev-&gt;right = curr;
+        }
+    }
+};
+</code></pre>
+<h2 id="226-翻转二叉树"><a class="header" href="#226-翻转二叉树"><a href="https://leetcode.cn/problems/invert-binary-tree">226. 翻转二叉树</a></a></h2>
+<p>递归，和最大最小深度等都类似。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (root == nullptr) {
+            return nullptr;
+        }
+
+        TreeNode* left = invertTree(root-&gt;left);
+        TreeNode* right = invertTree(root-&gt;right);
+
+        root-&gt;left = right;
+        root-&gt;right = left;
+
+        return root;
+
+    }
+};
+</code></pre>
+<h2 id="543-二叉树的直径"><a class="header" href="#543-二叉树的直径"><a href="https://leetcode.cn/problems/diameter-of-binary-tree/">543. 二叉树的直径</a></a></h2>
+<p>二叉树的 <strong>直径</strong> 是指树中任意两个节点之间最长路径的 <strong>长度</strong> 。这条路径可能经过也可能不经过根节点 <code>root</code> 。</p>
+<p>求最大深度，然后加一。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int ans;
+    int diameterOfBinaryTree(TreeNode* root) {
+        ans = 1;
+        depth(root);
+        return ans - 1;
+    }
+    int depth(TreeNode* root) {
+        if (root == nullptr) return 0;
+
+        int L = depth(root-&gt;left);
+        int R = depth(root-&gt;right);
+
+        // 更新 ans 为 max(ans, L + R + 1)，表示以当前节点为根的直径长度。
+        ans = max(ans, L+R+1);
+
+        // 返回当前节点为根节点的子树的深度 max(L, R) + 1。
+        return max(L, R) + 1;
+    }
+};
+</code></pre>
+<h2 id="617-合并二叉树"><a class="header" href="#617-合并二叉树"><a href="https://leetcode.cn/problems/merge-two-binary-trees">617. 合并二叉树</a></a></h2>
+<p>还是递归，如果都有值，需要相加。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        if (root1 == nullptr) return root2;
+        if (root2 == nullptr) return root1;
+
+        auto merged = new TreeNode(root1-&gt;val + root2-&gt;val);
+        merged-&gt;left = mergeTrees(root1-&gt;left, root2-&gt;left);
+        merged-&gt;right = mergeTrees(root1-&gt;right, root2-&gt;right);
+
+        return merged;
+
+    }
+};
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="system-design"><a class="header" href="#system-design">System Design</a></h1>
 <p>参考资料：</p>
 <p><a href="https://soulmachine.gitbooks.io/system-design/content/cn/">系统设计面试题精选</a></p>
