@@ -6909,6 +6909,33 @@ public:
 };
 
 </code></pre>
+<h2 id="169-多数元素"><a class="header" href="#169-多数元素"><a href="https://leetcode.cn/problems/majority-element/">169. 多数元素</a></a></h2>
+<p>两种方法：</p>
+<p>排序后，返回中位数；</p>
+<p>哈希表统计次数，然后找大于n/2的那个元素。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int majorityElement(vector&lt;int&gt;&amp; nums) {
+        // sort(nums.begin(), nums.end());
+        // return nums[nums.size()/2];
+
+        unordered_map&lt;int, int&gt; count;
+
+        for (auto x: nums) {
+            count[x]++;
+        }
+
+        for (auto y:count) {
+            if (y.second &gt; nums.size()/2) {
+                return y.first;
+            }
+        }
+
+        return 0;
+
+    }
+};
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="双指针"><a class="header" href="#双指针">双指针</a></h1>
 <p>[toc]</p>
 <h2 id="283-移动零"><a class="header" href="#283-移动零"><a href="https://leetcode.cn/problems/move-zeroes/">283. 移动零</a></a></h2>
@@ -7256,6 +7283,104 @@ public:
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="数组"><a class="header" href="#数组">数组</a></h1>
 <p>[toc]</p>
+<h2 id="53-最大子数组和"><a class="header" href="#53-最大子数组和"><a href="https://leetcode.cn/problems/maximum-subarray/">53. 最大子数组和</a></a></h2>
+<pre><code>输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出：6
+解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+</code></pre>
+<p>动态规划</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        int maxSum = nums[0];  // 初始最大和为第一个元素
+        int currentSum = nums[0];  // 当前子数组的和为第一个元素
+
+        for (int i = 1; i &lt; nums.size(); ++i) {
+            // 如果当前子数组的和加上当前元素比当前元素本身还小，就从当前元素重新开始
+            currentSum = max(nums[i], currentSum + nums[i]);
+            // 更新最大和
+            maxSum = max(maxSum, currentSum);
+        }
+
+        return maxSum;
+    }
+};
+
+</code></pre>
+<p>遍历数组：</p>
+<ul>
+<li>
+<p>从数组的第二个元素开始遍历（因为第一个元素已经在初始化时处理了）。</p>
+</li>
+<li>
+<p>对于每个元素nums[i]，有两种选择：</p>
+<ul>
+<li>将其加入当前子数组中（即 <code>currentSum + nums[i]</code>）；</li>
+<li>或者以当前元素作为新的子数组的起点（即 <code>nums[i]</code> 自身）。</li>
+</ul>
+</li>
+<li>
+<p>更新 <code>currentSum</code> 为以上两种选择中的较大值，这保证 <code>currentSum</code> 始终为以当前元素结尾的子数组的最大和。</p>
+</li>
+<li>
+<p>同时更新 <code>maxSum</code>，记录全局的最大和。</p>
+</li>
+</ul>
+<h2 id="56-合并区间"><a class="header" href="#56-合并区间"><a href="https://leetcode.cn/problems/merge-intervals/">56. 合并区间</a></a></h2>
+<pre><code>输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+输出：[[1,6],[8,10],[15,18]]
+解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+</code></pre>
+<p>排序+双指针</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+        sort(intervals.begin(), intervals.end());
+
+        vector&lt;vector&lt;int&gt;&gt; ans;
+
+        for (int i = 0; i&lt;intervals.size();) {
+            int t = intervals[i][1];
+            int j = i + 1;
+
+            while (j &lt; intervals.size() &amp;&amp; intervals[j][0] &lt;= t) {
+                t = max(t, intervals[j][1]);
+                j++;
+            }
+
+            ans.push_back({intervals[i][0], t});
+            i = j;
+        }
+
+        return ans;
+
+    }
+};
+</code></pre>
+<ul>
+<li>
+<p>对 vector&lt;vector<int>&gt; 排序，需要按照先比较区间开始，如果相同再比较区间结束，使用默认的排序规则即可</p>
+</li>
+<li>
+<p>使用双指针，左边指针指向当前区间的开始</p>
+</li>
+<li>
+<p>使用一个变量来记录连续的范围 t</p>
+</li>
+<li>
+<p>右指针开始往后寻找，如果后续的区间的开始值比 t 还小，说明重复了，可以归并到一起</p>
+</li>
+<li>
+<p>此时更新更大的结束值到 t</p>
+</li>
+<li>
+<p>直到区间断开，将 t 作为区间结束，存储到答案里</p>
+</li>
+<li>
+<p>然后移动左指针，跳过中间已经合并的区间</p>
+</li>
+</ul>
+<p>链接：https://leetcode.cn/problems/merge-intervals/solutions/204318/merge-intervals-by-ikaruga/</p>
 <h2 id="66-加一"><a class="header" href="#66-加一"><a href="https://leetcode.cn/problems/plus-one/">66. 加一</a></a></h2>
 <pre><code>输入：digits = [4,3,2,1]
 输出：[4,3,2,2]
@@ -7346,6 +7471,7 @@ public:
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="二叉树"><a class="header" href="#二叉树">二叉树</a></h1>
 <p>[toc]</p>
+<p>三序遍历都用了栈，入栈顺序为根左右，因此前序遍历是从入栈就开始提取结果，中序遍历是根左入栈以后，开始出站时候提取结果。</p>
 <h2 id="144-二叉树的前序遍历"><a class="header" href="#144-二叉树的前序遍历"><a href="https://leetcode.cn/problems/binary-tree-preorder-traversal/">144. 二叉树的前序遍历</a></a></h2>
 <p>先访问根节点，然后递归地访问左子树和右子树。</p>
 <p>对于二叉树 <code>[1, 2, 3, 4, 5, 6, 7]</code> 的前序遍历顺序是：<code>[1, 2, 4, 5, 3, 6, 7]</code>。</p>
@@ -7398,6 +7524,7 @@ public:
         return result;
     }
 </code></pre>
+<p>二叉搜索树具有一个重要性质：<strong>二叉搜索树的中序遍历为递增序列</strong>。</p>
 <h2 id="145-二叉树的后序遍历"><a class="header" href="#145-二叉树的后序遍历"><a href="https://leetcode.cn/problems/binary-tree-postorder-traversal/">145. 二叉树的后序遍历</a></a></h2>
 <p>先递归地访问左子树，然后递归地访问右子树，最后访问根节点。</p>
 <p>与中序的不同之处在于：</p>
@@ -7801,7 +7928,7 @@ public:
 </code></pre>
 <h2 id="98-验证二叉搜索树"><a class="header" href="#98-验证二叉搜索树"><a href="https://leetcode.cn/problems/validate-binary-search-tree/">98. 验证二叉搜索树</a></a></h2>
 <p>构造一个辅助函数，然后递归。</p>
-<p>root 值介于左右之间。</p>
+<p>root 值介于左右</p>
 <pre><code class="language-c++">class Solution {
 public:
     bool helper(TreeNode* root, long long lower, long long upper) {
@@ -7819,6 +7946,153 @@ public:
 
     }
 };
+</code></pre>
+<h2 id="230-二叉搜索树中第k小的元素"><a class="header" href="#230-二叉搜索树中第k小的元素"><a href="https://leetcode.cn/problems/kth-smallest-element-in-a-bst/">230. 二叉搜索树中第K小的元素</a></a></h2>
+<p>二叉搜索树具有一个重要性质：<strong>二叉搜索树的中序遍历为递增序列</strong>。</p>
+<p>因此就是中序遍历，然后提取vector中第k-1个元素。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        vector&lt;int&gt; result;
+        stack&lt;TreeNode*&gt; stk;
+
+        TreeNode* curr = root;
+
+        while(curr!=nullptr || !stk.empty()) {
+            while (curr!=nullptr) {
+                stk.push(curr);
+                curr = curr-&gt;left;
+            }
+
+            curr = stk.top();
+            stk.pop();
+
+            result.push_back(curr-&gt;val);
+            curr = curr-&gt;right;
+        }
+
+        return result[k - 1];
+
+    }
+};
+</code></pre>
+<h2 id="236-二叉树的最近公共祖先"><a class="header" href="#236-二叉树的最近公共祖先"><a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/">236. 二叉树的最近公共祖先</a></a></h2>
+<pre><code class="language-c++">class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // 如果根节点为空，或者根节点是 p 或 q 中的一个，则直接返回根节点
+        if (root == NULL || root == p || root == q) return root;
+
+        TreeNode* left = lowestCommonAncestor(root-&gt;left, p, q);
+        TreeNode* right = lowestCommonAncestor(root-&gt;right, p, q);
+
+        // 如果 left 为空，则表示左子树中不存在 p 和 q 的 LCA，此时返回右子树的结果。
+        if (left == NULL) return right;
+        if (right == NULL) return left;
+
+         // 如果左右子树各自找到了不同的节点 p 和 q，则当前节点 root 就是它们的 LCA
+        return root;
+        
+    }
+};
+</code></pre>
+<h2 id="199-二叉树的右视图"><a class="header" href="#199-二叉树的右视图"><a href="https://leetcode.cn/problems/binary-tree-right-side-view/">199. 二叉树的右视图</a></a></h2>
+<p>层序遍历，每行最后一个元素。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; rightSideView(TreeNode* root) {
+        vector&lt;int&gt; ans;
+
+        if (root == nullptr) return ans;
+
+        queue&lt;TreeNode*&gt; q;
+        q.push(root);
+
+        while(!q.empty()) {
+            int current_level_size = q.size();
+
+            vector&lt;int&gt; current_level_value;
+
+            for (int i = 0; i &lt; current_level_size; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+
+                current_level_value.push_back(node-&gt;val);
+
+                if (node-&gt;left != nullptr) {
+                    q.push(node-&gt;left);
+                }
+
+                if (node-&gt;right != nullptr) {
+                    q.push(node-&gt;right);
+                }
+            }
+            // 层序遍历这里是存储数组，右视图的话是存储最后一个元素。
+            ans.push_back(current_level_value[current_level_size - 1]);
+        }
+
+        return ans;
+
+    }
+};
+</code></pre>
+<h2 id="105-从前序与中序遍历序列构造二叉树"><a class="header" href="#105-从前序与中序遍历序列构造二叉树"><a href="https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/">105. 从前序与中序遍历序列构造二叉树</a></a></h2>
+<pre><code class="language-c++">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector&lt;int&gt;&amp; preorder, vector&lt;int&gt;&amp; inorder) {
+        // 特殊情况处理：如果先序遍历或中序遍历为空，则返回空指针
+        if (preorder.empty() || inorder.empty()) {
+            return nullptr;
+        }
+        
+        // 调用递归构建二叉树
+        return buildTreeRecursive(preorder, 0, preorder.size() - 1,
+                                  inorder, 0, inorder.size() - 1);
+    }
+    
+    // 递归构建二叉树的辅助函数
+    TreeNode* buildTreeRecursive(vector&lt;int&gt;&amp; preorder, int preStart, int preEnd,
+                                 vector&lt;int&gt;&amp; inorder, int inStart, int inEnd) {
+        // 如果先序遍历的起始位置大于结束位置，则当前子树为空，返回空指针
+        if (preStart &gt; preEnd) {
+            return nullptr;
+        }
+        
+        // 先序遍历的第一个节点是当前子树的根节点
+        int rootValue = preorder[preStart];
+        TreeNode* root = new TreeNode(rootValue);
+        
+        // 在中序遍历中找到根节点的位置
+        int rootIndexInInorder = inStart;
+        while (rootIndexInInorder &lt;= inEnd &amp;&amp; inorder[rootIndexInInorder] != rootValue) {
+            rootIndexInInorder++;
+        }
+        
+        // 计算左子树的长度
+        int leftSubtreeLength = rootIndexInInorder - inStart;
+        
+        // 递归构建左子树和右子树
+        root-&gt;left = buildTreeRecursive(preorder, preStart + 1, preStart + leftSubtreeLength,
+                                        inorder, inStart, rootIndexInInorder - 1);
+        root-&gt;right = buildTreeRecursive(preorder, preStart + leftSubtreeLength + 1, preEnd,
+                                         inorder, rootIndexInInorder + 1, inEnd);
+        
+        // 返回当前根节点
+        return root;
+    }
+};
+
 </code></pre>
 <h2 id="110-平衡二叉树"><a class="header" href="#110-平衡二叉树"><a href="https://leetcode.cn/problems/balanced-binary-tree">110. 平衡二叉树</a></a></h2>
 <p><strong>平衡二叉树</strong> 是指该树所有节点的左右子树的深度相差不超过 1。</p>
@@ -7885,6 +8159,37 @@ public:
         return hasPathSum(root-&gt;left, targetSum - root-&gt;val) \
                || hasPathSum(root-&gt;right, targetSum - root-&gt;val);
 
+    }
+};
+</code></pre>
+<h2 id="437-路径总和-iii"><a class="header" href="#437-路径总和-iii"><a href="https://leetcode.cn/problems/path-sum-iii/">437. 路径总和 III</a></a></h2>
+<pre><code class="language-c++">class Solution {
+public:
+    int pathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) return 0;
+
+        int ans = rootSum(root, targetSum);
+
+        ans += pathSum(root-&gt;left, targetSum);
+        ans += pathSum(root-&gt;right, targetSum);
+
+        return ans;
+
+    }
+
+    int rootSum(TreeNode* root, long targetSum) {
+        if (root == nullptr) return 0;
+
+        int ans = 0;
+
+        if (root-&gt;val == targetSum) {
+            ans++;
+        }
+
+        ans += rootSum(root-&gt;left, targetSum - root-&gt;val);
+        ans += rootSum(root-&gt;right, targetSum - root-&gt;val);
+
+        return ans;
     }
 };
 </code></pre>
@@ -7984,6 +8289,36 @@ public:
         merged-&gt;right = mergeTrees(root1-&gt;right, root2-&gt;right);
 
         return merged;
+
+    }
+};
+</code></pre>
+<h2 id="124-二叉树中的最大路径和"><a class="header" href="#124-二叉树中的最大路径和"><a href="https://leetcode.cn/problems/binary-tree-maximum-path-sum/">124. 二叉树中的最大路径和</a></a></h2>
+<pre><code class="language-c++">class Solution {
+public:
+    int maxSum = INT_MIN;
+
+    int maxGain (TreeNode* node) {
+        if (node == nullptr) return 0;
+
+        // 递归计算左右子节点的最大贡献值
+        // 只有在最大贡献值大于 0 时，才会选取对应子节点
+        int leftGain = max(maxGain(node-&gt;left), 0);
+        int rightGain = max(maxGain(node-&gt;right), 0);
+
+        // 节点的最大路径和取决于该节点的值与该节点的左右子节点的最大贡献值
+        int priceNewpath = node-&gt;val + leftGain + rightGain;
+
+        // 更新答案
+        maxSum = max(maxSum, priceNewpath);
+
+        // 返回节点的最大贡献值
+        return node-&gt;val + max(leftGain, rightGain);
+    }
+
+    int maxPathSum(TreeNode* root) {
+        maxGain(root);
+        return maxSum;
 
     }
 };

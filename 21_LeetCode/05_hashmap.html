@@ -268,6 +268,33 @@ public:
 };
 
 </code></pre>
+<h2 id="169-多数元素"><a class="header" href="#169-多数元素"><a href="https://leetcode.cn/problems/majority-element/">169. 多数元素</a></a></h2>
+<p>两种方法：</p>
+<p>排序后，返回中位数；</p>
+<p>哈希表统计次数，然后找大于n/2的那个元素。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int majorityElement(vector&lt;int&gt;&amp; nums) {
+        // sort(nums.begin(), nums.end());
+        // return nums[nums.size()/2];
+
+        unordered_map&lt;int, int&gt; count;
+
+        for (auto x: nums) {
+            count[x]++;
+        }
+
+        for (auto y:count) {
+            if (y.second &gt; nums.size()/2) {
+                return y.first;
+            }
+        }
+
+        return 0;
+
+    }
+};
+</code></pre>
 
                     </main>
 
