@@ -1,0 +1,432 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>虚拟化技术原理与实现 - NoteBook</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">NoteBook</a></li><li class="chapter-item expanded affix "><li class="part-title">计算机体系结构</li><li class="chapter-item expanded "><a href="../../01_体系结构/index.html"><strong aria-hidden="true">1.</strong> 体系结构</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/index.html"><strong aria-hidden="true">1.1.</strong> 内存管理</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/内存管理基础.html"><strong aria-hidden="true">1.1.1.</strong> 内存管理基础</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SMMU.html"><strong aria-hidden="true">1.1.2.</strong> SMMU</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/01_SMMU/SVA.html"><strong aria-hidden="true">1.1.3.</strong> 异构内存管理SVA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/index.html"><strong aria-hidden="true">1.2.</strong> NoC片上互连</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CHI.html"><strong aria-hidden="true">1.2.1.</strong> CHI协议</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NoC_introduction.html"><strong aria-hidden="true">1.2.2.</strong> NoC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/CMN700.html"><strong aria-hidden="true">1.2.3.</strong> CMN700</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/04_NoC片内互连总线/NI_700.html"><strong aria-hidden="true">1.2.4.</strong> NI-700</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/index.html"><strong aria-hidden="true">1.3.</strong> 异常与中断</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/中断.html"><strong aria-hidden="true">1.3.1.</strong> 异常与中断</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/GIC.html"><strong aria-hidden="true">1.3.2.</strong> ARM GIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/X86_APIC.html"><strong aria-hidden="true">1.3.3.</strong> X86 APIC</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/02_中断控制器/RISCV_AIA.html"><strong aria-hidden="true">1.3.4.</strong> RISCV AIA</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/index.html"><strong aria-hidden="true">1.4.</strong> SoC</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/05_CortexM3/概述.html"><strong aria-hidden="true">1.4.1.</strong> Cortex M3 MCU</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">1.4.2.</strong> ARM N2 参考设计</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/index.html"><strong aria-hidden="true">1.5.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/ARM固件启动顺序.html"><strong aria-hidden="true">1.5.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/RISCV_firmware.html"><strong aria-hidden="true">1.5.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/Cache_as_ram.html"><strong aria-hidden="true">1.5.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">1.5.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_EVENT.html"><strong aria-hidden="true">1.5.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/06_固件/EDK2_memmap.html"><strong aria-hidden="true">1.5.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/index.html"><strong aria-hidden="true">1.6.</strong> 存储</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/file_system.html"><strong aria-hidden="true">1.6.1.</strong> 文件系统</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/RAID.html"><strong aria-hidden="true">1.6.2.</strong> RAID</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/ssd.html"><strong aria-hidden="true">1.6.3.</strong> SSD</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/07_存储/分布式存储.html"><strong aria-hidden="true">1.6.4.</strong> 分布式存储系统</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/index.html"><strong aria-hidden="true">1.7.</strong> 虚拟化与分布式</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/系统虚拟化原理与实现.html" class="active"><strong aria-hidden="true">1.7.1.</strong> 虚拟化技术原理与实现</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/hypervisor.html"><strong aria-hidden="true">1.7.2.</strong> Hypervisor</a></li><li class="chapter-item expanded "><a href="../../01_体系结构/08_虚拟化与分布式/MIT6824.html"><strong aria-hidden="true">1.7.3.</strong> MIT6824</a></li></ol></li><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/index.html"><strong aria-hidden="true">1.8.</strong> Memory consistency and cache coherence</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../01_体系结构/09_Memory_Consistency/memory_consistency.html"><strong aria-hidden="true">1.8.1.</strong> Memory consistency</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../02_固件/index.html"><strong aria-hidden="true">2.</strong> 固件</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../02_固件/ARM固件启动顺序.html"><strong aria-hidden="true">2.1.</strong> ARM固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../02_固件/RISCV_firmware.html"><strong aria-hidden="true">2.2.</strong> RISC-V固件启动顺序</a></li><li class="chapter-item expanded "><a href="../../02_固件/Cache_as_ram.html"><strong aria-hidden="true">2.3.</strong> Cache as RAM & On chip memory</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_SYS_TABLE.html"><strong aria-hidden="true">2.4.</strong> EDK2 System Table</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_EVENT.html"><strong aria-hidden="true">2.5.</strong> EDK2 Event</a></li><li class="chapter-item expanded "><a href="../../02_固件/EDK2_memmap.html"><strong aria-hidden="true">2.6.</strong> EDK2 Memory Map</a></li></ol></li><li class="chapter-item expanded "><a href="../../03_OS/index.html"><strong aria-hidden="true">3.</strong> OS</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../03_OS/FreeRTOS.html"><strong aria-hidden="true">3.1.</strong> FreeRTOS</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">计算机工业标准</li><li class="chapter-item expanded "><a href="../../10_ACPI/index.html"><strong aria-hidden="true">4.</strong> ACPI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../10_ACPI/ACPI_overview.html"><strong aria-hidden="true">4.1.</strong> ACPI Overview</a></li><li class="chapter-item expanded "><a href="../../10_ACPI/CEDT.html"><strong aria-hidden="true">4.2.</strong> CEDT</a></li></ol></li><li class="chapter-item expanded "><a href="../../11_AMBA/index.html"><strong aria-hidden="true">5.</strong> AMBA</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/index.html"><strong aria-hidden="true">6.</strong> PCIe</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/index.html"><strong aria-hidden="true">6.1.</strong> 协议学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/physical_layer.html"><strong aria-hidden="true">6.1.1.</strong> Physical Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/data_link_layer.html"><strong aria-hidden="true">6.1.2.</strong> Data Link Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/TransactionLayer.html"><strong aria-hidden="true">6.1.3.</strong> Transaction Layer</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/03_pcie_eq.html"><strong aria-hidden="true">6.1.4.</strong> PCIe 均衡技术</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/02_1_tlp_flow_control.html"><strong aria-hidden="true">6.1.5.</strong> PCIe 流量控制</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/02_3_Transaction_Ordering.html"><strong aria-hidden="true">6.1.6.</strong> PCIe 传输顺序</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/00_PCIe协议/04_pcie_aer.html"><strong aria-hidden="true">6.1.7.</strong> PCIe 错误处理</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/index.html"><strong aria-hidden="true">6.2.</strong> ARM N2 参考设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/01_PCIe子系统简介/01_PCIe子系统.html"><strong aria-hidden="true">6.2.1.</strong> 01_PCIe子系统.md</a></li></ol></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/index.html"><strong aria-hidden="true">6.3.</strong> PCIe 枚举与资源分配</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/枚举过程中的资源降级.html"><strong aria-hidden="true">6.4.</strong> 枚举过程中的资源降级</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/02_PCIe枚举与资源分配/EDK2对optionRom的支持.html"><strong aria-hidden="true">6.5.</strong> EDK2对optionRom的支持</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/index.html"><strong aria-hidden="true">6.6.</strong> PCIe 高级特性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_AER.html"><strong aria-hidden="true">6.6.1.</strong> PCIe AER</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Interrupt.html"><strong aria-hidden="true">6.6.2.</strong> PCIe Interrupt</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Hot_Plug.html"><strong aria-hidden="true">6.6.3.</strong> PCIe Hot-Plug</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_Power_management.html"><strong aria-hidden="true">6.6.4.</strong> PCIe Power Management</a></li><li class="chapter-item expanded "><a href="../../12_PCIe/03_PCIe高级特性/PCIe_DPC.html"><strong aria-hidden="true">6.6.5.</strong> PCIe_DPC.md</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../13_CXL/index.html"><strong aria-hidden="true">7.</strong> CXL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../13_CXL/01_cxl.html"><strong aria-hidden="true">7.1.</strong> CXL Overview</a></li><li class="chapter-item expanded "><a href="../../13_CXL/02_cxl_type3.html"><strong aria-hidden="true">7.2.</strong> CXL SSD-通过CXL扩展内存</a></li><li class="chapter-item expanded "><a href="../../13_CXL/02_cxl_type3_config.html"><strong aria-hidden="true">7.3.</strong> CXL Type3 Config</a></li><li class="chapter-item expanded "><a href="../../13_CXL/03_cxl_type3_hdm_decoder.html"><strong aria-hidden="true">7.4.</strong> CXL Type3 HDM Decoder</a></li><li class="chapter-item expanded "><a href="../../13_CXL/cxl_reg.html"><strong aria-hidden="true">7.5.</strong> CXL 寄存器</a></li><li class="chapter-item expanded "><a href="../../13_CXL/04_cxl_dvsec.html"><strong aria-hidden="true">7.6.</strong> CXL DVSEC</a></li><li class="chapter-item expanded "><a href="../../13_CXL/CXL_in_CMN.html"><strong aria-hidden="true">7.7.</strong> CXL_in_CMN</a></li><li class="chapter-item expanded "><a href="../../13_CXL/CXL_in_SCP.html"><strong aria-hidden="true">7.8.</strong> CXL_in_SCP</a></li></ol></li><li class="chapter-item expanded "><a href="../../13_CXL/cxl枚举.html"><strong aria-hidden="true">8.</strong> CXL 枚举</a></li><li class="chapter-item expanded "><a href="../../14_DDR/index.html"><strong aria-hidden="true">9.</strong> DDR</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../14_DDR/01_Introduction.html"><strong aria-hidden="true">9.1.</strong> DDR Introduction</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">代码实现与工具</li><li class="chapter-item expanded "><a href="../../21_LeetCode/LeetCode.html"><strong aria-hidden="true">10.</strong> LeetCode</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../21_LeetCode/c_basic.html"><strong aria-hidden="true">10.1.</strong> C语言基础</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/08_array.html"><strong aria-hidden="true">10.2.</strong> 数组</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/09_matric.html"><strong aria-hidden="true">10.3.</strong> 矩阵</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/03_字符串.html"><strong aria-hidden="true">10.4.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/02_链表.html"><strong aria-hidden="true">10.5.</strong> 链表</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/10_二叉树.html"><strong aria-hidden="true">10.6.</strong> 二叉树</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/13_heap.html"><strong aria-hidden="true">10.7.</strong> 堆</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/07_stack.html"><strong aria-hidden="true">10.8.</strong> 栈</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/04_bitmap.html"><strong aria-hidden="true">10.9.</strong> Bit Map</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/05_hashmap.html"><strong aria-hidden="true">10.10.</strong> 哈希表</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/00_排序.html"><strong aria-hidden="true">10.11.</strong> 排序</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/01_二分法.html"><strong aria-hidden="true">10.12.</strong> 二分法</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/06_double_ptr.html"><strong aria-hidden="true">10.13.</strong> 双指针</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/12_回溯.html"><strong aria-hidden="true">10.14.</strong> 回溯</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/11_动态规划.html"><strong aria-hidden="true">10.15.</strong> 动态规划</a></li><li class="chapter-item expanded "><a href="../../21_LeetCode/14_贪心.html"><strong aria-hidden="true">10.16.</strong> 贪心</a></li></ol></li><li class="chapter-item expanded "><a href="../../22_System_design/index.html"><strong aria-hidden="true">11.</strong> System Design</a></li><li class="chapter-item expanded "><a href="../../22_System_design/System_Design_Overview.html"><strong aria-hidden="true">12.</strong> System Design Overview</a></li><li class="chapter-item expanded "><a href="../../20_tool/index.html"><strong aria-hidden="true">13.</strong> Tool</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../20_tool/git.html"><strong aria-hidden="true">13.1.</strong> Git</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">读书</li><li class="chapter-item expanded "><a href="../../30_reading/工作中的好习惯.html"><strong aria-hidden="true">14.</strong> 工作中的好习惯</a></li><li class="chapter-item expanded "><a href="../../30_reading/2024_reading.html"><strong aria-hidden="true">15.</strong> 2024 Reading</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">NoteBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="虚拟化技术原理与实现"><a class="header" href="#虚拟化技术原理与实现">虚拟化技术原理与实现</a></h1>
+<p>[toc]</p>
+<h2 id="一体系结构简介"><a class="header" href="#一体系结构简介">一、体系结构简介</a></h2>
+<p>基于x86</p>
+<h4 id="内存架构"><a class="header" href="#内存架构">内存架构</a></h4>
+<p>物理地址</p>
+<p>线性地址</p>
+<p>逻辑地址</p>
+<p>分段分页</p>
+<p>关键组件：页表、CR3、TLB</p>
+<h4 id="中断与异常"><a class="header" href="#中断与异常">中断与异常</a></h4>
+<p>PIC 单核</p>
+<p>APIC = LAPIC  + IOAPIC  多核</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815141321102.png" alt="image-20240815141321102" /></p>
+<p><strong>异常</strong></p>
+<ul>
+<li>
+<p>错误：缺页</p>
+</li>
+<li>
+<p>陷阱：system cal</p>
+</li>
+<li>
+<p>终止：硬件错误</p>
+</li>
+</ul>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815101231000.png" alt="image-20240815101231000" /></p>
+<h4 id="io架构"><a class="header" href="#io架构">IO架构</a></h4>
+<h4 id="dma"><a class="header" href="#dma">DMA</a></h4>
+<p>连续内存，最新的支持链表</p>
+<h4 id="时钟"><a class="header" href="#时钟">时钟</a></h4>
+<h3 id="操作系统与虚拟化"><a class="header" href="#操作系统与虚拟化">操作系统与虚拟化</a></h3>
+<h4 id="操作系统"><a class="header" href="#操作系统">操作系统</a></h4>
+<p>用户态、内核态</p>
+<p>上下文切换</p>
+<h4 id="虚拟化"><a class="header" href="#虚拟化">虚拟化</a></h4>
+<p>硬件虚拟化支持的处理器：Intel VT技术和AMD SVM技术，保证x86 是个可虚拟化技术。</p>
+<p>虚拟环境组成：硬件、虚拟机监视器和虚拟机。</p>
+<p>虚拟机三个典型特征：同质、高效和资源受控。</p>
+<p>是否可虚拟化：该系统堆敏感指令的支持。</p>
+<p>敏感指令：操作特权资源的指令，包括修改虚拟机的运行模式或下面物理机的状态。</p>
+<p>虚拟化漏洞：不能再所有的敏感指令上触发异常，，则不是可虚拟化的。</p>
+<p>完全虚拟化：客户机觉察不到自己运行在一个虚拟平台上。</p>
+<p>硬件辅助的完全虚拟化：Intel VT-x 引入新的执行模式用于虚拟机。</p>
+<p>类虚拟化：客户机知道自己运行再虚拟平台上，会主动适应。需要修改OS，使得kernel避免难以虚拟化的指令。</p>
+<p>主流VMM技术架构分三类：Hypervisor模型，宿主（Host）模型和混合模型。</p>
+<ul>
+<li>
+<p>Hypervisor模型就是type1 类型，没有OS，既管理硬件资源也提供虚拟化功能。</p>
+</li>
+<li>
+<p>Host 模型就是type2，运行OS上，提供虚拟化功能。</p>
+</li>
+<li>
+<p>混合的就是用Hypervisor，然后加一个运行再特权模式下的OS来进行虚拟化。</p>
+</li>
+</ul>
+<h2 id="二虚拟化实现技术架构"><a class="header" href="#二虚拟化实现技术架构">二、虚拟化实现技术架构</a></h2>
+<p>VMM 对物理资源的虚拟，主要包括三个：处理器虚拟化，IO虚拟化和内存虚拟化。</p>
+<p>Intel VT 包括对这三方面虚拟化的支持。</p>
+<p>在处理器虚拟化方面，Intel VT 提供了 VT-x（Intel Virtualization Technology for x86）技术；</p>
+<p>在内存虚拟化方面，Intel VT 提供了 EPT（Extended Page Table）技术；</p>
+<p>在 I/O 设备虚拟化方面，Intel VT 提供了 VT-d（Intel Virtualization Technology for Direct I/O）技术。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815134522597.png" alt="image-20240815134522597" /></p>
+<p>AMD 平台也提供了类似的技术—AMD SVM（AMD Secure Virtual Machine），其原理和使用方式与 Intel VT 类似。在处理器虚拟化方面，AMD SVM 提供了与 Intel VT-x 类似的技术；在内存虚拟化方面，AMD SVM 提供了 NPT （Nested Page Table）技术；在 I/O 设备虚拟化方面，AMD SVM 提供了 IOMMU （I/O Memory Management Unit）技术。</p>
+<h3 id="处理器虚拟化"><a class="header" href="#处理器虚拟化">处理器虚拟化</a></h3>
+<p>处理器虚拟化的宗旨是让虚拟机里执行的敏感指令能够异常陷入，并被 VMM 模拟，而不要直接作用于真实的硬件上。</p>
+<p>VT-x 引入了两种操作模式：根操作模式和非根操作模式，它们统称为 VMX 操作模式。</p>
+<p>1）根操作模式（VMX Root Operation）：VMM 运行时所处的模式，以下简称为根模式。在根模式下，所有指令的行为和传统的 IA32 一样，因此，原来的软件都可以正常运行。</p>
+<p>2）非根操作模式（VMX Non-Root Operation）：客户机运行时所处的模式，以下简称为非根模式。在非根模式下，所有敏感指令的行为都被重新定义，使得它们能不经过虚拟化就直接运行或者通过「陷入再模拟」的方式来处理。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815140608056.png" alt="image-20240815140608056" /></p>
+<p>根模式和非根模式都有相应的特权级 0～ 特权级 3，正交的。</p>
+<p>与 VT-x 类似，AMD SVM 也引入了根模式和非根模式两种操作模式，非根模式下的敏感指令引起的「陷入」称为 VM-Exit，VMM 调度某个客户机运行时，CPU 由根模式切换成非根模式称为 VM-Entry。</p>
+<p>硬件虚拟化使用 vCPU（Virtual CPU）描述符来描述虚拟 CPU。vCPU 描述符类似于操作系统中的进程描述符（或进程控制块），其本质是一个结构体。</p>
+<p>当 VMM 创建客户机时，首先要为客户机创建 vCPU，整个客户机的运行实际上可以看做是 VMM 调度不同的 vCPU 运行。</p>
+<h3 id="中断虚拟化"><a class="header" href="#中断虚拟化">中断虚拟化</a></h3>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815141344272.png" alt="image-20240815141344272" /></p>
+<p>每一个 vCPU 都对应一个虚拟 Local APIC 用于接收中断。虚拟平台则包含虚拟 I/O APIC 或者虚拟 PIC 用于发送中断。虚拟 Local APIC、虚拟 I/O APIC 和虚拟 PIC 都是由 VMM 维护的软件实体。</p>
+<h3 id="内存虚拟化"><a class="header" href="#内存虚拟化">内存虚拟化</a></h3>
+<p>内存虚拟化引入一层新的地址空间——客户机物理地址空间。</p>
+<p>VMM 负责管理和分配每个虚拟机的物理内存，客户机操作系统看到的是一个虚构的客户机物理地址空间，其指令中所使用的地址最终将转化成一个客户机物理地址。在有虚拟化的情况下，这样的客户机物理地址不能被直接发送到系统总线上去，需要由 VMM 将它转换成一个实际的物理地址后，再交由物理处理器来执行。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815142141983.png" alt="image-20240815142141983" /></p>
+<p>由于引入了客户机物理地址空间，内存虚拟化需要通过两次地址转换来支持地址空间的虚拟化，即客户机虚拟地址（简称为 GVA）→ 客户机物理地址（简称为 GPA）→ 宿主机物理地址（简称为 HPA）的转换。</p>
+<p>传统的 x86 架构只支持一次地址转换，即通过 CR3 指定的页表实现从虚拟地址到物理地址的转换。这和内存虚拟化所要求的两次地址转换产生了矛盾。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815142807940.png" alt="image-20240815142807940" /></p>
+<p>在影子页表的实现过程中，影子页表的页表结构并不一定与客户机页表的页表结构完全一致，比如在 64 位机上模拟 32 位机，客户机的页表结构便与宿主机不同，但只要保证相对于同一个虚拟地址。</p>
+<p>影子页表可以看做是客户机页表巨大的 TLB，称为虚拟 TLB。</p>
+<p>影子页表解决了传统的 IA32 架构下的内存虚拟化问题，但是它的缺点也比较明显，首先，实现非常复杂，需要考虑各种各样的页表同步情况。其次，影子页表的内存开销也很大，需要为每个客户机进程对应的页表都维护一个「影子页表」。</p>
+<p>为解决这些问题，Intel 和 AMD 都提供了相应的技术，直接在硬件上支持 GVA→GPA→HPA 的两次地址转换，大大降低了内存虚拟化的难度，同时也大大提高了内存虚拟化的性能。</p>
+<h5 id="intel-ept"><a class="header" href="#intel-ept">Intel EPT</a></h5>
+<p>Intel EPT（Extended Page Table，扩展页表）是 Intel VT-x 提供的内存虚拟化支持技术。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815143458200.png" alt="image-20240815143458200" /></p>
+<p>查表变得麻烦了很多，先看CR3里是什么值，这个值是GPA，为了知道这个GPA，就得先去查VMM中的页表，找到真正的HPA。</p>
+<p>CPU 需要 5 次查询 EPT 页表，每次查询都需要 4 次内存访问。这样，在最坏的情况下总共需要 20 次内存访问。</p>
+<h5 id="amd-npt"><a class="header" href="#amd-npt">AMD NPT</a></h5>
+<p>AMD NPT（Nested Page Table，嵌套页表）是 AMD 提供的内存虚拟化支持技术。</p>
+<p>1）客户机和宿主机都有自己的 CR3 寄存器，分别记为 gCR3（guest CR3）和 nCR3（nested CR3）。真正的 CR3 由 VMM 所控制和使用。</p>
+<p>2）gPT（guest Page Table，客户机页表）负责将客户机线性地址转换为客户机物理地址。客户机页表存在于客户机物理内存中，并由 gCR3 索引。</p>
+<p>3）nPT（nested Page Table，嵌套页表）负责将客户机物理地址转换为系统物理地址。嵌套页表存在于系统物理内存中，并由 nCR3 索引。</p>
+<p>4）最常用到的客户机线性地址到系统物理地址的映射关系在 TLB 中缓存。</p>
+<p>5）gCR3 和客户机页表中存放的都是客户机物理地址，所以，在访问客户机页表前需要将客户机物理地址转换为系统物理地址。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815144116083.png" alt="image-20240815144116083" /></p>
+<h3 id="io虚拟化"><a class="header" href="#io虚拟化">IO虚拟化</a></h3>
+<p>评价 I/O 虚拟技术的两个指标—性能和通用性（透明）。</p>
+<p>面临的问题：</p>
+<ul>
+<li>让客户机直接访问到设备真实的 I/O 地址空间（包括端口 I/O 和 MMIO）
+<ul>
+<li>VT-x 技术允许客户机直接访问物理的 I/O 空间，于是便解决了这个问题。</li>
+</ul>
+</li>
+<li>让设备的 DMA 操作直接访问到客户机的内存空间。设备不管系统中运行的是虚拟机还是真实的操作系统，它只管用驱动提供给它的物理地址做 DMA 操作。
+<ul>
+<li>Intel VT-d 技术提供了 DMA 重映射技术</li>
+</ul>
+</li>
+</ul>
+<h4 id="intel-vt-d"><a class="header" href="#intel-vt-d">Intel VT-d</a></h4>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815144838203.png" alt="image-20240815144838203" /></p>
+<p><strong>DMA 重映射</strong></p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145206955.png" alt="image-20240815145206955" /></p>
+<p>当 DMA 重映射硬件捕获一个 DMA 传输时，通过其中 BDF 的 Bus 字段索引根条目表，可以得到产生此 DMA 传输的总线对应的根条目。由根条目的 CTP 字段可以获得上下文条目表，用 BDF 中的{Dev:Function}索引该表，可以得到产生此 DMA 传输的设备对应的上下文条目。由上下文条目的 ASR 字段，可以寻址到该设备对应的 I/O 页表，此时，DMA 重映射硬件就可以做地址转换了。</p>
+<p>通过所示的两级结构，VT-d 技术可以实现对平台上 PCI 设备的全覆盖，并对它们的 DMA 传输进行地址转换。</p>
+<h4 id="amd-iommu"><a class="header" href="#amd-iommu">AMD IOMMU</a></h4>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145511102.png" alt="image-20240815145511102" /></p>
+<p>AMD 的 IOMMU 避免了设备模拟，取消了转译层，而且允许本机驱动程序直接配合设备，极大地降低了 I/O 设备虚拟化的开销。</p>
+<h3 id="网络虚拟化"><a class="header" href="#网络虚拟化">网络虚拟化</a></h3>
+<p>SR-IOV（Single Root I/O Virtualization）是 PCI-SIG 推出的一项标准，它将单个 PCIe 设备对上层软件虚拟化为多个独立的 PCIe 设备。SR-IOV 网卡能对上层操作系统虚拟化出多个 PCIe 网卡，而且虚拟出的每个网卡都可以实现独立的 I/O 功能。独立的通道能够实现更强的安全隔离、更完善的 QoS 和更高的传输效率。SR-IOV 目前支持在一块 PCIe 网卡上虚拟化出 256 个通道.</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145725553.png" alt="image-20240815145725553" /></p>
+<p>SR-IOV 虚拟出的通道有两种：PF（Physical Function）和 VF（Virtual Function）。PF 是一个完整的 PCIe 设备，包含全面的管理、配置功能，Hypervisor 往往通过 PF 来实现对网卡所有 I/O 资源的管理和配置；VF 是一个简化的 PCIe 设备，仅仅包含了 I/O 功能，不能通过 VF 管理物理网卡。</p>
+<p>所有的 VF 都是通过 PF 衍生而来的，一块 SR-IOV 网卡最多可以生成 256 个 VF。VF 可以理解为物理网卡硬件资源的一个切片，在虚拟化软件平台 Hypervisor 看来，VF 与普通的 PCIe 网卡一模一样，安装相应的驱动后就能直接使用。如果一台物理机上只有一个单端口的 SR-IOV 网卡，这个端口产生了 6 个 VF，则 Hypervisor 就能得到 6 个以太网连接。</p>
+<p>在 SR-IOV 的基础上，再结合 Intel VT-d 或 AMD IOMMU 技术，可以实现 VM 和 VF 的一对一映射，进而跳过 Hypervisor 的软件交换机使 VM 直接访问 VF 硬件资源。这样既能提高访问效率，又能提高网卡的利用率。</p>
+<h3 id="时间虚拟化"><a class="header" href="#时间虚拟化">时间虚拟化</a></h3>
+<p>概念：</p>
+<p>时间管理是操作系统的一个重要模块。操作系统的时间概念有以下两种。
+● 绝对时间：操作系统启动后到目前为止的总运行时间，又称为墙上时间（Wall time）。它是递增的。</p>
+<p>● 相对时间：两个时间之间的间隔。例如，两次时钟中断的间隔、两次使用 RDTSC 指令读取 TSC 的间隔。</p>
+<p>在虚拟环境下，客户机与其他客户机以及 VMM 共享物理平台，客户机只能得到部分的处理器时间。即使当前只有一个客户机，VMM 本身运行也需要占用 CPU 时间。</p>
+<h3 id="主流虚拟化产品"><a class="header" href="#主流虚拟化产品">主流虚拟化产品</a></h3>
+<h4 id="xen"><a class="header" href="#xen">Xen</a></h4>
+<p>Xen 可以安装在系统上，也可以直接安装到裸机上。</p>
+<p>Xen 采用的是混合模型。特权操作系统（Domain 0）可以是 Linux、Solaris 以及 NetBSD。</p>
+<p>OS需要定制化才能运行再Xen 上。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815150359893.png" alt="image-20240815150359893" /></p>
+<h4 id="vmware"><a class="header" href="#vmware">VMware</a></h4>
+<p>VMware 是 x86 虚拟化软件的主流厂商之一。</p>
+<p>基于 Hypervisor 架构的 VMware ESX Server 可以直接运行在裸机上。</p>
+<p>VMware Workstation 是 VMware 面向桌面的主打产品。Workstation 基于宿主模型，宿主机操作系统可以是 Windows 或者 Linux。</p>
+<h4 id="hyper-v"><a class="header" href="#hyper-v">Hyper-V</a></h4>
+<p>Hyper-V 是微软提出的一种系统管理程序虚拟化技术，它的主要作用是管理、调度虚拟机的创建和运行，并提供硬件资源的虚拟化。</p>
+<h4 id="kvm"><a class="header" href="#kvm">KVM</a></h4>
+<p>KVM（Kernel-based Virtual Machine）是一款开源的虚拟机软件，最早由 Qumranet 公司开发，并于 2007 年 2 月被集成到 Linux 2.6.20 内核中，称为 Linux 内核的一部分。</p>
+<p>随着越来越多的虚拟化功能被加入到 Linux 内核中，有说法认为 Linux 已经是一个 Hypervisor，因此，KVM 是 Hypervisor 模型。</p>
+<p>KVM 的宿主操作系统必须是 Linux，支持的客户机操作系统包括 Linux、Windows、Solaris 和 BSD，只能运行在支持虚拟化扩展的 x86 和 x86_64 硬件架构上，这意味着 KVM 不能运行在老式 CPU 上，新 CPU 如果不支持虚拟化扩展，也不能运行（如英特尔的 Atom 处理器）。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815151122500.png" alt="image-20240815151122500" /></p>
+<h2 id="三xen-虚拟化技术"><a class="header" href="#三xen-虚拟化技术">三、Xen 虚拟化技术</a></h2>
+<h4 id="架构"><a class="header" href="#架构">架构</a></h4>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815151735652.png" alt="image-20240815151735652" /></p>
+<p>Xen 虚拟化固件（Xen Virtual Firmware）是一个虚拟的 BIOS，它被加载到每一个 HVM 虚拟域以提供标准的启动指令，保证客户机操作系统在正常启动过程中能得到标准的 PC 兼容的软件环境。</p>
+<p><strong>独立设备驱动域（IDD）</strong></p>
+<p>在 Xen 结构中，所有的虚拟域操作系统访问硬件设备都要经过 Dom0，如果某一个硬件设备的驱动程序存在某些漏洞，那它就有可能摧毁整个 Dom0 的内核，从而导致整个系统崩溃。为了解决这个问题，Xen 考虑将 Dom0 中的设备驱动模块移动到另一个虚拟域中，一方面可以降低 Dom0 的运行负载，另一方面也可以降低系统的风险。</p>
+<p><strong>非特权虚拟域 U（DomU）</strong></p>
+<p>DomU 是除 Dom0 以外的虚拟域，由于 DomU 不能像 Dom0 一样直接访问物理 I/O 设备，因此，称为非特权域。</p>
+<p><strong>硬件虚拟域（HVM）</strong></p>
+<p>Xen 在设计之初为了追求高性能，采用了半虚拟化技术，需要少量修改客户机操作系统的内核与 Xen Hypervisor 进行协同工作。后期在得到 Intel 和 AMD 的 VT-x 及 SVM 硬件虚拟技术的支持后，Xen 能够实现全虚拟化，此时客户机操作系统的内核不需要修改，Windows XP 这种非开源的操作系统可以在其上运行，弥补了半虚拟化时的不足。</p>
+<h4 id="启动"><a class="header" href="#启动">启动</a></h4>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815152106216.png" alt="image-20240815152106216" /></p>
+<h2 id="四kvm-虚拟化技术"><a class="header" href="#四kvm-虚拟化技术">四、KVM 虚拟化技术</a></h2>
+<h4 id="kvm-1"><a class="header" href="#kvm-1">KVM</a></h4>
+<p>KVM 全称是 Kernel-based Virtual Machine，是一个基于 Linux 环境的开源虚拟化解决方案。</p>
+<p>与 Xen、VMware 等提供完整解决方案的商业化虚拟产品不同，KVM 的思想是在 Linux 内核的基础上添加虚拟机管理模块，重用 Linux 内核中已经完善的进程调度、内存管理、IO 管理等部分，<strong>使之成为一个可以支持运行虚拟机的 Hypervisor</strong>。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815152531925.png" alt="image-20240815152531925" /></p>
+<p>在 KVM 中，一个虚拟机就是一个传统的 Linux 中的进程（原文说是线程，感觉是个笔误），拥有自己的 PID 号，也可以被 kill 系统调用直接杀死（在这种情况下，虚拟机的行为表现为「突然断电」）。在一个 Linux 系统中，有多少个 VM，就有多少个进程。</p>
+<p>OS不需要修改就能直接运行再KVM上。</p>
+<p>KVM支持嵌套虚拟化，虚拟机中能再次虚拟其他主机。</p>
+<p><strong>KVM 体现了 Linux 系统的哲学：只做一件事情，但是要做得最好。</strong></p>
+<p>要不我也只做一件事，固件，尝试做到最好。但是有点难，因为要吃饭，要顺应时代潮流。</p>
+<p>在 KVM 的核心模块中，包含了 IOMMU、中断控制、kvm arch、设备管理等部分的代码，这些代码形成了虚拟机管理的核心功能。从这些功能中可以看到，KVM 并没有尝试实现一个完整的 PC 系统虚拟化，<strong>而将最重要的 CPU 虚拟化、I/O 虚拟化和内存虚拟化部分针对硬件辅助的能力进行了有效的抽象和对接，并且暴露出 API 供上层应用使用。</strong></p>
+<p>KVM 结构体在 KVM 的系统架构中代表一个具体的虚拟机。当通过 VM_CREATE_KVM 指令字创建一个新的 KVM 虚拟机之后，就会创建一个新的 KVM 结构体对象。KVM 结构体对象中包含了 vCPU、内存、APIC、IRQ、MMU、Event 事件管理等信息。</p>
+<h4 id="qemu-kvm"><a class="header" href="#qemu-kvm">qemu-kvm</a></h4>
+<p>qemu-kvm 是 KVM 所支持开发的一个 QEMU 版本，这个版本整合了 KVM 的加速支持，但是也重用了 QEMU 的体系结构、PC 机平台模拟等功能，充分发挥了二者的优点</p>
+<p>了支持 KVM 之外，QEMU 还支持全模拟化和 kqemu 加速模块等方式，这三种方式的架构区别如图</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815153448777.png" alt="image-20240815153448777" /></p>
+<p>第一种是借助额外的模块实现内核态的加速；</p>
+<p>第二种是用户态直接运行，全虚拟化；</p>
+<p>第三种模式则是 KVM 官方提供的 kvm-qemu 加速模式。运行在内核态的 KVM 模块通过/dev/kvm 字符设备文件向外提供操作接口。KVM 通过提供 libkvm 这个操作库，将/dev/kvm 这一层面的 ioctl 类型的 API 转化成为通常意义上的函数 API 调用，提供给 QEMU 的相应适配层，通过 QEMU 的支持来完成整个虚拟化工作。</p>
+<h4 id="libvirt-和-virt-manager"><a class="header" href="#libvirt-和-virt-manager">libvirt 和 virt-manager</a></h4>
+<p>在很多开源版本的 qemu-kvm 实现中，并不仅仅提供 qemu-kvm 软件来进行管理，而引入了一个叫做 libvirt 的库和 virt-manager 进行管理。</p>
+<p>virt-manager 是一个基于 Python 和 pygtk 编写的虚拟机管理工具前端，通过引用 libvirt 来进行桌面环境下的虚拟机管理</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815154957616.png" alt="image-20240815154957616" /></p>
+<h2 id="五虚拟化软件开放接口"><a class="header" href="#五虚拟化软件开放接口">五、虚拟化软件开放接口</a></h2>
+<p>ibvirt 是一套免费、开源的支持 Linux 下主流虚拟化工具的 C 函数库，支持与 C、C++、Ruby、Python 等多种主流开发语言的绑定。libvirt 的主要目标是为包括 Xen 在内的各种虚拟化工具提供一套方便、可靠的编程接口，用一种单一的方式管理多种不同的虚拟化提供方式和 Hypervisor，避免学习、使用不同 Hypervisor 的特定工具。</p>
+<p>libvirt 支持各种虚拟机监控程序，包括 Xen、KVM，以及 QEMU 和用于其他操作系统的许多虚拟产品。关于 libvirt 的官方描述如下。</p>
+<p>● libvirt 是一种为最新的 Linux（及其他操作系统）提供虚拟化功能的工具包。</p>
+<p>● libvirt 是遵循 GUN 公共许可的免费软件。</p>
+<p>● libvirt 是一种长期稳定的 C 语言 API。</p>
+<p>● libvirt 提供一组通用语言的绑定。</p>
+<p>● libvirt 是一个 DMTF（Distributed Management Task Force，分布式管理任务组）虚拟化模式的 CIM（Computer Integrated Manufacturing，计算机集成制造）提供者。</p>
+<p>● libvirt 是一个实现 AMQP（Advanced Message Queuing Protocol，消息队列协议）/Qpid（AMQP 的一个实现）消息系统的 QMF（Query Management Facility，查询管理应用程序）代理。</p>
+<p><img src="images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815155434472.png" alt="image-20240815155434472" /></p>
+<h2 id="六总结"><a class="header" href="#六总结">六、总结</a></h2>
+<p>虚拟化技术的发展，开始是从软件虚拟化开始，有很多问题，软件没办法解决，硬件开始逐渐介入，从架构角度增加一些功能，丰富完善虚拟化技术，使得虚拟化性能和完备性逐步提高，满足市场的需求。</p>
+<p>软硬件协同发展、共同进步促进了虚拟化技术的长足可持续性发展。</p>
+<h2 id="参考"><a class="header" href="#参考">参考：</a></h2>
+<p>《虚拟化技术原理与实现》</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../01_体系结构/08_虚拟化与分布式/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../01_体系结构/08_虚拟化与分布式/hypervisor.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../01_体系结构/08_虚拟化与分布式/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../01_体系结构/08_虚拟化与分布式/hypervisor.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
