@@ -173,11 +173,10 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="leetcode"><a class="header" href="#leetcode">LeetCode</a></h1>
+                        <h1 id="二分法"><a class="header" href="#二分法">二分法</a></h1>
 <p>[toc]</p>
 <!-- toc -->
 <p>记录自己做过的一些题，方便复习。</p>
-<h3 id="二分法"><a class="header" href="#二分法">二分法</a></h3>
 <h2 id="35-搜索插入位置"><a class="header" href="#35-搜索插入位置"><a href="https://leetcode.cn/problems/search-insert-position/">35. 搜索插入位置</a></a></h2>
 <p>while 循环，有四中情况，在左、在右、找到了，没找到。</p>
 <ul>
@@ -213,7 +212,7 @@ public:
     }
 };
 </code></pre>
-<p><a href="https://leetcode.cn/problems/search-a-2d-matrix/">74. 搜索二维矩阵</a></p>
+<h2 id="74-搜索二维矩阵"><a class="header" href="#74-搜索二维矩阵"><a href="https://leetcode.cn/problems/search-a-2d-matrix/">74. 搜索二维矩阵</a></a></h2>
 <p>方式一：直接两层for循环，注意先行后列；</p>
 <p>方法二：二分查找，<strong>注意将mid换算成二维位置</strong>；</p>
 <pre><code class="language-c++">class Solution {
@@ -252,6 +251,15 @@ public:
 <h2 id="34-在排序数组中查找元素的第一个和最后一个位置"><a class="header" href="#34-在排序数组中查找元素的第一个和最后一个位置"><a href="https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/">34. 在排序数组中查找元素的第一个和最后一个位置</a></a></h2>
 <p>数组有序，用二分；</p>
 <p>找两个位置，用两次二分，注意如果中间的就是目标值，需要继续往左或者右寻找（找first时候向左找，last向右找），因为这个不一定是最靠边的；</p>
+<p>重点是，找到的时候，</p>
+<ul>
+<li>
+<p>第一次先赋值，然后在左边继续找，right = mid - 1；</p>
+</li>
+<li>
+<p>第二次的时候，先赋值，然后在右边继续找，left = mid + 1；</p>
+</li>
+</ul>
 <pre><code class="language-c++">class Solution {
 public:
     vector&lt;int&gt;  ans;
@@ -277,7 +285,7 @@ public:
             int mid = left + ((right - left) &gt;&gt; 1);
             if (nums[mid] == target){
                 first = mid;
-                right = mid -1;
+                right = mid -1; // 重点
             } else if (nums[mid] &gt; target) {
                 //
                 right = mid -1;
@@ -295,7 +303,7 @@ public:
             int mid = left + ((right - left) &gt;&gt; 1);
             if (nums[mid] == target){
                 last = mid;
-                left = mid +1;
+                left = mid +1; // 重点
             } else if (nums[mid] &gt; target) {
                 //
                 right = mid -1;
@@ -314,7 +322,7 @@ public:
 </code></pre>
 <h2 id="33-搜索旋转排序数组"><a class="header" href="#33-搜索旋转排序数组"><a href="https://leetcode.cn/problems/search-in-rotated-sorted-array/">33. 搜索旋转排序数组</a></a></h2>
 <p>部分有序，也可以用二分法；</p>
-<p>先判断哪部分有序，在么一部分内部继续二分查找；</p>
+<p>先判断哪部分有序，在那一部分内部继续二分查找；</p>
 <p>注意要包括左右两边的数字；</p>
 <pre><code class="language-c++">class Solution {
 public:
@@ -346,21 +354,34 @@ public:
 };
 </code></pre>
 <h2 id="153-寻找旋转排序数组中的最小值"><a class="header" href="#153-寻找旋转排序数组中的最小值"><a href="https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/">153. 寻找旋转排序数组中的最小值</a></a></h2>
+<p>旋转后的数组一定被分成了前后两部分且两半都是升序数组，</p>
+<p>且<strong>前一半的最小值一定大于后一半的最大值</strong>，</p>
+<p>只要用二分找到后一半的第一个元素即可</p>
+<p><img src="images/01_%E4%BA%8C%E5%88%86%E6%B3%95/image-20240819161319004.png" alt="image-20240819161319004" /></p>
 <pre><code class="language-c++">class Solution {
 public:
     int findMin(vector&lt;int&gt;&amp; nums) {
-        int low = 0;
-        int high = nums.size() - 1;
-        while (low &lt; high) {
-            int pivot = low + (high - low) / 2;
-            if (nums[pivot] &lt; nums[high]) {
-                high = pivot;
-            }
-            else {
-                low = pivot + 1;
+        // min初始值为第一段升序数组的最小值，
+        // 而且目前不知道数组是有两段升序还是只有一段升序
+        int min = nums[0];
+
+        int left = 0;
+        int right = nums.size() - 1;
+
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+
+            // 如果中间位置比min小，那么这个mid位置一定在第二段升序数组中，
+            // 那么最小值一定在mid或者它的左边，这是因为每段都是升序的
+            // 先更新min，然后向左边遍历
+            if (nums[mid] &lt; min) {
+                min = nums[mid];
+                right = mid - 1;
+            } else {
+                left = mid + 1;
             }
         }
-        return nums[low];
+        return min;
     }
 };
 
@@ -403,7 +424,7 @@ public:
 输出：2
 </code></pre>
 <p><strong>解法</strong></p>
-<p>哈希表，但是空间复杂度不符合要求。</p>
+<p>哈希表，但是空间复杂度不符合要求。X</p>
 <p>使用二分查找来找到数组中的重复数的思路，主要基于鸽巢原理（Pigeonhole Principle）。该原理表明，如果有 <code>n + 1</code> 个数字放入 <code>n</code> 个盒子里，至少有一个盒子里会包含多个数字。</p>
 <p><strong>二分法思路：</strong></p>
 <ol>
@@ -419,7 +440,7 @@ public:
 <pre><code class="language-c++">class Solution {
 public:
     int findDuplicate(vector&lt;int&gt;&amp; nums) {
-        int left = 1, right = nums.size() - 1;
+        int left = 0, right = nums.size() - 1;
 
         while (left &lt; right) {
             int mid = left + (right - left) / 2;
@@ -483,6 +504,62 @@ public:
 
     }
 };
+</code></pre>
+<p>算法的时间复杂度为 <code>O((m+n))</code> 。不符合要求，看到log应该用二分法。</p>
+<p>可以使用二分查找的方法。这个方法的核心思想是将问题转换为寻找两个数组中的第 k 小的元素，其中 k 是两个数组长度之和的一半。</p>
+<pre><code class="language-c++">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;  // 用于 INT_MIN 和 INT_MAX
+
+class Solution {
+public:
+    double findMedianSortedArrays(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        int m = nums1.size(); // nums1 的长度
+        int n = nums2.size(); // nums2 的长度
+        
+        // 确保 nums1 是较短的数组，以减少二分查找的时间复杂度
+        if (m &gt; n) {
+            return findMedianSortedArrays(nums2, nums1); // 如果 nums1 更长，则交换两个数组
+        }
+
+        int totalLeft = (m + n + 1) / 2; // 左半部分的元素个数
+        int left = 0, right = m; // 二分查找的范围在 nums1 中
+        
+        // 使用二分查找在 nums1 中找到一个切分点
+        while (left &lt; right) {
+            int i = left + (right - left) / 2; // nums1 的切分点
+            int j = totalLeft - i; // nums2 的对应切分点
+            
+            // 确保 nums1[i] 和 nums2[j-1] 之间满足正确的关系
+            if (nums1[i] &lt; nums2[j - 1]) {
+                left = i + 1; // 如果 nums1[i] 小于 nums2[j-1]，则增大 i
+            } else {
+                right = i; // 否则，减小 i
+            }
+        }
+
+        int i = left; // 最终的 nums1 切分点
+        int j = totalLeft - i; // 最终的 nums2 切分点
+
+        // 计算左半部分最大值
+        int nums1LeftMax = (i == 0) ? INT_MIN : nums1[i - 1];
+        int nums2LeftMax = (j == 0) ? INT_MIN : nums2[j - 1];
+
+        // 计算右半部分最小值
+        int nums1RightMin = (i == m) ? INT_MAX : nums1[i];
+        int nums2RightMin = (j == n) ? INT_MAX : nums2[j];
+
+        // 判断总元素个数的奇偶性，并计算中位数
+        if ((m + n) % 2 == 1) {
+            // 如果总元素个数为奇数，中位数是左半部分的最大值
+            return std::max(nums1LeftMax, nums2LeftMax);
+        } else {
+            // 如果总元素个数为偶数，中位数是左半部分最大值和右半部分最小值的平均值
+            return (std::max(nums1LeftMax, nums2LeftMax) + std::min(nums1RightMin, nums2RightMin)) / 2.0;
+        }
+    }
+};
+
 </code></pre>
 
                     </main>

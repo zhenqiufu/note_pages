@@ -213,36 +213,31 @@ public:
 <pre><code class="language-c++">class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
-    // 创建一个无序集合 set，用来存储当前窗口中的字符
-    unordered_set&lt;char&gt; set;
-    // 字符串的长度
-    int n = s.size();
-    // 右指针 rk，初始化为 -1，表示窗口的右边界
-    int rk = -1;
-    // 最终的答案，表示最长的没有重复字符的子串的长度
-    int ans = 0;
+         // 创建一个无序集合 set，用来存储当前窗口中的字符
+        unordered_set&lt;char&gt; set;
 
-    // 开始遍历字符串 s
-    for (int i = 0; i &lt; n; i++) {
-        // 如果不是第一个字符，移除左指针对应的字符，即窗口左边界向右移动一位
-        if (i != 0) {
-            set.erase(s[i-1]);
+        int n = s.size();
+
+        int right = 0;
+
+        int ans = 0;
+
+        // 开始遍历字符串 s
+        for (int i = 0; i &lt; n; i++) {
+            // 如果不是第一个字符，移除左指针对应的字符，即窗口左边界向右移动一位
+            while (right &lt; n &amp;&amp; !set.count(s[right])) {
+                set.insert(s[right]);
+                right++;
+            }
+
+            // 计算当前窗口的长度并更新最大长度
+            ans = max(ans, right - i);
+            set.erase(s[i]);
         }
 
-        // 向右移动右指针，直到窗口中出现重复字符为止
-        while (rk + 1 &lt; n &amp;&amp; !set.count(s[rk + 1])) {
-            set.insert(s[rk + 1]);
-            rk++;
-        }
+        return ans;
 
-        // 计算当前窗口的长度并更新最大长度
-        ans = max(ans, rk - i + 1);
     }
-
-    // 返回最长的没有重复字符的子串的长度
-    return ans;
-}
-
 };
 </code></pre>
 <h2 id="5-最长回文子串"><a class="header" href="#5-最长回文子串"><a href="https://leetcode.cn/problems/longest-palindromic-substring/">5. 最长回文子串</a></a></h2>
@@ -250,115 +245,204 @@ public:
 输出："bab"
 解释："aba" 同样是符合题意的答案。
 </code></pre>
-<pre><code class="language-c++">string longestPalindrome(string s) {
-    int n = s.size();
-    if (n &lt; 2) {
-        return s;
-    }
-
-    int maxLen = 1; // 最长回文子串的长度
-    int begin = 0; // 最长回文子串的起始位置
-
-    // dp[i][j] 表示 s[i..j] 是否是回文串
-    vector&lt;vector&lt;int&gt;&gt; dp(n, vector&lt;int&gt;(n));
-
-    // 初始化：所有长度为 1 的子串都是回文串
-    for (int i = 0; i &lt; n; i++) {
-        dp[i][i] = true;
-    }
-
-    // 递推开始
-    // 先枚举子串长度 L
-    for (int L = 2; L &lt;= n; L++) {
-        // 枚举左边界 i
-        for (int i = 0; i &lt; n; i++) {
-            // 由 L 和 i 可以确定右边界 j
-            int j = L + i - 1;
-            // 如果右边界 j 超出字符串长度，就结束当前循环
-            if (j &gt;= n) {
-                break;
-            }
-
-            // 根据 s[i] 和 s[j] 是否相等分情况讨论
-            if (s[i] != s[j]) {
-                dp[i][j] = false;
-            } else {
-                // 当 s[i] == s[j] 时，根据子串长度决定是否为回文
-                if (j - i &lt; 3) {
-                    // 长度为 2 或 3 的子串，直接是回文
+<pre><code class="language-c++">class Solution {
+public:
+    string longestPalindrome(string s) {
+        vector&lt;vector&lt;int&gt;&gt; dp(s.size(), vector&lt;int&gt;(s.size(), false));
+        int start = 0, maxlen = 1;
+        for (int i = s.size() - 1; i &gt;= 0; i--) {
+            for (int j = i; j &lt; s.size(); j++) {
+                // 判断了 `s[i...j]` 是否是一个回文子串
+                if (s[i] == s[j] &amp;&amp; (j - i &lt;= 1 || dp[i + 1][j - 1])) {
                     dp[i][j] = true;
-                } else {
-                    // 更长的子串，取决于去掉首尾字符后的子串是否为回文
-                    dp[i][j] = dp[i + 1][j - 1];
+                    // i 到 j 范围是回文子串，记录下当前最大的长度
+                    if (j - i + 1 &gt;= maxlen) {
+                        start = i;
+                        maxlen = j - i + 1;
+                    }
                 }
             }
-
-            // 如果 s[i..j] 是回文串，并且长度大于当前记录的最大长度
-            if (dp[i][j] &amp;&amp; j - i + 1 &gt; maxLen) {
-                maxLen = j - i + 1; // 更新最大长度
-                begin = i; // 更新起始位置
-            }
         }
+        return s.substr(start, maxlen);
     }
-
-    // 返回最长回文子串
-    return s.substr(begin, maxLen);
-}
-
+};
 </code></pre>
-<p>每个部分：</p>
+<p>关键点 <code>if (s[i] == s[j] &amp;&amp; (j - i &lt;= 1 || dp[i + 1][j - 1])) {</code></p>
+<p>这个条件判断了 <code>s[i...j]</code> 是否是一个回文子串：</p>
+<ul>
+<li>
+<p><code>s[i] == s[j]</code>：子串的首尾字符是否相等。如果不相等，则肯定不是回文。</p>
+</li>
+<li>
+<pre><code>(j - i &lt;= 1 || dp[i + 1][j - 1])
+</code></pre>
+<p>：检查两种情况：</p>
+<ul>
+<li><code>j - i &lt;= 1</code> 表示子串长度为 1 或 2 时，只要两端字符相等，就是回文。</li>
+<li><code>dp[i + 1][j - 1]</code> 检查去掉两端字符后的子串 <code>s[i+1...j-1]</code> 是否为回文。</li>
+</ul>
+</li>
+</ul>
+<p>如果[2, 3] 是回文串，那么如果s[1] == s[4] 就可以说明[1, 4]是回文串。</p>
+<p>注意：在这段代码中，<code>dp[i + 1][j - 1]</code> 的使用是安全的，不会超出 <code>dp</code> 的范围。</p>
+<p><strong>当 <code>i = 4</code>, <code>j = 4</code>：</strong></p>
+<ul>
+<li>此时 <code>j - i = 0</code>，<code>j - i &lt;= 1</code> 成立，不需要访问 <code>dp[5][3]</code>（即不存在的索引）。</li>
+</ul>
+<p><strong>当 <code>i = 3</code>, <code>j = 4</code>：</strong></p>
+<ul>
+<li>此时 <code>j - i = 1</code>，<code>j - i &lt;= 1</code> 成立，不需要访问 <code>dp[4][3]</code>。</li>
+</ul>
+<p><strong>当 <code>i = 1</code>, <code>j = 3</code>：</strong></p>
+<ul>
+<li>此时 <code>j - i = 2</code>，<code>j - i &lt;= 1</code> 不成立，所以需要访问 <code>dp[2][2]</code>（在合法范围内）。</li>
+</ul>
+<p>用字符串 <code>"babad"</code> 通过动态规划的方式一步步演示代码的运算过程。</p>
+<p><strong>初始化</strong></p>
+<p>输入字符串 <code>s = "babad"</code>，其长度为 5。</p>
 <ol>
-<li>
-<p><code>int n = s.size();</code>：获取字符串 <code>s</code> 的长度，如果长度小于 2，则直接返回原字符串，因为单字符或空字符串本身就是回文。</p>
-</li>
-<li>
-<p><code>int maxLen = 1;</code> 和 <code>int begin = 0;</code>：初始化最长回文子串的长度为 1，起始位置为 0。</p>
-</li>
-<li>
-<p><code>vector&lt;vector&lt;int&gt;&gt; dp(n, vector&lt;int&gt;(n));</code>：创建二维动态规划数组 <code>dp</code>，<code>dp[i][j]</code> 表示子串 <code>s[i..j]</code> 是否为回文串。</p>
-</li>
-<li>
-<p>初始化阶段：</p>
-<ul>
-<li>所有长度为 1 的子串 <code>s[i..i]</code> 都是回文串，因此 <code>dp[i][i] = true;</code>。</li>
-</ul>
-</li>
-<li>
-<p>递推阶段：</p>
-<ul>
-<li>外层循环 <code>L</code> 表示子串长度，从 2 开始递增到 <code>n</code>。</li>
-<li>内层循环 <code>i</code> 表示子串的起始位置。</li>
-<li>计算右边界 <code>j</code>，根据 <code>L</code> 和 <code>i</code> 计算得出。</li>
-</ul>
-</li>
-<li>
-<p>回文判断：</p>
-<ul>
-<li>
-<p>如果 <code>s[i] != s[j]</code>，则 <code>s[i..j]</code> 不是回文串。</p>
-</li>
-<li>
-<p>如果</p>
-<pre><code>s[i] == s[j]
-</code></pre>
-<p>，则根据子串长度讨论是否为回文：</p>
-<ul>
-<li>长度为 2 或 3 的子串直接判定为回文。</li>
-<li>更长的子串则依赖于去掉首尾字符后的子串是否为回文。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>更新最长回文子串：</p>
-<ul>
-<li>如果 <code>dp[i][j]</code> 是回文串，并且长度大于当前记录的 <code>maxLen</code>，则更新 <code>maxLen</code> 和 <code>begin</code>。</li>
-</ul>
-</li>
-<li>
-<p>最后返回 <code>s.substr(begin, maxLen)</code>，即最长的回文子串。</p>
-</li>
+<li>初始化一个 5x5 的动态规划表 <code>dp</code>，所有值均为 <code>false</code>。</li>
+<li>初始化 <code>start = 0</code>，<code>maxlen = 1</code>。</li>
 </ol>
+<p>初始的 <code>dp</code> 表如下：</p>
+<div class="table-wrapper"><table><thead><tr><th>i\j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr><td>0</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>1</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>2</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>3</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>4</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+</tbody></table>
+</div>
+<p><strong>第一层循环 (i 从 4 到 0)</strong></p>
+<p><strong>i = 4, j = 4</strong></p>
+<ul>
+<li>子串 <code>s[4:4] = "d"</code>。</li>
+<li><code>s[4] == s[4]</code> 且子串长度为 1 (<code>j - i &lt;= 1</code>)，所以 <code>dp[4][4] = true</code>。</li>
+<li>更新 <code>start = 4</code>，<code>maxlen = 1</code>。</li>
+</ul>
+<p>此时的 <code>dp</code> 表如下：</p>
+<div class="table-wrapper"><table><thead><tr><th>i\j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr><td>0</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>1</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>2</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>3</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>4</td><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td></tr>
+</tbody></table>
+</div>
+<p><strong>i = 3, j = 3</strong></p>
+<ul>
+<li>子串 <code>s[3:3] = "a"</code>。</li>
+<li><code>s[3] == s[3]</code> 且子串长度为 1 (<code>j - i &lt;= 1</code>)，所以 <code>dp[3][3] = true</code>。</li>
+<li>更新 <code>start = 3</code>，<code>maxlen = 1</code>。</li>
+</ul>
+<p><strong>i = 3, j = 4</strong></p>
+<ul>
+<li>子串 <code>s[3:4] = "ad"</code>。</li>
+<li><code>s[3] != s[4]</code>，所以 <code>dp[3][4]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>此时的 <code>dp</code> 表如下：</p>
+<div class="table-wrapper"><table><thead><tr><th>i\j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr><td>0</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>1</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>2</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>3</td><td>F</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>4</td><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td></tr>
+</tbody></table>
+</div>
+<p>i = 2, j = 2</p>
+<ul>
+<li>子串 <code>s[2:2] = "b"</code>。</li>
+<li><code>s[2] == s[2]</code> 且子串长度为 1 (<code>j - i &lt;= 1</code>)，所以 <code>dp[2][2] = true</code>。</li>
+<li>更新 <code>start = 2</code>，<code>maxlen = 1</code>。</li>
+</ul>
+<p>i = 2, j = 3</p>
+<ul>
+<li>子串 <code>s[2:3] = "ba"</code>。</li>
+<li><code>s[2] != s[3]</code>，所以 <code>dp[2][3]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>i = 2, j = 4</p>
+<ul>
+<li>子串 <code>s[2:4] = "bad"</code>。</li>
+<li><code>s[2] != s[4]</code>，所以 <code>dp[2][4]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>此时的 <code>dp</code> 表如下：</p>
+<div class="table-wrapper"><table><thead><tr><th>i\j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr><td>0</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>1</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>2</td><td>F</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>3</td><td>F</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>4</td><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td></tr>
+</tbody></table>
+</div>
+<p>i = 1, j = 1</p>
+<ul>
+<li>子串 <code>s[1:1] = "a"</code>。</li>
+<li><code>s[1] == s[1]</code> 且子串长度为 1 (<code>j - i &lt;= 1</code>)，所以 <code>dp[1][1] = true</code>。</li>
+<li>更新 <code>start = 1</code>，<code>maxlen = 1</code>。</li>
+</ul>
+<p>i = 1, j = 2</p>
+<ul>
+<li>子串 <code>s[1:2] = "ab"</code>。</li>
+<li><code>s[1] != s[2]</code>，所以 <code>dp[1][2]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>i = 1, j = 3</p>
+<ul>
+<li>子串 <code>s[1:3] = "aba"</code>。</li>
+<li><code>s[1] == s[3]</code>，且 <code>dp[2][2] = true</code>，所以 <code>dp[1][3] = true</code>。</li>
+<li>更新 <code>start = 1</code>，<code>maxlen = 3</code>。</li>
+</ul>
+<p>i = 1, j = 4</p>
+<ul>
+<li>子串 <code>s[1:4] = "abad"</code>。</li>
+<li><code>s[1] != s[4]</code>，所以 <code>dp[1][4]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>此时的 <code>dp</code> 表如下：</p>
+<div class="table-wrapper"><table><thead><tr><th>i\j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr><td>0</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>1</td><td>F</td><td>T</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>2</td><td>F</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>3</td><td>F</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>4</td><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td></tr>
+</tbody></table>
+</div>
+<p>i = 0, j = 0</p>
+<ul>
+<li>子串 <code>s[0:0] = "b"</code>。</li>
+<li><code>s[0] == s[0]</code> 且子串长度为 1 (<code>j - i &lt;= 1</code>)，所以 <code>dp[0][0] = true</code>。</li>
+<li>更新 <code>start = 0</code>，<code>maxlen = 1</code>。</li>
+</ul>
+<p>i = 0, j = 1</p>
+<ul>
+<li>子串 <code>s[0:1] = "ba"</code>。</li>
+<li><code>s[0] != s[1]</code>，所以 <code>dp[0][1]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>i = 0, j = 2</p>
+<ul>
+<li>子串 <code>s[0:2] = "bab"</code>。</li>
+<li><code>s[0] == s[2]</code>，且 <code>dp[1][1] = true</code>，所以 <code>dp[0][2] = true</code>。</li>
+<li>更新 <code>start = 0</code>，<code>maxlen = 3</code>。</li>
+</ul>
+<p>i = 0, j = 3</p>
+<ul>
+<li>子串 <code>s[0:3] = "baba"</code>。</li>
+<li><code>s[0] != s[3]</code>，所以 <code>dp[0][3]</code> 保持 <code>false</code>。</li>
+</ul>
+<p><strong>i = 0, j = 4</strong></p>
+<ul>
+<li>子串 <code>s[0:4] = "babad"</code>。</li>
+<li><code>s[0] != s[4]</code>，所以 <code>dp[0][4]</code> 保持 <code>false</code>。</li>
+</ul>
+<p>此时的 <code>dp</code> 表如下：</p>
+<div class="table-wrapper"><table><thead><tr><th>i\j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr><td>0</td><td>T</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>1</td><td>F</td><td>T</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>2</td><td>F</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>3</td><td>F</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>4</td><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td></tr>
+</tbody></table>
+</div>
+<p>最终结果</p>
+<p>在遍历完成之后，最长的回文子串起始于 <code>start = 0</code>，长度为 <code>maxlen = 3</code>，即 <code>s[0:2] = "bab"</code>。</p>
 <h2 id="6-z-字形变换"><a class="header" href="#6-z-字形变换"><a href="https://leetcode.cn/problems/zigzag-conversion/">6. Z 字形变换</a></a></h2>
 <pre><code>输入：s = "PAYPALISHIRING", numRows = 4
 输出："PINALSIGYAHRPI"
@@ -428,7 +512,7 @@ public:
         }
 
         // 挨个判断字符，并累加到count上
-        while (s[i] &gt;= '0' &amp;&amp; s[i] &lt;= '9') {
+        while (i &lt; s.size() &amp;&amp; s[i] &gt;= '0' &amp;&amp; s[i] &lt;= '9') {
             count = count * 10 + (s[i] - '0');
             if (sign * count &lt; INT_MIN) {
                 return INT_MIN;
@@ -463,8 +547,9 @@ public:
         // 从第二个字符串开始遍历，与ans对比
         for (int i = 1; i &lt; strs.size(); i++) {
             // 如果第i个串的j个字符与ans的第j个字符相等，就继续j++
+            // 因为后面用到了j，就需要再for循环外单独定义j，否则后面就会报错，未定义j
             int j = 0;
-            for (;j &lt; ans.size() &amp;&amp; j &lt; strs[i].size(); j++) {
+            for (j = 0; j &lt; ans.size() &amp;&amp; j &lt; strs[i].size(); j++) {
                 if (ans[j] != strs[i][j]) {
                     break;
                 }
@@ -479,6 +564,32 @@ public:
             }
         }
         return ans;
+
+    }
+};
+</code></pre>
+<p>还有一种思路，先排序，然后比较第一个和最后一个。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    string longestCommonPrefix(vector&lt;string&gt;&amp; strs) {
+        if (strs.size() == 0) {
+            return "";
+        }
+
+        sort(strs.begin(), strs.end());
+
+        string first = strs[0];
+        string last = strs[strs.size() - 1];
+
+        int num = min(first.size(), last.size());
+
+        int i = 0;
+
+        while (i &lt; num &amp;&amp; first[i] == last[i]) {
+            i++;
+        }
+
+        return first.substr(0, i);
 
     }
 };
@@ -705,18 +816,23 @@ public:
             right++;
             
             // 更新滑动窗口中的数据
+            // 在目标串中有的字符才加入哈希表
             if (tFreq.count(c)) {
                 windowFreq[c]++;
+                // 窗口中c字符频率等于目标字符的频率，计数器加一
+                // 如果超过目标频率，也不需要重复加一
                 if (windowFreq[c] == tFreq[c]) {
                     valid++;
                 }
             }
 
             // 收缩窗口，左指针向右移动，尝试找到更小的覆盖子串
+            // 计数器和目标串的大小相等，说明所有的字符都能满足基本要求了
             while (valid == tFreq.size()) {
                 // 更新最小子串的长度
                 if (right - left &lt; minLen) {
                     start = left;
+                    // 因为right取值以后，直接++了，不需要再额外加1计算长度
                     minLen = right - left;
                 }
 

@@ -266,7 +266,7 @@ public:
 <pre><code>输入：nums = [0,1,0,1,0,1,99]
 输出：99
 </code></pre>
-<p>去他妈的，就哈希表吧。</p>
+<p>去他妈的，就哈希表吧。时间空间都是O(n)</p>
 <pre><code class="language-c++">class Solution {
 public:
     int singleNumber(vector&lt;int&gt;&amp; nums) {
@@ -289,11 +289,58 @@ public:
     }
 };
 </code></pre>
+<p>二进制加法，累计到3就置零，三倍消消乐。O(n) O(1)</p>
+<ul>
+<li><strong><code>low</code></strong>：记录某个位上 1 出现了 1 次或 2 次。也可以理解为，<code>low</code> 保留了那些在当前数字中出现过 1 次的比特位。</li>
+<li><strong><code>high</code></strong>：记录某个位上 1 出现了 2 次。<code>high</code> 保留了那些在当前数字中出现过 2 次的比特位。</li>
+</ul>
+<h3 id=""><a class="header" href="#"></a></h3>
+<pre><code class="language-c++">class Solution {
+public:
+    int singleNumber(vector&lt;int&gt;&amp; nums) {
+        int low = 0;
+        int high = 0;
+        
+        for (int n : nums) {
+        
+            /* carry 记录的是 low 和当前数字 n 的按位与结果，
+            表示 low 中哪些位和 n 的对应位都为 1
+            （也就是说，这些位的 1 已经在 low 中出现了一次，现在又出现了一次）。 */
+            int carry = low &amp; n;
+            
+            /* low ^= n 是将 n 中那些在 low 中已经存在的位（出现过 1 次的位）进行翻转。
+            如果某个位在 low 中已经是 1，那么翻转后会变为 0；
+            如果某个位在 low 中是 0，那么翻转后会变为 1。 */
+            low ^= n;
+            
+            /* high |= carry 是将 carry 中的值加到 high 中。
+            carry 表示的是 low 中已经出现两次 1 的位，
+            这些位应该被记录在 high 中，因为这些位的 1 现在已经出现了两次。 */
+            high |= carry;
+            
+            /* reset 是 low 和 high 的按位异或结果，
+            用来标记那些已经在 low 和 high 中都有记录的位。
+            这些位表示 1 已经出现了 3 次。 */
+            int reset = low ^ high;
+            
+            /* 将 low 和 high 与 reset 进行按位与操作，
+            去掉那些出现了 3 次的位，将它们清零。
+            这样做的目的是确保 low 和 high 只保留在当前遍历中有效的位信息。 */
+            low &amp;= reset;
+            high &amp;= reset;
+        }
+        
+        return low;
+    }
+};
+
+</code></pre>
 <h2 id="67-二进制求和"><a class="header" href="#67-二进制求和"><a href="https://leetcode.cn/problems/add-binary/">67. 二进制求和</a></a></h2>
 <pre><code>输入:a = "11", b = "1"
 输出："100"
 </code></pre>
 <p>从后面来，挨个模拟，最后反转一下结果数组。</p>
+<p><strong>to_string(sum % 2)将int转为string</strong></p>
 <pre><code class="language-c++">class Solution {
 public:
     string addBinary(string a, string b) {
