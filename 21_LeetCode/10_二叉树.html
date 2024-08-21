@@ -205,6 +205,23 @@ public:
     }
 };
 </code></pre>
+<p>递归版本</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; ans;
+    vector&lt;int&gt; preorderTraversal(TreeNode* root) {
+
+        if (root != nullptr) {
+            ans.push_back(root-&gt;val);
+            preorderTraversal(root-&gt;left);
+            preorderTraversal(root-&gt;right);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>相关：</p>
+<p><a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list">114. 二叉树展开为链表</a></p>
 <h2 id="94-二叉树的中序遍历"><a class="header" href="#94-二叉树的中序遍历"><a href="https://leetcode.cn/problems/binary-tree-inorder-traversal/">94. 二叉树的中序遍历</a></a></h2>
 <p>先递归地访问左子树，然后访问根节点，最后访问右子树。</p>
 <p>对于二叉树 <code>[1, 2, 3, 4, 5, 6, 7]</code> 的中序遍历顺序是：<code>[4, 2, 5, 1, 6, 3, 7]</code>。</p>
@@ -229,6 +246,24 @@ public:
     }
 </code></pre>
 <p>二叉搜索树具有一个重要性质：<strong>二叉搜索树的中序遍历为递增序列</strong>。</p>
+<p>递归写法</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; ans; 
+    vector&lt;int&gt; inorderTraversal(TreeNode* root) {
+        if (root != nullptr) {
+            
+            inorderTraversal(root-&gt;left);
+            ans.push_back(root-&gt;val);
+            inorderTraversal(root-&gt;right);
+        }
+        return ans;
+
+    }
+};
+</code></pre>
+<p>相关：</p>
+<p><a href="https://leetcode.cn/problems/kth-smallest-element-in-a-bst/">230. 二叉搜索树中第K小的元素</a></p>
 <h2 id="145-二叉树的后序遍历"><a class="header" href="#145-二叉树的后序遍历"><a href="https://leetcode.cn/problems/binary-tree-postorder-traversal/">145. 二叉树的后序遍历</a></a></h2>
 <p>先递归地访问左子树，然后递归地访问右子树，最后访问根节点。</p>
 <p>与中序的不同之处在于：</p>
@@ -500,6 +535,21 @@ public:
 </ul>
 <p><strong>最终结果：</strong></p>
 <p>根据后序遍历的顺序，最终 <code>result</code> 的内容为 <code>[4, 5, 2, 6, 7, 3, 1]</code>。</p>
+<p>递归写法</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; ans;
+    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
+        if (root != nullptr) {
+            
+            postorderTraversal(root-&gt;left);
+            postorderTraversal(root-&gt;right);
+            ans.push_back(root-&gt;val);
+        }
+        return ans;
+    }
+};
+</code></pre>
 <h2 id="102-二叉树的层序遍历"><a class="header" href="#102-二叉树的层序遍历"><a href="https://leetcode.cn/problems/binary-tree-level-order-traversal/">102. 二叉树的层序遍历</a></a></h2>
 <p>使用队列辅助，不断入队，出队，直到队列为空。</p>
 <pre><code class="language-c++">vector&lt;vector&lt;int&gt;&gt; levelOrder(TreeNode* root) {
@@ -537,6 +587,8 @@ public:
 }
 
 </code></pre>
+<p>相关：</p>
+<p><a href="https://leetcode.cn/problems/binary-tree-right-side-view/">199. 二叉树的右视图</a></p>
 <h2 id="100-相同的树"><a class="header" href="#100-相同的树"><a href="https://leetcode.cn/problems/same-tree/">100. 相同的树</a></a></h2>
 <pre><code class="language-c++">bool isSameTree(TreeNode* p, TreeNode* q) {
         // If both trees are empty, they are identical
@@ -633,6 +685,7 @@ public:
 <h2 id="98-验证二叉搜索树"><a class="header" href="#98-验证二叉搜索树"><a href="https://leetcode.cn/problems/validate-binary-search-tree/">98. 验证二叉搜索树</a></a></h2>
 <p>构造一个辅助函数，然后递归。</p>
 <p>root 值介于左右</p>
+<p>重点是越界情况的处理，需要使用long long类型，因为long 类型和int有可能一样</p>
 <pre><code class="language-c++">class Solution {
 public:
     bool helper(TreeNode* root, long long lower, long long upper) {
@@ -677,6 +730,26 @@ public:
 
         return result[k - 1];
 
+    }
+};
+</code></pre>
+<p>递归写法</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; in_order_ans;
+    int kthSmallest(TreeNode* root, int k) {
+        
+        help(root);
+        return in_order_ans[k - 1];
+
+    }
+
+    void help(TreeNode* root) {
+        if (root != nullptr) {
+            help(root-&gt;left);
+            in_order_ans.push_back(root-&gt;val);
+            help(root-&gt;right);
+        }
     }
 };
 </code></pre>
@@ -801,6 +874,7 @@ public:
 <h2 id="110-平衡二叉树"><a class="header" href="#110-平衡二叉树"><a href="https://leetcode.cn/problems/balanced-binary-tree">110. 平衡二叉树</a></a></h2>
 <p><strong>平衡二叉树</strong> 是指该树所有节点的左右子树的深度相差不超过 1。</p>
 <p>把所有的高度都算一遍。和最大最小深度都类似。</p>
+<p>判断是否为平衡二叉树。</p>
 <pre><code class="language-c++">class Solution {
 public:
     int height(TreeNode* root) {
@@ -846,6 +920,25 @@ public:
 
     }
 </code></pre>
+<p>另一种写法</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        } else if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {
+            return 1;
+        } else if (root-&gt;left == nullptr) {
+            return 1 + minDepth(root-&gt;right);
+        } else if (root-&gt;right == nullptr) {
+            return 1 + minDepth(root-&gt;left);
+        } else {
+            return 1 + min(minDepth(root-&gt;left), minDepth(root-&gt;right));
+        }
+    }
+};
+
+</code></pre>
 <h2 id="112-路径总和"><a class="header" href="#112-路径总和"><a href="https://leetcode.cn/problems/path-sum">112. 路径总和</a></a></h2>
 <p>判断是否有等于目标值的路径。</p>
 <p>递归</p>
@@ -867,13 +960,17 @@ public:
 };
 </code></pre>
 <h2 id="437-路径总和-iii"><a class="header" href="#437-路径总和-iii"><a href="https://leetcode.cn/problems/path-sum-iii/">437. 路径总和 III</a></a></h2>
+<p>确认有几个等于目标值的路径。</p>
+<p>注意，辅助函数的参数用的是long</p>
 <pre><code class="language-c++">class Solution {
 public:
     int pathSum(TreeNode* root, int targetSum) {
         if (root == nullptr) return 0;
 
+        // 从root出发有几个
         int ans = rootSum(root, targetSum);
 
+        // 递归，从root左右出发有几个
         ans += pathSum(root-&gt;left, targetSum);
         ans += pathSum(root-&gt;right, targetSum);
 
@@ -881,6 +978,7 @@ public:
 
     }
 
+    // help 路径和计算函数，和上一个不同的是，这里要记录个数。
     int rootSum(TreeNode* root, long targetSum) {
         if (root == nullptr) return 0;
 
@@ -897,13 +995,43 @@ public:
     }
 };
 </code></pre>
+<h2 id="124-二叉树中的最大路径和"><a class="header" href="#124-二叉树中的最大路径和"><a href="https://leetcode.cn/problems/binary-tree-maximum-path-sum/">124. 二叉树中的最大路径和</a></a></h2>
+<pre><code class="language-c++">class Solution {
+public:
+    int maxSum = INT_MIN;
+
+    int maxGain (TreeNode* node) {
+        if (node == nullptr) return 0;
+
+        // 递归计算左右子节点的最大贡献值
+        // 只有在最大贡献值大于 0 时，才会选取对应子节点
+        int leftGain = max(maxGain(node-&gt;left), 0);
+        int rightGain = max(maxGain(node-&gt;right), 0);
+
+        // 节点的最大路径和取决于该节点的值与该节点的左右子节点的最大贡献值
+        int priceNewpath = node-&gt;val + leftGain + rightGain;
+
+        // 更新答案
+        maxSum = max(maxSum, priceNewpath);
+
+        // 返回节点的最大贡献值
+        return node-&gt;val + max(leftGain, rightGain);
+    }
+
+    int maxPathSum(TreeNode* root) {
+        maxGain(root);
+        return maxSum;
+
+    }
+};
+</code></pre>
 <h2 id="114-二叉树展开为链表"><a class="header" href="#114-二叉树展开为链表"><a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list">114. 二叉树展开为链表</a></a></h2>
 <p>给你二叉树的根结点 <code>root</code> ，请你将它展开为一个单链表：</p>
 <ul>
 <li>展开后的单链表应该同样使用 <code>TreeNode</code> ，其中 <code>right</code> 子指针指向链表中下一个结点，而左子指针始终为 <code>null</code> 。</li>
 <li>展开后的单链表应该与二叉树 <a href="https://baike.baidu.com/item/%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86/6442839?fr=aladdin"><strong>先序遍历</strong></a> 顺序相同。</li>
 </ul>
-<p>先前序遍历，然后再修改二叉树节点信息。</p>
+<p>先前序遍历，存储节点指针，然后再按顺序修改二叉树节点信息。</p>
 <pre><code class="language-c++">class Solution {
 public:
     void flatten(TreeNode* root) {
@@ -931,6 +1059,29 @@ public:
 
             prev-&gt;left = nullptr;
             prev-&gt;right = curr;
+        }
+    }
+};
+</code></pre>
+<p>递归写法：</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;TreeNode*&gt; pre_order;
+
+    void flatten(TreeNode* root) {
+        help(root);
+        int size = pre_order.size();
+        for (int  i = 0; i &lt; size - 1; i++) {
+            pre_order[i]-&gt;left = nullptr;
+            pre_order[i]-&gt;right = pre_order[i+1];
+        } 
+    }
+
+    void help(TreeNode* root) {
+        if (root != nullptr) {
+            pre_order.push_back(root);
+            help(root-&gt;left);
+            help(root-&gt;right);
         }
     }
 };
@@ -993,36 +1144,6 @@ public:
         merged-&gt;right = mergeTrees(root1-&gt;right, root2-&gt;right);
 
         return merged;
-
-    }
-};
-</code></pre>
-<h2 id="124-二叉树中的最大路径和"><a class="header" href="#124-二叉树中的最大路径和"><a href="https://leetcode.cn/problems/binary-tree-maximum-path-sum/">124. 二叉树中的最大路径和</a></a></h2>
-<pre><code class="language-c++">class Solution {
-public:
-    int maxSum = INT_MIN;
-
-    int maxGain (TreeNode* node) {
-        if (node == nullptr) return 0;
-
-        // 递归计算左右子节点的最大贡献值
-        // 只有在最大贡献值大于 0 时，才会选取对应子节点
-        int leftGain = max(maxGain(node-&gt;left), 0);
-        int rightGain = max(maxGain(node-&gt;right), 0);
-
-        // 节点的最大路径和取决于该节点的值与该节点的左右子节点的最大贡献值
-        int priceNewpath = node-&gt;val + leftGain + rightGain;
-
-        // 更新答案
-        maxSum = max(maxSum, priceNewpath);
-
-        // 返回节点的最大贡献值
-        return node-&gt;val + max(leftGain, rightGain);
-    }
-
-    int maxPathSum(TreeNode* root) {
-        maxGain(root);
-        return maxSum;
 
     }
 };
