@@ -398,6 +398,61 @@ typedefunsigned long UBaseType_t;
 
 #endif/* PORTMACRO_H */
 </code></pre>
+<p>创建任务有两种方式：</p>
+<ul>
+<li>一种是在main里，挨个创建任务，最后开启调度器；</li>
+<li>另一种是在main里只创建一个任务，在这个任务中去创建其他任务，都创建好了以后，将主任务删除，最后开启调度器。</li>
+</ul>
+<p>任务创建</p>
+<pre><code class="language-c">BaseType_t xTaskCreate( TaskFunction_t pxTaskCode, // 函数指针, 任务函数
+                        const char * const pcName, // 任务的名字
+                        const configSTACK_DEPTH_TYPE usStackDepth, // 栈大小,单位为word,10表示40字节
+                        void * const pvParameters, // 调用任务函数时传入的参数
+                        UBaseType_t uxPriority,    // 优先级
+                        TaskHandle_t * const pxCreatedTask ); // 任务句柄, 以后使用它来操作这个任务
+
+</code></pre>
+<p>创建任务函数，在这里面创建任务，最后将自己删除。</p>
+<p>创建子任务时候，在临界区内创建。</p>
+<p>临界段用一句话概括就是一段在执行的时候不能被中断的代码段。</p>
+<p>那么什么情况下临界段会被打断？一个是系统调度，还有一个就是外部中断。在FreeRTOS，系统调度，最终也是产生PendSV中断，在 PendSV Handler里面实现任务的切换，所以还是可以归结为中断。既然这样，FreeRTOS对临界段的保护最终还是回到对中断的开和关的控制。</p>
+<p>看样子就是屏蔽所有中断，“我创建任务的时候，什么中断都不处理”。</p>
+<pre><code class="language-c">/**
+  * @brief  freertos first creat task
+  * @note   This function is used to creat app task and delect self.
+  * @param  *p
+  * @param  None
+  * @retval None
+  */
+static void creat_task(void *p)
+{
+    os_printf("%s", __FUNCTION__);
+    int cnt = 0;
+
+    /* creat app task in this 在这里创建应用任务 */
+    taskENTER_CRITICAL();
+
+    extern int app_init(void);
+    app_init();
+
+    taskEXIT_CRITICAL();
+    /* creat app task in this 在这里创建应用任务 */
+
+    /* delay task 延时退出，并删除本任务 */
+    while(1){
+        os_printf("this is creat task:idle-%d", cnt++);
+        vTaskDelay(1000);
+
+        if (cnt &gt;= 10){
+            break;
+        }
+    }
+
+    os_printf("delete creat task");
+
+    vTaskDelete(xTask_creat);
+}
+</code></pre>
 <h2 id="参考"><a class="header" href="#参考">参考：</a></h2>
 <ul>
 <li><a href="https://blog.csdn.net/thisway_diy/category_11105776.html">韦东山freeRTOS系列教程</a></li>

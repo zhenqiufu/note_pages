@@ -1049,6 +1049,632 @@ EL1 各有一个异常向量表。</p>
 <p>上图是整体架构，包括片内互连总线CMN-700，与PICe子系统相连的SMMU和NI-700，挂在RNI节点上的SCP，分布在不同位置的GIC与挂在SNF上的memory controller，及最关键的大core。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="固件"><a class="header" href="#固件">固件</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="arm固件启动顺序"><a class="header" href="#arm固件启动顺序">ARM固件启动顺序</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="risc-v固件启动顺序"><a class="header" href="#risc-v固件启动顺序">RISC-V固件启动顺序</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cache-as-ram--on-chip-memory"><a class="header" href="#cache-as-ram--on-chip-memory">Cache as RAM &amp; On chip memory</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-system-table"><a class="header" href="#edk2-system-table">EDK2 System Table</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-event"><a class="header" href="#edk2-event">EDK2 Event</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-memory-map"><a class="header" href="#edk2-memory-map">EDK2 Memory Map</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="存储"><a class="header" href="#存储">存储</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="常见文件系统"><a class="header" href="#常见文件系统">常见文件系统</a></h1>
+<p>[toc]</p>
+<p>常见的文件系统格式主要包括以下几种：</p>
+<h3 id="windows-文件系统"><a class="header" href="#windows-文件系统">Windows 文件系统</a></h3>
+<ol>
+<li><strong>FAT32（File Allocation Table 32）</strong>：
+<ul>
+<li><strong>特点</strong>：支持较大的分区（最高可支持 2TB），但单个文件最大为 4GB。兼容性高，支持多种操作系统。</li>
+<li><strong>应用场景</strong>：常用于小型存储设备，如 USB 闪存驱动器和 SD 卡。</li>
+</ul>
+</li>
+<li><strong>NTFS（New Technology File System）</strong>：
+<ul>
+<li><strong>特点</strong>：支持大文件和大分区，提供文件权限、加密、压缩和快照等功能。更适合大容量存储和系统分区。</li>
+<li><strong>应用场景</strong>：主要用于 Windows 系统的硬盘和 SSD。</li>
+</ul>
+</li>
+</ol>
+<h3 id="macos-文件系统"><a class="header" href="#macos-文件系统">macOS 文件系统</a></h3>
+<ol>
+<li><strong>HFS+（Hierarchical File System Plus）</strong>：
+<ul>
+<li><strong>特点</strong>：支持大文件和大分区，具有文件权限、加密和快照等功能。支持硬链接、符号链接等。</li>
+<li><strong>应用场景</strong>：早期的 macOS 系统使用，现逐渐被 APFS 取代。</li>
+</ul>
+</li>
+<li><strong>APFS（Apple File System）</strong>：
+<ul>
+<li><strong>特点</strong>：优化了 SSD 性能，支持加密、快照、克隆和空间共享等功能。提高了数据完整性和文件系统的效率。</li>
+<li><strong>应用场景</strong>：macOS 10.13 及之后版本的默认文件系统，适用于 Mac 电脑、iOS 设备等。</li>
+</ul>
+</li>
+</ol>
+<h3 id="linux-文件系统"><a class="header" href="#linux-文件系统">Linux 文件系统</a></h3>
+<ol>
+<li><strong>ext4（Fourth Extended File System）</strong>：
+<ul>
+<li><strong>特点</strong>：支持大文件和大分区，提供日志功能，增强了文件系统的稳定性和性能。</li>
+<li><strong>应用场景</strong>：多数 Linux 发行版默认文件系统，广泛应用于服务器和桌面系统。</li>
+</ul>
+</li>
+<li><strong>XFS</strong>：
+<ul>
+<li><strong>特点</strong>：支持大文件和大分区，具有高性能和高扩展性，适用于大规模数据存储。</li>
+<li><strong>应用场景</strong>：用于高性能存储需求的服务器和数据中心。</li>
+</ul>
+</li>
+<li><strong>Btrfs（B-tree File System）</strong>：
+<ul>
+<li><strong>特点</strong>：提供快照、克隆、数据校验和多设备支持，致力于数据完整性和可扩展性。</li>
+<li><strong>应用场景</strong>：用于需要高级数据管理和可靠性的场景，如服务器和个人电脑。</li>
+</ul>
+</li>
+</ol>
+<h3 id="通用文件系统"><a class="header" href="#通用文件系统">通用文件系统</a></h3>
+<ol>
+<li>
+<p>exFAT（Extended File Allocation Table）</p>
+<p>：</p>
+<ul>
+<li><strong>特点</strong>：弥补 FAT32 和 NTFS 之间的差距，支持大文件和大分区，无文件大小限制，兼容性高。</li>
+<li><strong>应用场景</strong>：常用于跨平台的存储设备，如 USB 闪存驱动器和外部硬盘，特别是在 Windows 和 macOS 系统之间共享文件。</li>
+</ul>
+</li>
+</ol>
+<h3 id="高性能文件系统"><a class="header" href="#高性能文件系统">高性能文件系统</a></h3>
+<ol>
+<li>
+<p>ZFS（Zettabyte File System）</p>
+<p>：</p>
+<ul>
+<li><strong>特点</strong>：支持大容量存储、快照、数据完整性校验、压缩和 RAID-Z 等高级功能。</li>
+<li><strong>应用场景</strong>：广泛应用于服务器和数据中心，尤其是需要高可靠性和数据完整性的场景。</li>
+</ul>
+</li>
+</ol>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/xiaolincoding/p/13499209.html">很不错的文章</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="raid"><a class="header" href="#raid">RAID</a></h1>
+<p>[toc]</p>
+<h2 id="简介"><a class="header" href="#简介">简介</a></h2>
+<p>RAID（Redundant Array of Independent Disks，冗余独立磁盘阵列）是一种将多个物理硬盘组合成一个逻辑单元的技术，其主要目的是提高数据存储的性能、可靠性和容量。通过不同的RAID级别配置，可以实现以下几个关键优势：</p>
+<ol>
+<li><strong>性能提升</strong>：RAID通过并行处理数据的读写操作，从而提高整体的访问速度。例如，RAID 0（条带化）将数据分散存储在多个磁盘上，可以显著提高读取和写入速度。</li>
+<li><strong>数据冗余和容错能力</strong>：通过数据镜像（如RAID 1）或校验机制（如RAID 5、RAID 6），RAID可以在一个或多个硬盘出现故障时保护数据不丢失，从而增强数据的安全性。例如，RAID 1通过将数据完全复制到另一块磁盘上，确保即使其中一块磁盘失效，数据也不会丢失。</li>
+<li><strong>容量扩展</strong>：RAID可以将多个硬盘的存储容量结合起来，提供更大的存储空间。例如，RAID 5通过条带化和奇偶校验的组合，不仅提供了容错能力，还最大化利用了硬盘的存储容量。</li>
+</ol>
+<p>不同RAID级别的特点如下：</p>
+<ul>
+<li><strong>RAID 0</strong>：将数据条带化分布在多个磁盘上，没有冗余，提供最高的性能，但没有容错能力。</li>
+<li><strong>RAID 1</strong>：将数据镜像存储在两块或更多磁盘上，提供高数据冗余和读性能，但写性能和存储利用率较低。</li>
+<li><strong>RAID 5</strong>：将数据和奇偶校验信息条带化存储在三个或更多磁盘上，提供良好的读性能、数据冗余和存储利用率，但写性能略低于RAID 0。</li>
+<li><strong>RAID 6</strong>：类似RAID 5，但使用双重奇偶校验，可以在两块磁盘同时失效的情况下保护数据，提高了容错能力。</li>
+<li><strong>RAID 10</strong>（RAID 1+0）：结合RAID 0和RAID 1的特点，既有高性能的条带化，又有高冗余的镜像，适用于需要高性能和高可靠性的场景。</li>
+</ul>
+<p>0是分开，1是备份，10是既分开又备份。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/RAID/image-20240715131609095.png" alt="image-20240715131609095" /></p>
+<h3 id="raid-3"><a class="header" href="#raid-3">RAID 3</a></h3>
+<ul>
+<li><strong>条带化和专用奇偶校验盘</strong>：RAID 3 将数据以字节级或位级条带化，并在一个专用的奇偶校验盘上存储奇偶校验信息。</li>
+<li><strong>高数据传输率</strong>：因为所有磁盘同时工作，RAID 3 提供了很高的连续数据传输速率，适合大文件的读取和写入。</li>
+<li><strong>容错能力</strong>：如果一块数据盘出现故障，可以通过奇偶校验盘的数据恢复丢失的数据。</li>
+<li><strong>缺点</strong>：奇偶校验盘成为瓶颈，写入性能较低，因为每次写入操作都需要更新奇偶校验盘。</li>
+</ul>
+<h3 id="raid-5"><a class="header" href="#raid-5">RAID 5</a></h3>
+<ul>
+<li><strong>条带化和分布式奇偶校验</strong>：RAID 5 将数据和奇偶校验信息条带化存储在三个或更多磁盘上，奇偶校验信息分布在所有磁盘上，而不是专用一个盘。</li>
+<li><strong>良好的读性能</strong>：由于数据分布在多个磁盘上，可以并行读取，读性能接近 RAID 0。</li>
+<li><strong>良好的存储利用率</strong>：存储空间的利用率为 ( \frac{(n-1)}{n} ) （n 为磁盘数量），比 RAID 1 高。</li>
+<li><strong>容错能力</strong>：允许一块磁盘故障，故障磁盘的数据可以通过奇偶校验信息恢复。</li>
+<li><strong>写性能稍低</strong>：写入时需要计算和写入奇偶校验信息，写性能比读性能低，但比 RAID 3 高。</li>
+</ul>
+<h3 id="raid-6"><a class="header" href="#raid-6">RAID 6</a></h3>
+<ul>
+<li><strong>条带化和双重奇偶校验</strong>：RAID 6 类似于 RAID 5，但增加了第二层奇偶校验信息，分布在所有磁盘上。</li>
+<li><strong>更高的容错能力</strong>：允许两块磁盘同时失效，这使得 RAID 6 比 RAID 5 更可靠。</li>
+<li><strong>良好的读性能</strong>：与 RAID 5 类似，由于数据分布在多个磁盘上，可以并行读取。</li>
+<li><strong>存储利用率较 RAID 5 低</strong>：存储空间的利用率为 ( \frac{(n-2)}{n} ) （n 为磁盘数量），因为两块磁盘用于存储奇偶校验信息。</li>
+<li><strong>写性能进一步降低</strong>：写入时需要计算和写入双重奇偶校验信息，写性能比 RAID 5 稍低。</li>
+</ul>
+<h3 id="总结-1"><a class="header" href="#总结-1">总结</a></h3>
+<ul>
+<li><strong>RAID 3</strong> 提供高连续数据传输速率，适合大文件操作，但奇偶校验盘是瓶颈。</li>
+<li><strong>RAID 5</strong> 提供良好的读性能和存储利用率，适合大多数应用场景，有一定的写入性能损失。</li>
+<li><strong>RAID 6</strong> 提供更高的容错能力，适合需要高数据可靠性的场景，但有更高的写入性能损失和较低的存储利用率。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ssd"><a class="header" href="#ssd">SSD</a></h1>
+<p>[toc]</p>
+<h2 id="简介-1"><a class="header" href="#简介-1">简介</a></h2>
+<p>SSD作为数据存储设备，是一种典型的SOC系统。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/ssd/image-20240715134556835.png" alt="image-20240715134556835" /></p>
+<p>SSD controller主要分为前端协议层，中端FTL层和后端nand控制器三大部分。</p>
+<p>前端通过PCIE/SATA接口解析host发来的命令，放入命令队列里等待中端FTL层去处理；</p>
+<p>FTL（flash translation layer）层通过前端发来的LBA映射到闪存的物理空间，是SSD算法软件层；</p>
+<p>后端，即flash controller，跟闪存打交道并完成数据编解码和ECC。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="分布式存储"><a class="header" href="#分布式存储">分布式存储</a></h1>
+<p>[toc]</p>
+<h2 id="集中存储结构"><a class="header" href="#集中存储结构">集中存储结构</a></h2>
+<p>在这个存储系统中包含很多组件，除了核心的机头(控制器)、磁盘阵列( JBOD )和交换机等设备外，还有管理设备等辅助设备。</p>
+<p>结构中包含一个机头，这个是存储系统中最为核心的部件。通常在机头中有包含两个控制器，互为备用， 避免硬件故障导致整个存储系统的不可用。机头中通常包含前端端口和后端端口，前端端口用户为服务器提供存储服务，而后端端口用于扩充存储系统的容量。通过后端端口机头可以连接更多的存储设备，从而形成一个非常大的存储资源池。</p>
+<p>在整个结构中，机头中是整个存储系统的核心部件，整个存储系统的高级功能都在其中实现。控制器中的软件实现对磁盘的管理，将磁盘抽象化为存储资源池，然后划分为 LUN 提供给服务器使用。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/image-20240715133452696.png" alt="image-20240715133452696" /></p>
+<h2 id="分布式存储-1"><a class="header" href="#分布式存储-1">分布式存储</a></h2>
+<p>分布式存储最早是由谷歌提出的，其目的是通过廉价的服务器来提供使用与大规模，高并发场景下的 Web 访问问题。</p>
+<p><strong>完全无中心架构 – 计算模式</strong></p>
+<p>以 Ceph 为代表的架构是其典型的代表。在该架构中与 HDFS 不同的地方在于该架构中没有中心节点。客户端是通过一个<strong>设备映射关系 计算出来 其写入数据的位置</strong>，这样客户端可以直接与存储节点通信，从而避免中心节点的性能瓶颈。</p>
+<p>这和CMN SAM 类似，客户也不知道自己最终要去哪里，得自己算。直接映射的就是Ceph，哈希映射的就是swift。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/image-20240715133751005.png" alt="image-20240715133751005" /></p>
+<p>如上图所示， 在 Ceph 存储系统架构中核心组件有 MON 服务、 OSD 服务和 MDS 服务等。</p>
+<p>(1) MON 服务用于维护存储系统的硬件逻辑关系，主要是服务器和硬盘等在线信息。MON 服务通过集群的方式保证其服务的可用性。</p>
+<p>(2) OSD 服务用于实现对磁盘的管理，实现真正的数据读写，通常一个磁盘对应一个 OSD 服务。</p>
+<p>(3) MDS 只为 CephFS 文件存储系统跟踪文件的层次机构和存储元数据。Ceph 块设备和 RADOS 并不需要元数据，因此也不需要 Ceph MDS 守护进程</p>
+<p>(4) RADOS ：RADOS 就是包含上述三种服务的 ceph 存储集群。在 Ceph 中所有的数据都以对象形式存在的，并且无论哪种数据类型 RADOS 对象存储都将负责保存这些对象。RADOS 层可以确保数据始终保持一致性。要做到这一点必须执行数据复制、故障检测和恢复，以及数据迁移和所在集群节点实现在平衡</p>
+<p>(5) RBD (块设备)：原名 RADOS 块设备，提供可靠的分布式和高性能块存储磁盘给客户端。</p>
+<p>(6) CephFS ：Ceph 文件系统提供了一个使用 Ceph 存储集群存储用户数据的与 POSIX 兼容的文件系统</p>
+<p>(7) Librados ：libRADOS 库为 PHP 、 RUBY 、 Java 、 Python 、 C++ 等语言提供 了方便的访问 RADOS 接口的方式</p>
+<p>(8) RADOS GW ：RGW 提供对象存储服务，它允许应用程序和 Ceph 对象存储建立连接， RGW 提供了与 Amazon S3 和 openstack Swift 兼容的 RUSTFUL API</p>
+<p>客户端访问存储的大致流程是，客户端在启动后会首先通过 RADOS GW 进入，从 MON 服务拉取存储资源布局信息，然后根据该布局信息和写入数据的名称等信息计算出期望数据的位置(包含具体的物理服务器信息和磁盘信息)，然后和该位置信息对应的 CephFS 对应的位置直接通信，读取或者写入数据</p>
+<p>还有lustre。</p>
+<p>参考：<a href="https://www.51cto.com/article/616378.html">Blog</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="虚拟化与分布式"><a class="header" href="#虚拟化与分布式">虚拟化与分布式</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="虚拟化技术原理与实现"><a class="header" href="#虚拟化技术原理与实现">虚拟化技术原理与实现</a></h1>
+<p>[toc]</p>
+<h2 id="一体系结构简介"><a class="header" href="#一体系结构简介">一、体系结构简介</a></h2>
+<p>基于x86</p>
+<h4 id="内存架构"><a class="header" href="#内存架构">内存架构</a></h4>
+<p>物理地址</p>
+<p>线性地址</p>
+<p>逻辑地址</p>
+<p>分段分页</p>
+<p>关键组件：页表、CR3、TLB</p>
+<h4 id="中断与异常"><a class="header" href="#中断与异常">中断与异常</a></h4>
+<p>PIC 单核</p>
+<p>APIC = LAPIC  + IOAPIC  多核</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815141321102.png" alt="image-20240815141321102" /></p>
+<p><strong>异常</strong></p>
+<ul>
+<li>
+<p>错误：缺页</p>
+</li>
+<li>
+<p>陷阱：system cal</p>
+</li>
+<li>
+<p>终止：硬件错误</p>
+</li>
+</ul>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815101231000.png" alt="image-20240815101231000" /></p>
+<h4 id="io架构"><a class="header" href="#io架构">IO架构</a></h4>
+<h4 id="dma"><a class="header" href="#dma">DMA</a></h4>
+<p>连续内存，最新的支持链表</p>
+<h4 id="时钟"><a class="header" href="#时钟">时钟</a></h4>
+<h3 id="操作系统与虚拟化"><a class="header" href="#操作系统与虚拟化">操作系统与虚拟化</a></h3>
+<h4 id="操作系统"><a class="header" href="#操作系统">操作系统</a></h4>
+<p>用户态、内核态</p>
+<p>上下文切换</p>
+<h4 id="虚拟化"><a class="header" href="#虚拟化">虚拟化</a></h4>
+<p>硬件虚拟化支持的处理器：Intel VT技术和AMD SVM技术，保证x86 是个可虚拟化技术。</p>
+<p>虚拟环境组成：硬件、虚拟机监视器和虚拟机。</p>
+<p>虚拟机三个典型特征：同质、高效和资源受控。</p>
+<p>是否可虚拟化：该系统堆敏感指令的支持。</p>
+<p>敏感指令：操作特权资源的指令，包括修改虚拟机的运行模式或下面物理机的状态。</p>
+<p>虚拟化漏洞：不能再所有的敏感指令上触发异常，，则不是可虚拟化的。</p>
+<p>完全虚拟化：客户机觉察不到自己运行在一个虚拟平台上。</p>
+<p>硬件辅助的完全虚拟化：Intel VT-x 引入新的执行模式用于虚拟机。</p>
+<p>类虚拟化：客户机知道自己运行再虚拟平台上，会主动适应。需要修改OS，使得kernel避免难以虚拟化的指令。</p>
+<p>主流VMM技术架构分三类：Hypervisor模型，宿主（Host）模型和混合模型。</p>
+<ul>
+<li>
+<p>Hypervisor模型就是type1 类型，没有OS，既管理硬件资源也提供虚拟化功能。</p>
+</li>
+<li>
+<p>Host 模型就是type2，运行OS上，提供虚拟化功能。</p>
+</li>
+<li>
+<p>混合的就是用Hypervisor，然后加一个运行再特权模式下的OS来进行虚拟化。</p>
+</li>
+</ul>
+<h2 id="二虚拟化实现技术架构"><a class="header" href="#二虚拟化实现技术架构">二、虚拟化实现技术架构</a></h2>
+<p>VMM 对物理资源的虚拟，主要包括三个：处理器虚拟化，IO虚拟化和内存虚拟化。</p>
+<p>Intel VT 包括对这三方面虚拟化的支持。</p>
+<p>在处理器虚拟化方面，Intel VT 提供了 VT-x（Intel Virtualization Technology for x86）技术；</p>
+<p>在内存虚拟化方面，Intel VT 提供了 EPT（Extended Page Table）技术；</p>
+<p>在 I/O 设备虚拟化方面，Intel VT 提供了 VT-d（Intel Virtualization Technology for Direct I/O）技术。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815134522597.png" alt="image-20240815134522597" /></p>
+<p>AMD 平台也提供了类似的技术—AMD SVM（AMD Secure Virtual Machine），其原理和使用方式与 Intel VT 类似。在处理器虚拟化方面，AMD SVM 提供了与 Intel VT-x 类似的技术；在内存虚拟化方面，AMD SVM 提供了 NPT （Nested Page Table）技术；在 I/O 设备虚拟化方面，AMD SVM 提供了 IOMMU （I/O Memory Management Unit）技术。</p>
+<h3 id="处理器虚拟化"><a class="header" href="#处理器虚拟化">处理器虚拟化</a></h3>
+<p>处理器虚拟化的宗旨是让虚拟机里执行的敏感指令能够异常陷入，并被 VMM 模拟，而不要直接作用于真实的硬件上。</p>
+<p>VT-x 引入了两种操作模式：根操作模式和非根操作模式，它们统称为 VMX 操作模式。</p>
+<p>1）根操作模式（VMX Root Operation）：VMM 运行时所处的模式，以下简称为根模式。在根模式下，所有指令的行为和传统的 IA32 一样，因此，原来的软件都可以正常运行。</p>
+<p>2）非根操作模式（VMX Non-Root Operation）：客户机运行时所处的模式，以下简称为非根模式。在非根模式下，所有敏感指令的行为都被重新定义，使得它们能不经过虚拟化就直接运行或者通过「陷入再模拟」的方式来处理。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815140608056.png" alt="image-20240815140608056" /></p>
+<p>根模式和非根模式都有相应的特权级 0～ 特权级 3，正交的。</p>
+<p>与 VT-x 类似，AMD SVM 也引入了根模式和非根模式两种操作模式，非根模式下的敏感指令引起的「陷入」称为 VM-Exit，VMM 调度某个客户机运行时，CPU 由根模式切换成非根模式称为 VM-Entry。</p>
+<p>硬件虚拟化使用 vCPU（Virtual CPU）描述符来描述虚拟 CPU。vCPU 描述符类似于操作系统中的进程描述符（或进程控制块），其本质是一个结构体。</p>
+<p>当 VMM 创建客户机时，首先要为客户机创建 vCPU，整个客户机的运行实际上可以看做是 VMM 调度不同的 vCPU 运行。</p>
+<h3 id="中断虚拟化"><a class="header" href="#中断虚拟化">中断虚拟化</a></h3>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815141344272.png" alt="image-20240815141344272" /></p>
+<p>每一个 vCPU 都对应一个虚拟 Local APIC 用于接收中断。虚拟平台则包含虚拟 I/O APIC 或者虚拟 PIC 用于发送中断。虚拟 Local APIC、虚拟 I/O APIC 和虚拟 PIC 都是由 VMM 维护的软件实体。</p>
+<h3 id="内存虚拟化"><a class="header" href="#内存虚拟化">内存虚拟化</a></h3>
+<p>内存虚拟化引入一层新的地址空间——客户机物理地址空间。</p>
+<p>VMM 负责管理和分配每个虚拟机的物理内存，客户机操作系统看到的是一个虚构的客户机物理地址空间，其指令中所使用的地址最终将转化成一个客户机物理地址。在有虚拟化的情况下，这样的客户机物理地址不能被直接发送到系统总线上去，需要由 VMM 将它转换成一个实际的物理地址后，再交由物理处理器来执行。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815142141983.png" alt="image-20240815142141983" /></p>
+<p>由于引入了客户机物理地址空间，内存虚拟化需要通过两次地址转换来支持地址空间的虚拟化，即客户机虚拟地址（简称为 GVA）→ 客户机物理地址（简称为 GPA）→ 宿主机物理地址（简称为 HPA）的转换。</p>
+<p>传统的 x86 架构只支持一次地址转换，即通过 CR3 指定的页表实现从虚拟地址到物理地址的转换。这和内存虚拟化所要求的两次地址转换产生了矛盾。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815142807940.png" alt="image-20240815142807940" /></p>
+<p>在影子页表的实现过程中，影子页表的页表结构并不一定与客户机页表的页表结构完全一致，比如在 64 位机上模拟 32 位机，客户机的页表结构便与宿主机不同，但只要保证相对于同一个虚拟地址。</p>
+<p>影子页表可以看做是客户机页表巨大的 TLB，称为虚拟 TLB。</p>
+<p>影子页表解决了传统的 IA32 架构下的内存虚拟化问题，但是它的缺点也比较明显，首先，实现非常复杂，需要考虑各种各样的页表同步情况。其次，影子页表的内存开销也很大，需要为每个客户机进程对应的页表都维护一个「影子页表」。</p>
+<p>为解决这些问题，Intel 和 AMD 都提供了相应的技术，直接在硬件上支持 GVA→GPA→HPA 的两次地址转换，大大降低了内存虚拟化的难度，同时也大大提高了内存虚拟化的性能。</p>
+<h5 id="intel-ept"><a class="header" href="#intel-ept">Intel EPT</a></h5>
+<p>Intel EPT（Extended Page Table，扩展页表）是 Intel VT-x 提供的内存虚拟化支持技术。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815143458200.png" alt="image-20240815143458200" /></p>
+<p>查表变得麻烦了很多，先看CR3里是什么值，这个值是GPA，为了知道这个GPA，就得先去查VMM中的页表，找到真正的HPA。</p>
+<p>CPU 需要 5 次查询 EPT 页表，每次查询都需要 4 次内存访问。这样，在最坏的情况下总共需要 20 次内存访问。</p>
+<h5 id="amd-npt"><a class="header" href="#amd-npt">AMD NPT</a></h5>
+<p>AMD NPT（Nested Page Table，嵌套页表）是 AMD 提供的内存虚拟化支持技术。</p>
+<p>1）客户机和宿主机都有自己的 CR3 寄存器，分别记为 gCR3（guest CR3）和 nCR3（nested CR3）。真正的 CR3 由 VMM 所控制和使用。</p>
+<p>2）gPT（guest Page Table，客户机页表）负责将客户机线性地址转换为客户机物理地址。客户机页表存在于客户机物理内存中，并由 gCR3 索引。</p>
+<p>3）nPT（nested Page Table，嵌套页表）负责将客户机物理地址转换为系统物理地址。嵌套页表存在于系统物理内存中，并由 nCR3 索引。</p>
+<p>4）最常用到的客户机线性地址到系统物理地址的映射关系在 TLB 中缓存。</p>
+<p>5）gCR3 和客户机页表中存放的都是客户机物理地址，所以，在访问客户机页表前需要将客户机物理地址转换为系统物理地址。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815144116083.png" alt="image-20240815144116083" /></p>
+<h3 id="io虚拟化"><a class="header" href="#io虚拟化">IO虚拟化</a></h3>
+<p>评价 I/O 虚拟技术的两个指标—性能和通用性（透明）。</p>
+<p>面临的问题：</p>
+<ul>
+<li>让客户机直接访问到设备真实的 I/O 地址空间（包括端口 I/O 和 MMIO）
+<ul>
+<li>VT-x 技术允许客户机直接访问物理的 I/O 空间，于是便解决了这个问题。</li>
+</ul>
+</li>
+<li>让设备的 DMA 操作直接访问到客户机的内存空间。设备不管系统中运行的是虚拟机还是真实的操作系统，它只管用驱动提供给它的物理地址做 DMA 操作。
+<ul>
+<li>Intel VT-d 技术提供了 DMA 重映射技术</li>
+</ul>
+</li>
+</ul>
+<h4 id="intel-vt-d"><a class="header" href="#intel-vt-d">Intel VT-d</a></h4>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815144838203.png" alt="image-20240815144838203" /></p>
+<p><strong>DMA 重映射</strong></p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145206955.png" alt="image-20240815145206955" /></p>
+<p>当 DMA 重映射硬件捕获一个 DMA 传输时，通过其中 BDF 的 Bus 字段索引根条目表，可以得到产生此 DMA 传输的总线对应的根条目。由根条目的 CTP 字段可以获得上下文条目表，用 BDF 中的{Dev:Function}索引该表，可以得到产生此 DMA 传输的设备对应的上下文条目。由上下文条目的 ASR 字段，可以寻址到该设备对应的 I/O 页表，此时，DMA 重映射硬件就可以做地址转换了。</p>
+<p>通过所示的两级结构，VT-d 技术可以实现对平台上 PCI 设备的全覆盖，并对它们的 DMA 传输进行地址转换。</p>
+<h4 id="amd-iommu"><a class="header" href="#amd-iommu">AMD IOMMU</a></h4>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145511102.png" alt="image-20240815145511102" /></p>
+<p>AMD 的 IOMMU 避免了设备模拟，取消了转译层，而且允许本机驱动程序直接配合设备，极大地降低了 I/O 设备虚拟化的开销。</p>
+<h3 id="网络虚拟化"><a class="header" href="#网络虚拟化">网络虚拟化</a></h3>
+<p>SR-IOV（Single Root I/O Virtualization）是 PCI-SIG 推出的一项标准，它将单个 PCIe 设备对上层软件虚拟化为多个独立的 PCIe 设备。SR-IOV 网卡能对上层操作系统虚拟化出多个 PCIe 网卡，而且虚拟出的每个网卡都可以实现独立的 I/O 功能。独立的通道能够实现更强的安全隔离、更完善的 QoS 和更高的传输效率。SR-IOV 目前支持在一块 PCIe 网卡上虚拟化出 256 个通道.</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145725553.png" alt="image-20240815145725553" /></p>
+<p>SR-IOV 虚拟出的通道有两种：PF（Physical Function）和 VF（Virtual Function）。PF 是一个完整的 PCIe 设备，包含全面的管理、配置功能，Hypervisor 往往通过 PF 来实现对网卡所有 I/O 资源的管理和配置；VF 是一个简化的 PCIe 设备，仅仅包含了 I/O 功能，不能通过 VF 管理物理网卡。</p>
+<p>所有的 VF 都是通过 PF 衍生而来的，一块 SR-IOV 网卡最多可以生成 256 个 VF。VF 可以理解为物理网卡硬件资源的一个切片，在虚拟化软件平台 Hypervisor 看来，VF 与普通的 PCIe 网卡一模一样，安装相应的驱动后就能直接使用。如果一台物理机上只有一个单端口的 SR-IOV 网卡，这个端口产生了 6 个 VF，则 Hypervisor 就能得到 6 个以太网连接。</p>
+<p>在 SR-IOV 的基础上，再结合 Intel VT-d 或 AMD IOMMU 技术，可以实现 VM 和 VF 的一对一映射，进而跳过 Hypervisor 的软件交换机使 VM 直接访问 VF 硬件资源。这样既能提高访问效率，又能提高网卡的利用率。</p>
+<h3 id="时间虚拟化"><a class="header" href="#时间虚拟化">时间虚拟化</a></h3>
+<p>概念：</p>
+<p>时间管理是操作系统的一个重要模块。操作系统的时间概念有以下两种。
+● 绝对时间：操作系统启动后到目前为止的总运行时间，又称为墙上时间（Wall time）。它是递增的。</p>
+<p>● 相对时间：两个时间之间的间隔。例如，两次时钟中断的间隔、两次使用 RDTSC 指令读取 TSC 的间隔。</p>
+<p>在虚拟环境下，客户机与其他客户机以及 VMM 共享物理平台，客户机只能得到部分的处理器时间。即使当前只有一个客户机，VMM 本身运行也需要占用 CPU 时间。</p>
+<h3 id="主流虚拟化产品"><a class="header" href="#主流虚拟化产品">主流虚拟化产品</a></h3>
+<h4 id="xen"><a class="header" href="#xen">Xen</a></h4>
+<p>Xen 可以安装在系统上，也可以直接安装到裸机上。</p>
+<p>Xen 采用的是混合模型。特权操作系统（Domain 0）可以是 Linux、Solaris 以及 NetBSD。</p>
+<p>OS需要定制化才能运行再Xen 上。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815150359893.png" alt="image-20240815150359893" /></p>
+<h4 id="vmware"><a class="header" href="#vmware">VMware</a></h4>
+<p>VMware 是 x86 虚拟化软件的主流厂商之一。</p>
+<p>基于 Hypervisor 架构的 VMware ESX Server 可以直接运行在裸机上。</p>
+<p>VMware Workstation 是 VMware 面向桌面的主打产品。Workstation 基于宿主模型，宿主机操作系统可以是 Windows 或者 Linux。</p>
+<h4 id="hyper-v"><a class="header" href="#hyper-v">Hyper-V</a></h4>
+<p>Hyper-V 是微软提出的一种系统管理程序虚拟化技术，它的主要作用是管理、调度虚拟机的创建和运行，并提供硬件资源的虚拟化。</p>
+<h4 id="kvm"><a class="header" href="#kvm">KVM</a></h4>
+<p>KVM（Kernel-based Virtual Machine）是一款开源的虚拟机软件，最早由 Qumranet 公司开发，并于 2007 年 2 月被集成到 Linux 2.6.20 内核中，称为 Linux 内核的一部分。</p>
+<p>随着越来越多的虚拟化功能被加入到 Linux 内核中，有说法认为 Linux 已经是一个 Hypervisor，因此，KVM 是 Hypervisor 模型。</p>
+<p>KVM 的宿主操作系统必须是 Linux，支持的客户机操作系统包括 Linux、Windows、Solaris 和 BSD，只能运行在支持虚拟化扩展的 x86 和 x86_64 硬件架构上，这意味着 KVM 不能运行在老式 CPU 上，新 CPU 如果不支持虚拟化扩展，也不能运行（如英特尔的 Atom 处理器）。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815151122500.png" alt="image-20240815151122500" /></p>
+<h2 id="三xen-虚拟化技术"><a class="header" href="#三xen-虚拟化技术">三、Xen 虚拟化技术</a></h2>
+<h4 id="架构"><a class="header" href="#架构">架构</a></h4>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815151735652.png" alt="image-20240815151735652" /></p>
+<p>Xen 虚拟化固件（Xen Virtual Firmware）是一个虚拟的 BIOS，它被加载到每一个 HVM 虚拟域以提供标准的启动指令，保证客户机操作系统在正常启动过程中能得到标准的 PC 兼容的软件环境。</p>
+<p><strong>独立设备驱动域（IDD）</strong></p>
+<p>在 Xen 结构中，所有的虚拟域操作系统访问硬件设备都要经过 Dom0，如果某一个硬件设备的驱动程序存在某些漏洞，那它就有可能摧毁整个 Dom0 的内核，从而导致整个系统崩溃。为了解决这个问题，Xen 考虑将 Dom0 中的设备驱动模块移动到另一个虚拟域中，一方面可以降低 Dom0 的运行负载，另一方面也可以降低系统的风险。</p>
+<p><strong>非特权虚拟域 U（DomU）</strong></p>
+<p>DomU 是除 Dom0 以外的虚拟域，由于 DomU 不能像 Dom0 一样直接访问物理 I/O 设备，因此，称为非特权域。</p>
+<p><strong>硬件虚拟域（HVM）</strong></p>
+<p>Xen 在设计之初为了追求高性能，采用了半虚拟化技术，需要少量修改客户机操作系统的内核与 Xen Hypervisor 进行协同工作。后期在得到 Intel 和 AMD 的 VT-x 及 SVM 硬件虚拟技术的支持后，Xen 能够实现全虚拟化，此时客户机操作系统的内核不需要修改，Windows XP 这种非开源的操作系统可以在其上运行，弥补了半虚拟化时的不足。</p>
+<h4 id="启动"><a class="header" href="#启动">启动</a></h4>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815152106216.png" alt="image-20240815152106216" /></p>
+<h2 id="四kvm-虚拟化技术"><a class="header" href="#四kvm-虚拟化技术">四、KVM 虚拟化技术</a></h2>
+<h4 id="kvm-1"><a class="header" href="#kvm-1">KVM</a></h4>
+<p>KVM 全称是 Kernel-based Virtual Machine，是一个基于 Linux 环境的开源虚拟化解决方案。</p>
+<p>与 Xen、VMware 等提供完整解决方案的商业化虚拟产品不同，KVM 的思想是在 Linux 内核的基础上添加虚拟机管理模块，重用 Linux 内核中已经完善的进程调度、内存管理、IO 管理等部分，<strong>使之成为一个可以支持运行虚拟机的 Hypervisor</strong>。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815152531925.png" alt="image-20240815152531925" /></p>
+<p>在 KVM 中，一个虚拟机就是一个传统的 Linux 中的进程（原文说是线程，感觉是个笔误），拥有自己的 PID 号，也可以被 kill 系统调用直接杀死（在这种情况下，虚拟机的行为表现为「突然断电」）。在一个 Linux 系统中，有多少个 VM，就有多少个进程。</p>
+<p>OS不需要修改就能直接运行再KVM上。</p>
+<p>KVM支持嵌套虚拟化，虚拟机中能再次虚拟其他主机。</p>
+<p><strong>KVM 体现了 Linux 系统的哲学：只做一件事情，但是要做得最好。</strong></p>
+<p>要不我也只做一件事，固件，尝试做到最好。但是有点难，因为要吃饭，要顺应时代潮流。</p>
+<p>在 KVM 的核心模块中，包含了 IOMMU、中断控制、kvm arch、设备管理等部分的代码，这些代码形成了虚拟机管理的核心功能。从这些功能中可以看到，KVM 并没有尝试实现一个完整的 PC 系统虚拟化，<strong>而将最重要的 CPU 虚拟化、I/O 虚拟化和内存虚拟化部分针对硬件辅助的能力进行了有效的抽象和对接，并且暴露出 API 供上层应用使用。</strong></p>
+<p>KVM 结构体在 KVM 的系统架构中代表一个具体的虚拟机。当通过 VM_CREATE_KVM 指令字创建一个新的 KVM 虚拟机之后，就会创建一个新的 KVM 结构体对象。KVM 结构体对象中包含了 vCPU、内存、APIC、IRQ、MMU、Event 事件管理等信息。</p>
+<h4 id="qemu-kvm"><a class="header" href="#qemu-kvm">qemu-kvm</a></h4>
+<p>qemu-kvm 是 KVM 所支持开发的一个 QEMU 版本，这个版本整合了 KVM 的加速支持，但是也重用了 QEMU 的体系结构、PC 机平台模拟等功能，充分发挥了二者的优点</p>
+<p>了支持 KVM 之外，QEMU 还支持全模拟化和 kqemu 加速模块等方式，这三种方式的架构区别如图</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815153448777.png" alt="image-20240815153448777" /></p>
+<p>第一种是借助额外的模块实现内核态的加速；</p>
+<p>第二种是用户态直接运行，全虚拟化；</p>
+<p>第三种模式则是 KVM 官方提供的 kvm-qemu 加速模式。运行在内核态的 KVM 模块通过/dev/kvm 字符设备文件向外提供操作接口。KVM 通过提供 libkvm 这个操作库，将/dev/kvm 这一层面的 ioctl 类型的 API 转化成为通常意义上的函数 API 调用，提供给 QEMU 的相应适配层，通过 QEMU 的支持来完成整个虚拟化工作。</p>
+<h4 id="libvirt-和-virt-manager"><a class="header" href="#libvirt-和-virt-manager">libvirt 和 virt-manager</a></h4>
+<p>在很多开源版本的 qemu-kvm 实现中，并不仅仅提供 qemu-kvm 软件来进行管理，而引入了一个叫做 libvirt 的库和 virt-manager 进行管理。</p>
+<p>virt-manager 是一个基于 Python 和 pygtk 编写的虚拟机管理工具前端，通过引用 libvirt 来进行桌面环境下的虚拟机管理</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815154957616.png" alt="image-20240815154957616" /></p>
+<h2 id="五虚拟化软件开放接口"><a class="header" href="#五虚拟化软件开放接口">五、虚拟化软件开放接口</a></h2>
+<p>ibvirt 是一套免费、开源的支持 Linux 下主流虚拟化工具的 C 函数库，支持与 C、C++、Ruby、Python 等多种主流开发语言的绑定。libvirt 的主要目标是为包括 Xen 在内的各种虚拟化工具提供一套方便、可靠的编程接口，用一种单一的方式管理多种不同的虚拟化提供方式和 Hypervisor，避免学习、使用不同 Hypervisor 的特定工具。</p>
+<p>libvirt 支持各种虚拟机监控程序，包括 Xen、KVM，以及 QEMU 和用于其他操作系统的许多虚拟产品。关于 libvirt 的官方描述如下。</p>
+<p>● libvirt 是一种为最新的 Linux（及其他操作系统）提供虚拟化功能的工具包。</p>
+<p>● libvirt 是遵循 GUN 公共许可的免费软件。</p>
+<p>● libvirt 是一种长期稳定的 C 语言 API。</p>
+<p>● libvirt 提供一组通用语言的绑定。</p>
+<p>● libvirt 是一个 DMTF（Distributed Management Task Force，分布式管理任务组）虚拟化模式的 CIM（Computer Integrated Manufacturing，计算机集成制造）提供者。</p>
+<p>● libvirt 是一个实现 AMQP（Advanced Message Queuing Protocol，消息队列协议）/Qpid（AMQP 的一个实现）消息系统的 QMF（Query Management Facility，查询管理应用程序）代理。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815155434472.png" alt="image-20240815155434472" /></p>
+<h2 id="六总结"><a class="header" href="#六总结">六、总结</a></h2>
+<p>虚拟化技术的发展，开始是从软件虚拟化开始，有很多问题，软件没办法解决，硬件开始逐渐介入，从架构角度增加一些功能，丰富完善虚拟化技术，使得虚拟化性能和完备性逐步提高，满足市场的需求。</p>
+<p>软硬件协同发展、共同进步促进了虚拟化技术的长足可持续性发展。</p>
+<h2 id="参考"><a class="header" href="#参考">参考：</a></h2>
+<p>《虚拟化技术原理与实现》</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="hypervisor"><a class="header" href="#hypervisor">Hypervisor</a></h1>
+<p>[toc]</p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<h4 id="type-1-hypervisor"><a class="header" href="#type-1-hypervisor">Type 1 Hypervisor</a></h4>
+<p>可以本地安装并直接在物理主机上运行的Hypervisor称为Type 1 Hypervisor。</p>
+<h6 id="关键指标"><a class="header" href="#关键指标">关键指标</a></h6>
+<ul>
+<li>Type 1 Hypervisor可以直接安装在裸机系统或物理主机上。</li>
+<li><strong>它不需要先安装或可用的操作系统 (OS)</strong>，即可将自身部署在服务器上。</li>
+<li>直接访问 CPU、内存、网络、物理存储。</li>
+<li>硬件利用效率更高，提供最佳性能。</li>
+<li>由于没有任何额外的硬件访问层，因此安全性更高。</li>
+<li>每个Type 1 Hypervisor始终需要专用的物理机。</li>
+<li>可以成本更高，更适合企业级解决方案。</li>
+<li>VMware ESXi、Citrix Hypervisor和Microsoft Hyper-V是Type 1 Hypervisor的一些示例。</li>
+</ul>
+<h4 id="type-2-hypervisor"><a class="header" href="#type-2-hypervisor">Type 2 Hypervisor</a></h4>
+<p>无法本地安装且需要操作系统才能在物理主机上运行的管理程序称为类型 2 管理程序。</p>
+<h6 id="关键指标-1"><a class="header" href="#关键指标-1">关键指标</a></h6>
+<ul>
+<li>Type 2 hypervisor 不能直接安装在裸机系统或物理主机上。</li>
+<li><strong>它需要首先安装或可用的操作系统，以便部署自己。</strong></li>
+<li>间接访问 CPU、内存、网络、物理存储。</li>
+<li>由于需要额外的层 (OS) 来访问资源，因此硬件利用率可能会降低并导致性能滞后。</li>
+<li>由于主机操作系统的可用性，潜在的安全风险。</li>
+<li>每个Type 2 hypervisor不需要专用的物理机。单个主机上可以有多个。</li>
+<li>成本更低，更适合小型企业解决方案。</li>
+<li>VMware Workstation Player、VMware Workstation Pro和VirtualBox是Type 2 hypervisor的一些示例。</li>
+</ul>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/hypervisor/image-20240718133210715.png" alt="image-20240718133210715" /></p>
+<h2 id="行业发展"><a class="header" href="#行业发展">行业发展</a></h2>
+<p>截取自：<a href="https://zhuanlan.zhihu.com/p/672508870">基于 RISC-V 的 Type-1 Hypervisor 的设计与实现</a></p>
+<h3 id="rvirt"><a class="header" href="#rvirt">RVirt</a></h3>
+<p>RVirt 是由 MIT PDOS 在 2018 年使用 Rust 开发的一个 <strong>RISC-V Type-1 hypervisor</strong>。RVirt 诞生时 RISC-V 虚拟化扩展仍然没有被提出，因此 MIT PDOS 采用了纯软件虚拟化的技术，RVirt 运行在 S-mode，客户操作系统运行在 U-mode，当客户操作系统执行特权指令或者读写 CSR 时将会陷入 hypervisor，hypervisor 会为客户操作系统维护影子状态。RVirt 可以在 QEMU virt 和 Hifive Unleased 开发板上运行 fedora 操作系统。RVirt 的优点是可以在任何实现了 M，S，U 特权级的 RISC-V 芯片上运行，缺点是性能低。</p>
+<h3 id="bao-hypervisor"><a class="header" href="#bao-hypervisor">Bao-hypervisor</a></h3>
+<p>Bao hypervisor是一个轻量级、安全、可靠、高效并且开源的 hypervisor 解决方案，旨在为现代多核嵌入式系统提供强大的虚拟化能力。与传统虚拟化解决方案相比，Bao hypervisor 可以更好地满足嵌入式系统对实时性、安全性和可靠性等方面的要求。</p>
+<p>Bao 的架构采用静态分区架构，并支持硬件辅助虚拟化技术。每个分区都被分配了一组硬件资源，并且这些资源在运行时不会发生变化。这种方法可以提高系统的可预测性和安全性，并减少了虚拟化开销。</p>
+<p>Bao 是一个轻量级 hypervisor，具有小巧、高效、可裁剪等特点，并且可以提供强大的空间和时间隔离。作者进行了一些实验来评估 Bao 的性能。实验结果表明，Bao 启动速度快、内存占用率低，并且中断延迟较小。</p>
+<p>目前 Bao 已经支持了 RISC-V 虚拟化技术并且成功在添加了 Hypervisor Extension 的 rocket chip 以及 CVA6 软核上成功运行。</p>
+<h3 id="xvisor"><a class="header" href="#xvisor">Xvisor</a></h3>
+<p>Xvisor 是一个完整的单体式虚拟化管理程序，支持全虚拟化和半虚拟化。它旨在提供一个轻量级的虚拟化管理程序，可用于嵌入式系统，具有较小的开销和内存占用。Xvisor 主要提供全虚拟化客户机，并通过可选的 VirtIO 设备提供半虚拟化。所有核心组件都作为单个软件层运行，包括 CPU 虚拟化、客户机 IO 模拟、后台线程、半虚拟化服务、管理服务和设备驱动程序。客户操作系统运行在 Xvisor 实现者称之为 Normal vCPUs 的特权较低的环境中。</p>
+<p>在 2019 年 Xvisor 根据当时的 RISC-V 虚拟化草案支持了 RISC-V 虚拟化，后续更新到 RISC-V Hypervisor Extension 1.0，不过目前 Xvisor 作者对于 Xvisor 已经疏于维护。</p>
+<h3 id="sel4"><a class="header" href="#sel4">seL4</a></h3>
+<p>seL4 是一种基于保密性和高度安全的微内核操作系统，由澳大利亚国立大学的 NICTA（现在成为CSIRO data61）团队开发。seL4具有严格的形式化验证，保证了其内核的功能正确性和安全性。这使得seL4成为在实时和安全领域进行高度可信和高保密度的应用的理想平台。</p>
+<p>seL4的特点包括以下几点：</p>
+<ul>
+<li>高度安全性：seL4的内核采用严格的数学证明，保证内核的正确性和安全性。</li>
+<li>微内核设计：seL4采用微内核设计，只包含操作系统最基本的功能。这使得它具有高度的可扩展性、可配置性和可移植性。</li>
+<li>高性能：由于seL4是一个精简的微内核，它不会附加额外的功能和复杂度，这使得它能够在嵌入式和高性能计算领域具有优势。</li>
+<li>开放源代码：seL4采用 GPLv2 开源协议，完全开放源代码。</li>
+<li>应用领域广泛：由于其高度安全和可信度，seL4在许多领域中得到广泛应用，如智能网联汽车、航空航天、国防、金融、医疗等。</li>
+<li>目前 seL4 已经为 RISC-V 虚拟化提供了支持。</li>
+</ul>
+<h3 id="kvm-2"><a class="header" href="#kvm-2">KVM</a></h3>
+<p>KVM（Kernel-based Virtual Machine）是一种基于Linux内核的虚拟化技术，它允许在相同的物理硬件上运行多个虚拟机（VM），每个VM都可以运行不同的操作系统。KVM利用虚拟化技术中的硬件辅助虚拟化技术（如Intel VT和AMD-V）来提高VM性能和安全性。</p>
+<p>KVM是一种开放源代码软件，它被许多组织和公司使用和支持，例如Red Hat、IBM、Intel等。KVM支持多种操作系统，包括Linux、Windows和BSD。此外，KVM还提供了一些管理工具，如virt-manager和virsh，使用户能够轻松创建、配置和管理虚拟机。</p>
+<p>KVM的优点包括可靠性、高性能、高安全性、灵活性和可扩展性。它可以在不同的硬件架构上运行。另外，由于它是Linux内核的一部分，因此它保持了与Linux内核的紧密集成，可以受益于Linux社区提供的驱动程序、功能和补丁。</p>
+<p>一些比较好的文章</p>
+<p><a href="https://zhuanlan.zhihu.com/p/672508870">基于 RISC-V 的 Type-1 Hypervisor 的设计与实现</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mit-6824-distributed-systems"><a class="header" href="#mit-6824-distributed-systems">MIT 6.824 Distributed Systems</a></h1>
+<p>6.824 是MIT开设的一门讲解分布式系统的课程。课程内容包括Golang语言的学习、分布式系统研究的动机、一致性协议算法、著名分布式系统软件论文讲解和一致性算法实现实验。这门课是一门实践性质比较强的课程。</p>
+<p>资源：</p>
+<p><a href="https://www.bilibili.com/video/BV1R7411t71W/?vd_source=e2650e9dfc4eb50f3b6d371091063d29">B站</a></p>
+<p>课程主页：<a href="https://link.zhihu.com/?target=https%3A//pdos.csail.mit.edu/6.824/schedule.html">https://pdos.csail.mit.edu/6.82</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-consistency-and-cache-coherence"><a class="header" href="#memory-consistency-and-cache-coherence">Memory consistency and cache coherence</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-consistency"><a class="header" href="#memory-consistency">Memory Consistency</a></h1>
+<p>[toc]</p>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>一个栗子：</p>
+<p>可以从现实世界中直观的感受一下我们为什么需要 consistency model。请考虑一所在线发布其课程安排的大学，假设计算机体系结构课程原定在 152 室。开课前一天，大学注册处决定将课程搬到 252 室。注册处发送电子邮件，要求网站管理员更新在线课程表，几分钟后，注册处会向所有注册的学生发送一条短信，要求学生去检查新的课程表。想象这样一个场景，网站管理员太忙而无法立即发布更新，一个勤奋的学生收到短信后，立即查看在线课程表，会观察到课程位置认为 152 室。尽管在线课程表最终更新为 252 室，并且注册处以正确的顺序执行“写入”，但这位勤奋的学生以不同的顺序观察它们，因此去了错误的房间。</p>
+<p>我们可以观察到电子邮件系统、人工网络管理员和短信系统的组合，代表了一个极其弱的 consistency model。为了防止勤奋的学生走错房间，大学注册处需要在发送电子邮件之后执行 FENCE 操作，以确保在线课程表在发送短信之前已经更新。</p>
+<p>计算机中的栗子：</p>
+<pre><code class="language-c">static int x = 0, y = 0;
+static int r1, r2;
+
+
+static void int thread_cpu0(void)
+{
+        x = 1;    /* 1) */
+        r1 = y;   /* 2) */
+}
+
+
+static void int thread_cpu1(void)
+{
+        y = 1;    /* 3) */
+        r2 = x;   /* 4) */
+}
+
+
+static void check_after_assign(void)
+{
+        printk("r1 = %d, r2 = %d\n", r1, r2);
+}
+</code></pre>
+<p>在多核系统上，我们知道两个函数4条操作执行可以互相交错。理论上来我们有以下6种排列组合。</p>
+<pre><code class="language-text">1) 2) 3) 4)
+1) 3) 2) 4)
+1) 3) 4) 2)
+3) 4) 1) 2)
+3) 1) 4) 2)
+3) 1) 2) 4)
+</code></pre>
+<p>当我们确保thread_cpu0和thread_cpu1执行完成后，调用check_after_assign()会打印什么提示信息呢？根据以上6种组合，我们可能会得到如下3种结果。</p>
+<pre><code class="language-c">r1 = 1, r2 = 1
+r1 = 0, r2 = 1   // 1) 2) 3) 4)
+r1 = 1, r2 = 0   // 3) 4) 1) 2)
+</code></pre>
+<p>这里就出了个问题，每个处理器都按照各自正确的顺序在执行，但r1 或者 r2 没有拿到正确的值，这就是王齐老师总是提到的"序"的问题。具有乱序处理器核心、write buffer、prefetching 和 multiple cache banks 的共享内存硬件中也可能发生类似的行为。</p>
+<p>有个问题，有了cache一致性，为什么还会出这种问题呢？如，write buffer 可能导致这个问题，数据都没到cache里，没到cache里，缓存一致性就不起作用了。</p>
+<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/09_Memory_Consistency/images/memory_consistency/image-20240724170156332.png" alt="image-20240724170156332" /></p>
+<p>此外，加入write buffer，可能出现更糟糕的情况，如 <code>1) 3) 2) 4)</code> 这个case，可能写操作都暂存在write buffer中，另一个core 互相全都没看见对方的修改，直接输出全是0。</p>
+<pre><code class="language-text">r1 = 0, r2 = 0
+</code></pre>
+<p>看起来像是按照 <code>3) 4) 1) 2)</code> 这顺序执行的。</p>
+<p>从这个例子可以看出，在共享存储系统中，需要对多处理器的访存操作的次序做出限制，才能保证程序执行的正确。</p>
+<p>存储一致性模型是多处理器系统设计者与应用程序员之间的一种约定，它给出了正确编写程序的标准，使得程序员无须考虑具体访存次序就能编写正确程序，而系统设计者则可以根据这个约定来优化设计提高性能。系统设计者通过对各处理器的访存操作完成次序加以必要的约束来满足存储一致性模型的要求。</p>
+<p>现代计算机为了提升处理性能，在硬件层面加入了各种优化等，最终导致了内存乱序访问的问题。由于不同处理器架构在硬件层面的优化程度不同，导致可能产生的内存乱序访问的行为也存在很大的差异。**内存一致性模型描述了这些可能产生的乱序访问行为的规则以及约束，以便软件开发人员在不清楚硬件实现细节的情况下，能够理解硬件的行为并正确编写并发代码。**比如，某个架构遵循TSO模型，作为软件工程师，你只需要知道，这个标准，按这个标准去写代码就行了，不用关心硬件的实现细节。</p>
+<p>内存一致性模型（Memory Consistency Model）就是用来描述多处理器对共享存储器的访问行为，在不同的内存一致性模型里，多线程对共享存储器的访问行为有非常大的差别。这些差别会严重影响程序的执行逻辑，甚至会造成软件逻辑问题。</p>
+<p>“<strong>单核乱序对程序员是透明的，只有其他核才会受到乱序影响</strong>” —— core 0 能看到自己write buffer 中的内容，core1 也能看到自己的。</p>
+<h2 id="与缓存一致性的区别"><a class="header" href="#与缓存一致性的区别">与缓存一致性的区别</a></h2>
+<p>在英文里，这两个是不同的单词memory consistency and cache coherence，中文里不知道谁最先翻译的，给整成一样的了，这会带来很大的误解。</p>
+<p>cache一致性关注的是多个CPU看到一个地址的数据是否一致。<strong>内容一致</strong></p>
+<p>而内存一致性关注的是多个CPU看到多个地址数据读写的次序。<strong>次序关系</strong></p>
+<p>一个关注的是<strong>一个地址</strong>，一个关注的是<strong>多个地址</strong>的顺序。还是有点区别。</p>
+<h2 id="常见模型"><a class="header" href="#常见模型">常见模型</a></h2>
+<p>内存一致性关注对内存的读写操作访问，由此可得到4种不同的指令组合，依次为Store-Load、Store-Store、Load-Store、Load-Load，通过允许调整这些指令组合执行的顺序，可以获得不同的内存一致性模型。目前有多种内存一致性模型，从上到下模型的限制由强到弱，依次为：</p>
+<p>顺序一致性（Sequential Consistency，简写SC）模型；
+完全存储定序（Total Store Order，简写TSO）模型；x86-64
+部分存储定序（Part Store Order，简写PSO）模型；
+宽松存储（Relax Memory Order，简写RMO）模型。</p>
+<p>这些存储一致性模型对访存事件次序的限制不同，因而对程序员的要求以及所能得到的性能也不一样。<strong>存储一致性模型对访存事件次序施加的限制越弱越有利于提高性能，但编程越难</strong>。下面介绍具体的存储一致性模型。</p>
+<p>这四种内存一致性模型描述了在多处理器系统中处理器之间共享内存的不同策略。以下是对每种模型的详细解释和示例：</p>
+<h3 id="1-顺序一致性模型sequential-consistency-sc"><a class="header" href="#1-顺序一致性模型sequential-consistency-sc">1. 顺序一致性模型（Sequential Consistency, SC）</a></h3>
+<p>顺序一致性模型要求所有处理器的内存操作按照一个统一的全局顺序执行，即每个处理器的操作顺序在全局顺序中保持一致。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>所有处理器的内存操作严格按照程序中指定的顺序执行。</li>
+<li>在所有处理器看来，所有内存操作发生的顺序是一致的。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
+3 -&gt; 1 -&gt; 4 -&gt; 2
+1 -&gt; 3 -&gt; 4 -&gt; 2 // 是否为可行的顺序
+3 -&gt; 1 -&gt; 2 -&gt; 4
+</code></pre>
+<ul>
+<li>
+<p>各个处理器上的操作顺序必须按照程序的顺序执行。</p>
+</li>
+<li>
+<p>所有处理器看到的操作顺序一致。</p>
+</li>
+</ul>
+<h5 id="解读"><a class="header" href="#解读">解读</a></h5>
+<h6 id="分析-1---3---4---2"><a class="header" href="#分析-1---3---4---2">分析 <code>1 -&gt; 3 -&gt; 4 -&gt; 2</code></a></h6>
+<ol>
+<li><code>1: x = 1</code> （CPU 0）</li>
+<li><code>3: y = 1</code> （CPU 1）</li>
+<li><code>4: r2 = x</code> （CPU 1）</li>
+<li><code>2: r1 = y</code> （CPU 0）</li>
+</ol>
+<p>我们需要检查 <code>CPU 0</code> 和 <code>CPU 1</code> 各自的操作顺序：</p>
+<ul>
+<li>对于 <code>CPU 0</code>，顺序是 <code>1 -&gt; 2</code></li>
+<li>对于 <code>CPU 1</code>，顺序是 <code>3 -&gt; 4</code></li>
+</ul>
+<p>在顺序一致性模型下，我们必须确保每个处理器的操作顺序在全局视图中保持一致。</p>
+<h6 id="全局视图的一致性"><a class="header" href="#全局视图的一致性">全局视图的一致性</a></h6>
+<p>根据顺序 <code>1 -&gt; 3 -&gt; 4 -&gt; 2</code>，我们有：</p>
+<ul>
+<li>操作 <code>4</code> 读取 <code>x</code>，应该看到的是操作 <code>1</code> 的结果，即 <code>r2 = 1</code></li>
+<li>操作 <code>2</code> 读取 <code>y</code>，应该看到的是操作 <code>3</code> 的结果，即 <code>r1 = 1</code></li>
+</ul>
+<h3 id="2-完全存储定序模型total-store-order-tso"><a class="header" href="#2-完全存储定序模型total-store-order-tso">2. 完全存储定序模型（Total Store Order, TSO）</a></h3>
+<p>TSO 模型允许写操作的重排序，但读取操作在看到前一写操作的结果之前不会继续。store和load的组合有4种。分别是store-store，store-load，load-load和load-store。TSO模型中，<strong>只存在store-load存在乱序</strong>，另外3种内存操作不存在乱序。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>写操作可以重排序，但在读操作发生之前必须确保前一写操作的可见性。</li>
+<li>写操作被推送到写缓冲区，而读操作可以从写缓冲区中读取未提交的写操作。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
+3 -&gt; 1 -&gt; 4 -&gt; 2
+1 -&gt; 2 -&gt; 3 -&gt; 4
+3 -&gt; 4 -&gt; 1 -&gt; 2
+</code></pre>
+<p>但必须确保读操作看到之前写操作的结果。</p>
+<h3 id="3-部分存储定序模型partial-store-order-pso"><a class="header" href="#3-部分存储定序模型partial-store-order-pso">3. 部分存储定序模型（Partial Store Order, PSO）</a></h3>
+<p>PSO 模型允许写操作和读操作都进行重排序，但对某些特定的内存操作需要保持顺序。</p>
+<p>处理器一致性（Processor Consistency, PC） 松散一致性（Relaxed Consistency, RC）</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>写操作和读操作可以进行更广泛的重排序。</li>
+<li>通过显式的同步操作（如内存屏障）来保证某些操作的顺序性。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
+3 -&gt; 1 -&gt; 4 -&gt; 2
+1 -&gt; 2 -&gt; 3 -&gt; 4
+3 -&gt; 4 -&gt; 1 -&gt; 2
+2 -&gt; 1 -&gt; 4 -&gt; 3
+4 -&gt; 3 -&gt; 2 -&gt; 1
+</code></pre>
+<p>但通过内存屏障，可以强制某些操作按顺序执行。</p>
+<h3 id="4-宽松存储模型relaxed-memory-order-rmo"><a class="header" href="#4-宽松存储模型relaxed-memory-order-rmo">4. 宽松存储模型（Relaxed Memory Order, RMO）</a></h3>
+<p>RMO 模型允许最广泛的重排序，包括读写操作的重排序，通过显式的同步操作来保证必要的顺序。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>读操作和写操作几乎可以完全自由地重排序。</li>
+<li>通过同步原语（如内存屏障）来保证必要的顺序。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
+3 -&gt; 1 -&gt; 4 -&gt; 2
+1 -&gt; 2 -&gt; 3 -&gt; 4
+3 -&gt; 4 -&gt; 1 -&gt; 2
+2 -&gt; 1 -&gt; 4 -&gt; 3
+4 -&gt; 3 -&gt; 2 -&gt; 1
+2 -&gt; 4 -&gt; 1 -&gt; 3
+4 -&gt; 2 -&gt; 3 -&gt; 1
+</code></pre>
+<p>通过使用内存屏障，程序员可以强制某些关键操作按顺序执行，以确保数据一致性。</p>
+<h3 id="总结表格"><a class="header" href="#总结表格">总结表格</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>组合</th><th>SC</th><th>TSO</th><th>PSO</th><th>RMO</th></tr></thead><tbody>
+<tr><td>Store-Store</td><td>禁止重排序</td><td>禁止重排序</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Store-Load</td><td>禁止重排序</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Load-Load</td><td>禁止重排序</td><td>禁止重排序</td><td>禁止重排序</td><td>Yes</td></tr>
+<tr><td>Load-Store</td><td>禁止重排序</td><td>禁止重排序</td><td>禁止重排序</td><td>Yes</td></tr>
+</tbody></table>
+</div>
+<h2 id="如何保证顺序性"><a class="header" href="#如何保证顺序性">如何保证顺序性</a></h2>
+<p>如果我们确实不希望看到<code>r1 = 0, r2 = 0</code>的结果，我们该怎么办呢？Linux内核中提供了<code>smp_mb()</code>宏对不同架构的指令进行封装，<code>smp_mb()</code>的作用是阻止它后面的读写操作不会乱序到宏前面的指令前执行。他就像是个屏障一样，不容逾越。</p>
+<p>这个屏障把代码分成了两部分，每一个部分内部可以乱序，但之间不能乱。</p>
+<p>参考：</p>
+<ul>
+<li>
+<p><a href="https://pages.cs.wisc.edu/~markhill/papers/primer2020_2nd_edition.pdf">A Primer on Memory Consistency and Cache Coherence (2nd Edition)</a></p>
+</li>
+<li>
+<p>https://blog.csdn.net/qq_29328443/article/details/107616795</p>
+</li>
+<li>
+<p>https://blog.csdn.net/anyegongjuezjd/article/details/125954805</p>
+</li>
+<li>
+<p>https://zhuanlan.zhihu.com/p/141655129?from_voters_page=true</p>
+</li>
+<li>
+<p><a href="https://foxsen.github.io/archbase/%E5%A4%9A%E6%A0%B8%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%84.html#%E5%AD%98%E5%82%A8%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B">计算机体系结构基础</a></p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="固件-1"><a class="header" href="#固件-1">固件</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="arm固件启动顺序-1"><a class="header" href="#arm固件启动顺序-1">ARM固件启动顺序</a></h1>
 <h2 id="小core"><a class="header" href="#小core">小core</a></h2>
 <ol>
 <li>
@@ -1236,8 +1862,8 @@ EL1 各有一个异常向量表。</p>
 <p>30.更新保留内存区域；</p>
 <p>31.加载、验证、解压zImage(boot loader内核和petitboot);</p>
 <p>32.启动boot loader内核。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/ARM%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/image-20240704111929075.png" alt="image-20240704111929075" /></p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/ARM%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/image-20240704111945789.png" alt="image-20240704111945789" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/ARM%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/image-20240704111929075.png" alt="image-20240704111929075" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/ARM%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/image-20240704111945789.png" alt="image-20240704111945789" /></p>
 <p>CMN OCM(on chip memory) 是L3 cache，在没有DDR 的时候就使用这个组件来运行代码。与Intel的cache as ram 类似。</p>
 <p>当OCM 当做memory 时候的时候，CMN OCM(on chip memory) 不能使用28*2=56M 全部缓存，只能用一部分，一般不超过3/4，实际只使用了32M。</p>
 <p>测试流程：</p>
@@ -1248,19 +1874,19 @@ EL1 各有一个异常向量表。</p>
 <p>hostboot会将skiboot 搬到0x800 0000 处。</p>
 <p>32M 最大的地址是0x200 0000, 而skiboot 默认会将自己搬到0x3000 0000 来运行，所以开了OCM，即不能去那里运行，当前代码使用的是0x0，也就是搬到0x0处运行。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="risc-v-firmware"><a class="header" href="#risc-v-firmware">RISC-V Firmware</a></h1>
-<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<h2 id="概述-1"><a class="header" href="#概述-1">概述</a></h2>
 <p>Firmware 启动的一般流程</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711102511545.png" alt="image-20240711102511545" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711102511545.png" alt="image-20240711102511545" /></p>
 <h2 id="arm64-vs-risc-v"><a class="header" href="#arm64-vs-risc-v">ARM64 vs RISC-V</a></h2>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711103010418.png" alt="image-20240711103010418" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711103010418.png" alt="image-20240711103010418" /></p>
 <p>uboot处可以替换为EDK2，可以从PEI开始，也可以从DXE直接开始。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711103301123.png" alt="image-20240711103301123" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711103301123.png" alt="image-20240711103301123" /></p>
 <p>对应起来就是：</p>
 <p>ZSBL: SCP ROM</p>
 <p>FSBL: SCP RAM</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711105826248.png" alt="image-20240711105826248" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711105826248.png" alt="image-20240711105826248" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cache-as-ram-and-on-chip-memory"><a class="header" href="#cache-as-ram-and-on-chip-memory">Cache as RAM and On Chip Memory</a></h1>
-<h2 id="概述-1"><a class="header" href="#概述-1">概述</a></h2>
+<h2 id="概述-2"><a class="header" href="#概述-2">概述</a></h2>
 <p>不同架构对这个问题有不同的描述，</p>
 <p>x86中叫做Cache as RAM, CAR;</p>
 <p>ARM 架构中叫On Chip Memory，OCM。</p>
@@ -1268,7 +1894,7 @@ EL1 各有一个异常向量表。</p>
 <h2 id="car"><a class="header" href="#car">CAR</a></h2>
 <h3 id="ocm"><a class="header" href="#ocm">OCM</a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="system-table"><a class="header" href="#system-table">System Table</a></h1>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/EDK2_SYS_TABLE/image-20240729101921741.png" alt="image-20240729101921741" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/EDK2_SYS_TABLE/image-20240729101921741.png" alt="image-20240729101921741" /></p>
 <p>在 <code>MdeModulePkg\Core\Dxe\DxeMain\DxeMain.c</code> 中创建。</p>
 <pre><code class="language-c">  //
   // Allocate the EFI System Table and EFI Runtime Service Table from EfiRuntimeServicesData
@@ -1349,9 +1975,9 @@ typedef struct {
   EFI_CONFIGURATION_TABLE           *ConfigurationTable;
 } EFI_SYSTEM_TABLE;
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-event"><a class="header" href="#edk2-event">EDK2 EVENT</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-event-1"><a class="header" href="#edk2-event-1">EDK2 EVENT</a></h1>
 <p>[toc]</p>
-<h2 id="简介"><a class="header" href="#简介">简介</a></h2>
+<h2 id="简介-2"><a class="header" href="#简介-2">简介</a></h2>
 <p>先来回顾一下中断处理的过程。正常执行代码，中断进来了，执行中断处理函数，中断处理函数结束后，继续执行未完成的代码。</p>
 <p>异步操作，就是中断。UEFI 不支持中断，是个单核单线程的架构。只有时钟中断。</p>
 <p>说到 做定时/计数器 ，最经典的当数intel兼容的8253/8254定时器，它几乎是所有的PC必须兼容支持的一颗IC，当然在其他的微处理器系统当中也是支持的，比如MSC8051,以及其他的微处理器当中。</p>
@@ -1400,7 +2026,7 @@ typedef struct {
 </code></pre>
 <p>31这个等级就是用来加锁的，直接拉到最高，就没有中断进来了。</p>
 <h2 id="初始化流程"><a class="header" href="#初始化流程">初始化流程</a></h2>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/06_%E5%9B%BA%E4%BB%B6/images/EDK2_EVENT/image-20240716144753316.png" alt="image-20240716144753316" /></p>
+<p><img src="02_%E5%9B%BA%E4%BB%B6/images/EDK2_EVENT/image-20240716144753316.png" alt="image-20240716144753316" /></p>
 <p>从DXE main 开始看起</p>
 <pre><code class="language-c">  //
   // Initialize the Event Services
@@ -1894,1477 +2520,6 @@ CoreDispatchEventNotifies (
 <p>参考：</p>
 <p><a href="https://www.cnblogs.com/hammerqiu/p/10701348.html">Blog</a></p>
 <p><a href="https://blog.csdn.net/Hannle/article/details/124084678">Blog</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-memory-map"><a class="header" href="#edk2-memory-map">EDK2 MEMORY MAP</a></h1>
-<p>启动时候，获取内存布局信息</p>
-<p>GetMemoryMap</p>
-<p>https://blog.csdn.net/xiaopangzi313/article/details/109928878</p>
-<p>https://www.lab-z.com/stu5/</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="存储"><a class="header" href="#存储">存储</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="常见文件系统"><a class="header" href="#常见文件系统">常见文件系统</a></h1>
-<p>[toc]</p>
-<p>常见的文件系统格式主要包括以下几种：</p>
-<h3 id="windows-文件系统"><a class="header" href="#windows-文件系统">Windows 文件系统</a></h3>
-<ol>
-<li><strong>FAT32（File Allocation Table 32）</strong>：
-<ul>
-<li><strong>特点</strong>：支持较大的分区（最高可支持 2TB），但单个文件最大为 4GB。兼容性高，支持多种操作系统。</li>
-<li><strong>应用场景</strong>：常用于小型存储设备，如 USB 闪存驱动器和 SD 卡。</li>
-</ul>
-</li>
-<li><strong>NTFS（New Technology File System）</strong>：
-<ul>
-<li><strong>特点</strong>：支持大文件和大分区，提供文件权限、加密、压缩和快照等功能。更适合大容量存储和系统分区。</li>
-<li><strong>应用场景</strong>：主要用于 Windows 系统的硬盘和 SSD。</li>
-</ul>
-</li>
-</ol>
-<h3 id="macos-文件系统"><a class="header" href="#macos-文件系统">macOS 文件系统</a></h3>
-<ol>
-<li><strong>HFS+（Hierarchical File System Plus）</strong>：
-<ul>
-<li><strong>特点</strong>：支持大文件和大分区，具有文件权限、加密和快照等功能。支持硬链接、符号链接等。</li>
-<li><strong>应用场景</strong>：早期的 macOS 系统使用，现逐渐被 APFS 取代。</li>
-</ul>
-</li>
-<li><strong>APFS（Apple File System）</strong>：
-<ul>
-<li><strong>特点</strong>：优化了 SSD 性能，支持加密、快照、克隆和空间共享等功能。提高了数据完整性和文件系统的效率。</li>
-<li><strong>应用场景</strong>：macOS 10.13 及之后版本的默认文件系统，适用于 Mac 电脑、iOS 设备等。</li>
-</ul>
-</li>
-</ol>
-<h3 id="linux-文件系统"><a class="header" href="#linux-文件系统">Linux 文件系统</a></h3>
-<ol>
-<li><strong>ext4（Fourth Extended File System）</strong>：
-<ul>
-<li><strong>特点</strong>：支持大文件和大分区，提供日志功能，增强了文件系统的稳定性和性能。</li>
-<li><strong>应用场景</strong>：多数 Linux 发行版默认文件系统，广泛应用于服务器和桌面系统。</li>
-</ul>
-</li>
-<li><strong>XFS</strong>：
-<ul>
-<li><strong>特点</strong>：支持大文件和大分区，具有高性能和高扩展性，适用于大规模数据存储。</li>
-<li><strong>应用场景</strong>：用于高性能存储需求的服务器和数据中心。</li>
-</ul>
-</li>
-<li><strong>Btrfs（B-tree File System）</strong>：
-<ul>
-<li><strong>特点</strong>：提供快照、克隆、数据校验和多设备支持，致力于数据完整性和可扩展性。</li>
-<li><strong>应用场景</strong>：用于需要高级数据管理和可靠性的场景，如服务器和个人电脑。</li>
-</ul>
-</li>
-</ol>
-<h3 id="通用文件系统"><a class="header" href="#通用文件系统">通用文件系统</a></h3>
-<ol>
-<li>
-<p>exFAT（Extended File Allocation Table）</p>
-<p>：</p>
-<ul>
-<li><strong>特点</strong>：弥补 FAT32 和 NTFS 之间的差距，支持大文件和大分区，无文件大小限制，兼容性高。</li>
-<li><strong>应用场景</strong>：常用于跨平台的存储设备，如 USB 闪存驱动器和外部硬盘，特别是在 Windows 和 macOS 系统之间共享文件。</li>
-</ul>
-</li>
-</ol>
-<h3 id="高性能文件系统"><a class="header" href="#高性能文件系统">高性能文件系统</a></h3>
-<ol>
-<li>
-<p>ZFS（Zettabyte File System）</p>
-<p>：</p>
-<ul>
-<li><strong>特点</strong>：支持大容量存储、快照、数据完整性校验、压缩和 RAID-Z 等高级功能。</li>
-<li><strong>应用场景</strong>：广泛应用于服务器和数据中心，尤其是需要高可靠性和数据完整性的场景。</li>
-</ul>
-</li>
-</ol>
-<p>参考：</p>
-<p><a href="https://www.cnblogs.com/xiaolincoding/p/13499209.html">很不错的文章</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="raid"><a class="header" href="#raid">RAID</a></h1>
-<p>[toc]</p>
-<h2 id="简介-1"><a class="header" href="#简介-1">简介</a></h2>
-<p>RAID（Redundant Array of Independent Disks，冗余独立磁盘阵列）是一种将多个物理硬盘组合成一个逻辑单元的技术，其主要目的是提高数据存储的性能、可靠性和容量。通过不同的RAID级别配置，可以实现以下几个关键优势：</p>
-<ol>
-<li><strong>性能提升</strong>：RAID通过并行处理数据的读写操作，从而提高整体的访问速度。例如，RAID 0（条带化）将数据分散存储在多个磁盘上，可以显著提高读取和写入速度。</li>
-<li><strong>数据冗余和容错能力</strong>：通过数据镜像（如RAID 1）或校验机制（如RAID 5、RAID 6），RAID可以在一个或多个硬盘出现故障时保护数据不丢失，从而增强数据的安全性。例如，RAID 1通过将数据完全复制到另一块磁盘上，确保即使其中一块磁盘失效，数据也不会丢失。</li>
-<li><strong>容量扩展</strong>：RAID可以将多个硬盘的存储容量结合起来，提供更大的存储空间。例如，RAID 5通过条带化和奇偶校验的组合，不仅提供了容错能力，还最大化利用了硬盘的存储容量。</li>
-</ol>
-<p>不同RAID级别的特点如下：</p>
-<ul>
-<li><strong>RAID 0</strong>：将数据条带化分布在多个磁盘上，没有冗余，提供最高的性能，但没有容错能力。</li>
-<li><strong>RAID 1</strong>：将数据镜像存储在两块或更多磁盘上，提供高数据冗余和读性能，但写性能和存储利用率较低。</li>
-<li><strong>RAID 5</strong>：将数据和奇偶校验信息条带化存储在三个或更多磁盘上，提供良好的读性能、数据冗余和存储利用率，但写性能略低于RAID 0。</li>
-<li><strong>RAID 6</strong>：类似RAID 5，但使用双重奇偶校验，可以在两块磁盘同时失效的情况下保护数据，提高了容错能力。</li>
-<li><strong>RAID 10</strong>（RAID 1+0）：结合RAID 0和RAID 1的特点，既有高性能的条带化，又有高冗余的镜像，适用于需要高性能和高可靠性的场景。</li>
-</ul>
-<p>0是分开，1是备份，10是既分开又备份。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/RAID/image-20240715131609095.png" alt="image-20240715131609095" /></p>
-<h3 id="raid-3"><a class="header" href="#raid-3">RAID 3</a></h3>
-<ul>
-<li><strong>条带化和专用奇偶校验盘</strong>：RAID 3 将数据以字节级或位级条带化，并在一个专用的奇偶校验盘上存储奇偶校验信息。</li>
-<li><strong>高数据传输率</strong>：因为所有磁盘同时工作，RAID 3 提供了很高的连续数据传输速率，适合大文件的读取和写入。</li>
-<li><strong>容错能力</strong>：如果一块数据盘出现故障，可以通过奇偶校验盘的数据恢复丢失的数据。</li>
-<li><strong>缺点</strong>：奇偶校验盘成为瓶颈，写入性能较低，因为每次写入操作都需要更新奇偶校验盘。</li>
-</ul>
-<h3 id="raid-5"><a class="header" href="#raid-5">RAID 5</a></h3>
-<ul>
-<li><strong>条带化和分布式奇偶校验</strong>：RAID 5 将数据和奇偶校验信息条带化存储在三个或更多磁盘上，奇偶校验信息分布在所有磁盘上，而不是专用一个盘。</li>
-<li><strong>良好的读性能</strong>：由于数据分布在多个磁盘上，可以并行读取，读性能接近 RAID 0。</li>
-<li><strong>良好的存储利用率</strong>：存储空间的利用率为 ( \frac{(n-1)}{n} ) （n 为磁盘数量），比 RAID 1 高。</li>
-<li><strong>容错能力</strong>：允许一块磁盘故障，故障磁盘的数据可以通过奇偶校验信息恢复。</li>
-<li><strong>写性能稍低</strong>：写入时需要计算和写入奇偶校验信息，写性能比读性能低，但比 RAID 3 高。</li>
-</ul>
-<h3 id="raid-6"><a class="header" href="#raid-6">RAID 6</a></h3>
-<ul>
-<li><strong>条带化和双重奇偶校验</strong>：RAID 6 类似于 RAID 5，但增加了第二层奇偶校验信息，分布在所有磁盘上。</li>
-<li><strong>更高的容错能力</strong>：允许两块磁盘同时失效，这使得 RAID 6 比 RAID 5 更可靠。</li>
-<li><strong>良好的读性能</strong>：与 RAID 5 类似，由于数据分布在多个磁盘上，可以并行读取。</li>
-<li><strong>存储利用率较 RAID 5 低</strong>：存储空间的利用率为 ( \frac{(n-2)}{n} ) （n 为磁盘数量），因为两块磁盘用于存储奇偶校验信息。</li>
-<li><strong>写性能进一步降低</strong>：写入时需要计算和写入双重奇偶校验信息，写性能比 RAID 5 稍低。</li>
-</ul>
-<h3 id="总结-1"><a class="header" href="#总结-1">总结</a></h3>
-<ul>
-<li><strong>RAID 3</strong> 提供高连续数据传输速率，适合大文件操作，但奇偶校验盘是瓶颈。</li>
-<li><strong>RAID 5</strong> 提供良好的读性能和存储利用率，适合大多数应用场景，有一定的写入性能损失。</li>
-<li><strong>RAID 6</strong> 提供更高的容错能力，适合需要高数据可靠性的场景，但有更高的写入性能损失和较低的存储利用率。</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="ssd"><a class="header" href="#ssd">SSD</a></h1>
-<p>[toc]</p>
-<h2 id="简介-2"><a class="header" href="#简介-2">简介</a></h2>
-<p>SSD作为数据存储设备，是一种典型的SOC系统。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/ssd/image-20240715134556835.png" alt="image-20240715134556835" /></p>
-<p>SSD controller主要分为前端协议层，中端FTL层和后端nand控制器三大部分。</p>
-<p>前端通过PCIE/SATA接口解析host发来的命令，放入命令队列里等待中端FTL层去处理；</p>
-<p>FTL（flash translation layer）层通过前端发来的LBA映射到闪存的物理空间，是SSD算法软件层；</p>
-<p>后端，即flash controller，跟闪存打交道并完成数据编解码和ECC。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="分布式存储"><a class="header" href="#分布式存储">分布式存储</a></h1>
-<p>[toc]</p>
-<h2 id="集中存储结构"><a class="header" href="#集中存储结构">集中存储结构</a></h2>
-<p>在这个存储系统中包含很多组件，除了核心的机头(控制器)、磁盘阵列( JBOD )和交换机等设备外，还有管理设备等辅助设备。</p>
-<p>结构中包含一个机头，这个是存储系统中最为核心的部件。通常在机头中有包含两个控制器，互为备用， 避免硬件故障导致整个存储系统的不可用。机头中通常包含前端端口和后端端口，前端端口用户为服务器提供存储服务，而后端端口用于扩充存储系统的容量。通过后端端口机头可以连接更多的存储设备，从而形成一个非常大的存储资源池。</p>
-<p>在整个结构中，机头中是整个存储系统的核心部件，整个存储系统的高级功能都在其中实现。控制器中的软件实现对磁盘的管理，将磁盘抽象化为存储资源池，然后划分为 LUN 提供给服务器使用。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/image-20240715133452696.png" alt="image-20240715133452696" /></p>
-<h2 id="分布式存储-1"><a class="header" href="#分布式存储-1">分布式存储</a></h2>
-<p>分布式存储最早是由谷歌提出的，其目的是通过廉价的服务器来提供使用与大规模，高并发场景下的 Web 访问问题。</p>
-<p><strong>完全无中心架构 – 计算模式</strong></p>
-<p>以 Ceph 为代表的架构是其典型的代表。在该架构中与 HDFS 不同的地方在于该架构中没有中心节点。客户端是通过一个<strong>设备映射关系 计算出来 其写入数据的位置</strong>，这样客户端可以直接与存储节点通信，从而避免中心节点的性能瓶颈。</p>
-<p>这和CMN SAM 类似，客户也不知道自己最终要去哪里，得自己算。直接映射的就是Ceph，哈希映射的就是swift。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/07_%E5%AD%98%E5%82%A8/images/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/image-20240715133751005.png" alt="image-20240715133751005" /></p>
-<p>如上图所示， 在 Ceph 存储系统架构中核心组件有 MON 服务、 OSD 服务和 MDS 服务等。</p>
-<p>(1) MON 服务用于维护存储系统的硬件逻辑关系，主要是服务器和硬盘等在线信息。MON 服务通过集群的方式保证其服务的可用性。</p>
-<p>(2) OSD 服务用于实现对磁盘的管理，实现真正的数据读写，通常一个磁盘对应一个 OSD 服务。</p>
-<p>(3) MDS 只为 CephFS 文件存储系统跟踪文件的层次机构和存储元数据。Ceph 块设备和 RADOS 并不需要元数据，因此也不需要 Ceph MDS 守护进程</p>
-<p>(4) RADOS ：RADOS 就是包含上述三种服务的 ceph 存储集群。在 Ceph 中所有的数据都以对象形式存在的，并且无论哪种数据类型 RADOS 对象存储都将负责保存这些对象。RADOS 层可以确保数据始终保持一致性。要做到这一点必须执行数据复制、故障检测和恢复，以及数据迁移和所在集群节点实现在平衡</p>
-<p>(5) RBD (块设备)：原名 RADOS 块设备，提供可靠的分布式和高性能块存储磁盘给客户端。</p>
-<p>(6) CephFS ：Ceph 文件系统提供了一个使用 Ceph 存储集群存储用户数据的与 POSIX 兼容的文件系统</p>
-<p>(7) Librados ：libRADOS 库为 PHP 、 RUBY 、 Java 、 Python 、 C++ 等语言提供 了方便的访问 RADOS 接口的方式</p>
-<p>(8) RADOS GW ：RGW 提供对象存储服务，它允许应用程序和 Ceph 对象存储建立连接， RGW 提供了与 Amazon S3 和 openstack Swift 兼容的 RUSTFUL API</p>
-<p>客户端访问存储的大致流程是，客户端在启动后会首先通过 RADOS GW 进入，从 MON 服务拉取存储资源布局信息，然后根据该布局信息和写入数据的名称等信息计算出期望数据的位置(包含具体的物理服务器信息和磁盘信息)，然后和该位置信息对应的 CephFS 对应的位置直接通信，读取或者写入数据</p>
-<p>还有lustre。</p>
-<p>参考：<a href="https://www.51cto.com/article/616378.html">Blog</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="虚拟化与分布式"><a class="header" href="#虚拟化与分布式">虚拟化与分布式</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="虚拟化技术原理与实现"><a class="header" href="#虚拟化技术原理与实现">虚拟化技术原理与实现</a></h1>
-<p>[toc]</p>
-<h2 id="一体系结构简介"><a class="header" href="#一体系结构简介">一、体系结构简介</a></h2>
-<p>基于x86</p>
-<h4 id="内存架构"><a class="header" href="#内存架构">内存架构</a></h4>
-<p>物理地址</p>
-<p>线性地址</p>
-<p>逻辑地址</p>
-<p>分段分页</p>
-<p>关键组件：页表、CR3、TLB</p>
-<h4 id="中断与异常"><a class="header" href="#中断与异常">中断与异常</a></h4>
-<p>PIC 单核</p>
-<p>APIC = LAPIC  + IOAPIC  多核</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815141321102.png" alt="image-20240815141321102" /></p>
-<p><strong>异常</strong></p>
-<ul>
-<li>
-<p>错误：缺页</p>
-</li>
-<li>
-<p>陷阱：system cal</p>
-</li>
-<li>
-<p>终止：硬件错误</p>
-</li>
-</ul>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815101231000.png" alt="image-20240815101231000" /></p>
-<h4 id="io架构"><a class="header" href="#io架构">IO架构</a></h4>
-<h4 id="dma"><a class="header" href="#dma">DMA</a></h4>
-<p>连续内存，最新的支持链表</p>
-<h4 id="时钟"><a class="header" href="#时钟">时钟</a></h4>
-<h3 id="操作系统与虚拟化"><a class="header" href="#操作系统与虚拟化">操作系统与虚拟化</a></h3>
-<h4 id="操作系统"><a class="header" href="#操作系统">操作系统</a></h4>
-<p>用户态、内核态</p>
-<p>上下文切换</p>
-<h4 id="虚拟化"><a class="header" href="#虚拟化">虚拟化</a></h4>
-<p>硬件虚拟化支持的处理器：Intel VT技术和AMD SVM技术，保证x86 是个可虚拟化技术。</p>
-<p>虚拟环境组成：硬件、虚拟机监视器和虚拟机。</p>
-<p>虚拟机三个典型特征：同质、高效和资源受控。</p>
-<p>是否可虚拟化：该系统堆敏感指令的支持。</p>
-<p>敏感指令：操作特权资源的指令，包括修改虚拟机的运行模式或下面物理机的状态。</p>
-<p>虚拟化漏洞：不能再所有的敏感指令上触发异常，，则不是可虚拟化的。</p>
-<p>完全虚拟化：客户机觉察不到自己运行在一个虚拟平台上。</p>
-<p>硬件辅助的完全虚拟化：Intel VT-x 引入新的执行模式用于虚拟机。</p>
-<p>类虚拟化：客户机知道自己运行再虚拟平台上，会主动适应。需要修改OS，使得kernel避免难以虚拟化的指令。</p>
-<p>主流VMM技术架构分三类：Hypervisor模型，宿主（Host）模型和混合模型。</p>
-<ul>
-<li>
-<p>Hypervisor模型就是type1 类型，没有OS，既管理硬件资源也提供虚拟化功能。</p>
-</li>
-<li>
-<p>Host 模型就是type2，运行OS上，提供虚拟化功能。</p>
-</li>
-<li>
-<p>混合的就是用Hypervisor，然后加一个运行再特权模式下的OS来进行虚拟化。</p>
-</li>
-</ul>
-<h2 id="二虚拟化实现技术架构"><a class="header" href="#二虚拟化实现技术架构">二、虚拟化实现技术架构</a></h2>
-<p>VMM 对物理资源的虚拟，主要包括三个：处理器虚拟化，IO虚拟化和内存虚拟化。</p>
-<p>Intel VT 包括对这三方面虚拟化的支持。</p>
-<p>在处理器虚拟化方面，Intel VT 提供了 VT-x（Intel Virtualization Technology for x86）技术；</p>
-<p>在内存虚拟化方面，Intel VT 提供了 EPT（Extended Page Table）技术；</p>
-<p>在 I/O 设备虚拟化方面，Intel VT 提供了 VT-d（Intel Virtualization Technology for Direct I/O）技术。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815134522597.png" alt="image-20240815134522597" /></p>
-<p>AMD 平台也提供了类似的技术—AMD SVM（AMD Secure Virtual Machine），其原理和使用方式与 Intel VT 类似。在处理器虚拟化方面，AMD SVM 提供了与 Intel VT-x 类似的技术；在内存虚拟化方面，AMD SVM 提供了 NPT （Nested Page Table）技术；在 I/O 设备虚拟化方面，AMD SVM 提供了 IOMMU （I/O Memory Management Unit）技术。</p>
-<h3 id="处理器虚拟化"><a class="header" href="#处理器虚拟化">处理器虚拟化</a></h3>
-<p>处理器虚拟化的宗旨是让虚拟机里执行的敏感指令能够异常陷入，并被 VMM 模拟，而不要直接作用于真实的硬件上。</p>
-<p>VT-x 引入了两种操作模式：根操作模式和非根操作模式，它们统称为 VMX 操作模式。</p>
-<p>1）根操作模式（VMX Root Operation）：VMM 运行时所处的模式，以下简称为根模式。在根模式下，所有指令的行为和传统的 IA32 一样，因此，原来的软件都可以正常运行。</p>
-<p>2）非根操作模式（VMX Non-Root Operation）：客户机运行时所处的模式，以下简称为非根模式。在非根模式下，所有敏感指令的行为都被重新定义，使得它们能不经过虚拟化就直接运行或者通过「陷入再模拟」的方式来处理。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815140608056.png" alt="image-20240815140608056" /></p>
-<p>根模式和非根模式都有相应的特权级 0～ 特权级 3，正交的。</p>
-<p>与 VT-x 类似，AMD SVM 也引入了根模式和非根模式两种操作模式，非根模式下的敏感指令引起的「陷入」称为 VM-Exit，VMM 调度某个客户机运行时，CPU 由根模式切换成非根模式称为 VM-Entry。</p>
-<p>硬件虚拟化使用 vCPU（Virtual CPU）描述符来描述虚拟 CPU。vCPU 描述符类似于操作系统中的进程描述符（或进程控制块），其本质是一个结构体。</p>
-<p>当 VMM 创建客户机时，首先要为客户机创建 vCPU，整个客户机的运行实际上可以看做是 VMM 调度不同的 vCPU 运行。</p>
-<h3 id="中断虚拟化"><a class="header" href="#中断虚拟化">中断虚拟化</a></h3>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815141344272.png" alt="image-20240815141344272" /></p>
-<p>每一个 vCPU 都对应一个虚拟 Local APIC 用于接收中断。虚拟平台则包含虚拟 I/O APIC 或者虚拟 PIC 用于发送中断。虚拟 Local APIC、虚拟 I/O APIC 和虚拟 PIC 都是由 VMM 维护的软件实体。</p>
-<h3 id="内存虚拟化"><a class="header" href="#内存虚拟化">内存虚拟化</a></h3>
-<p>内存虚拟化引入一层新的地址空间——客户机物理地址空间。</p>
-<p>VMM 负责管理和分配每个虚拟机的物理内存，客户机操作系统看到的是一个虚构的客户机物理地址空间，其指令中所使用的地址最终将转化成一个客户机物理地址。在有虚拟化的情况下，这样的客户机物理地址不能被直接发送到系统总线上去，需要由 VMM 将它转换成一个实际的物理地址后，再交由物理处理器来执行。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815142141983.png" alt="image-20240815142141983" /></p>
-<p>由于引入了客户机物理地址空间，内存虚拟化需要通过两次地址转换来支持地址空间的虚拟化，即客户机虚拟地址（简称为 GVA）→ 客户机物理地址（简称为 GPA）→ 宿主机物理地址（简称为 HPA）的转换。</p>
-<p>传统的 x86 架构只支持一次地址转换，即通过 CR3 指定的页表实现从虚拟地址到物理地址的转换。这和内存虚拟化所要求的两次地址转换产生了矛盾。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815142807940.png" alt="image-20240815142807940" /></p>
-<p>在影子页表的实现过程中，影子页表的页表结构并不一定与客户机页表的页表结构完全一致，比如在 64 位机上模拟 32 位机，客户机的页表结构便与宿主机不同，但只要保证相对于同一个虚拟地址。</p>
-<p>影子页表可以看做是客户机页表巨大的 TLB，称为虚拟 TLB。</p>
-<p>影子页表解决了传统的 IA32 架构下的内存虚拟化问题，但是它的缺点也比较明显，首先，实现非常复杂，需要考虑各种各样的页表同步情况。其次，影子页表的内存开销也很大，需要为每个客户机进程对应的页表都维护一个「影子页表」。</p>
-<p>为解决这些问题，Intel 和 AMD 都提供了相应的技术，直接在硬件上支持 GVA→GPA→HPA 的两次地址转换，大大降低了内存虚拟化的难度，同时也大大提高了内存虚拟化的性能。</p>
-<h5 id="intel-ept"><a class="header" href="#intel-ept">Intel EPT</a></h5>
-<p>Intel EPT（Extended Page Table，扩展页表）是 Intel VT-x 提供的内存虚拟化支持技术。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815143458200.png" alt="image-20240815143458200" /></p>
-<p>查表变得麻烦了很多，先看CR3里是什么值，这个值是GPA，为了知道这个GPA，就得先去查VMM中的页表，找到真正的HPA。</p>
-<p>CPU 需要 5 次查询 EPT 页表，每次查询都需要 4 次内存访问。这样，在最坏的情况下总共需要 20 次内存访问。</p>
-<h5 id="amd-npt"><a class="header" href="#amd-npt">AMD NPT</a></h5>
-<p>AMD NPT（Nested Page Table，嵌套页表）是 AMD 提供的内存虚拟化支持技术。</p>
-<p>1）客户机和宿主机都有自己的 CR3 寄存器，分别记为 gCR3（guest CR3）和 nCR3（nested CR3）。真正的 CR3 由 VMM 所控制和使用。</p>
-<p>2）gPT（guest Page Table，客户机页表）负责将客户机线性地址转换为客户机物理地址。客户机页表存在于客户机物理内存中，并由 gCR3 索引。</p>
-<p>3）nPT（nested Page Table，嵌套页表）负责将客户机物理地址转换为系统物理地址。嵌套页表存在于系统物理内存中，并由 nCR3 索引。</p>
-<p>4）最常用到的客户机线性地址到系统物理地址的映射关系在 TLB 中缓存。</p>
-<p>5）gCR3 和客户机页表中存放的都是客户机物理地址，所以，在访问客户机页表前需要将客户机物理地址转换为系统物理地址。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815144116083.png" alt="image-20240815144116083" /></p>
-<h3 id="io虚拟化"><a class="header" href="#io虚拟化">IO虚拟化</a></h3>
-<p>评价 I/O 虚拟技术的两个指标—性能和通用性（透明）。</p>
-<p>面临的问题：</p>
-<ul>
-<li>让客户机直接访问到设备真实的 I/O 地址空间（包括端口 I/O 和 MMIO）
-<ul>
-<li>VT-x 技术允许客户机直接访问物理的 I/O 空间，于是便解决了这个问题。</li>
-</ul>
-</li>
-<li>让设备的 DMA 操作直接访问到客户机的内存空间。设备不管系统中运行的是虚拟机还是真实的操作系统，它只管用驱动提供给它的物理地址做 DMA 操作。
-<ul>
-<li>Intel VT-d 技术提供了 DMA 重映射技术</li>
-</ul>
-</li>
-</ul>
-<h4 id="intel-vt-d"><a class="header" href="#intel-vt-d">Intel VT-d</a></h4>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815144838203.png" alt="image-20240815144838203" /></p>
-<p><strong>DMA 重映射</strong></p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145206955.png" alt="image-20240815145206955" /></p>
-<p>当 DMA 重映射硬件捕获一个 DMA 传输时，通过其中 BDF 的 Bus 字段索引根条目表，可以得到产生此 DMA 传输的总线对应的根条目。由根条目的 CTP 字段可以获得上下文条目表，用 BDF 中的{Dev:Function}索引该表，可以得到产生此 DMA 传输的设备对应的上下文条目。由上下文条目的 ASR 字段，可以寻址到该设备对应的 I/O 页表，此时，DMA 重映射硬件就可以做地址转换了。</p>
-<p>通过所示的两级结构，VT-d 技术可以实现对平台上 PCI 设备的全覆盖，并对它们的 DMA 传输进行地址转换。</p>
-<h4 id="amd-iommu"><a class="header" href="#amd-iommu">AMD IOMMU</a></h4>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145511102.png" alt="image-20240815145511102" /></p>
-<p>AMD 的 IOMMU 避免了设备模拟，取消了转译层，而且允许本机驱动程序直接配合设备，极大地降低了 I/O 设备虚拟化的开销。</p>
-<h3 id="网络虚拟化"><a class="header" href="#网络虚拟化">网络虚拟化</a></h3>
-<p>SR-IOV（Single Root I/O Virtualization）是 PCI-SIG 推出的一项标准，它将单个 PCIe 设备对上层软件虚拟化为多个独立的 PCIe 设备。SR-IOV 网卡能对上层操作系统虚拟化出多个 PCIe 网卡，而且虚拟出的每个网卡都可以实现独立的 I/O 功能。独立的通道能够实现更强的安全隔离、更完善的 QoS 和更高的传输效率。SR-IOV 目前支持在一块 PCIe 网卡上虚拟化出 256 个通道.</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815145725553.png" alt="image-20240815145725553" /></p>
-<p>SR-IOV 虚拟出的通道有两种：PF（Physical Function）和 VF（Virtual Function）。PF 是一个完整的 PCIe 设备，包含全面的管理、配置功能，Hypervisor 往往通过 PF 来实现对网卡所有 I/O 资源的管理和配置；VF 是一个简化的 PCIe 设备，仅仅包含了 I/O 功能，不能通过 VF 管理物理网卡。</p>
-<p>所有的 VF 都是通过 PF 衍生而来的，一块 SR-IOV 网卡最多可以生成 256 个 VF。VF 可以理解为物理网卡硬件资源的一个切片，在虚拟化软件平台 Hypervisor 看来，VF 与普通的 PCIe 网卡一模一样，安装相应的驱动后就能直接使用。如果一台物理机上只有一个单端口的 SR-IOV 网卡，这个端口产生了 6 个 VF，则 Hypervisor 就能得到 6 个以太网连接。</p>
-<p>在 SR-IOV 的基础上，再结合 Intel VT-d 或 AMD IOMMU 技术，可以实现 VM 和 VF 的一对一映射，进而跳过 Hypervisor 的软件交换机使 VM 直接访问 VF 硬件资源。这样既能提高访问效率，又能提高网卡的利用率。</p>
-<h3 id="时间虚拟化"><a class="header" href="#时间虚拟化">时间虚拟化</a></h3>
-<p>概念：</p>
-<p>时间管理是操作系统的一个重要模块。操作系统的时间概念有以下两种。
-● 绝对时间：操作系统启动后到目前为止的总运行时间，又称为墙上时间（Wall time）。它是递增的。</p>
-<p>● 相对时间：两个时间之间的间隔。例如，两次时钟中断的间隔、两次使用 RDTSC 指令读取 TSC 的间隔。</p>
-<p>在虚拟环境下，客户机与其他客户机以及 VMM 共享物理平台，客户机只能得到部分的处理器时间。即使当前只有一个客户机，VMM 本身运行也需要占用 CPU 时间。</p>
-<h3 id="主流虚拟化产品"><a class="header" href="#主流虚拟化产品">主流虚拟化产品</a></h3>
-<h4 id="xen"><a class="header" href="#xen">Xen</a></h4>
-<p>Xen 可以安装在系统上，也可以直接安装到裸机上。</p>
-<p>Xen 采用的是混合模型。特权操作系统（Domain 0）可以是 Linux、Solaris 以及 NetBSD。</p>
-<p>OS需要定制化才能运行再Xen 上。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815150359893.png" alt="image-20240815150359893" /></p>
-<h4 id="vmware"><a class="header" href="#vmware">VMware</a></h4>
-<p>VMware 是 x86 虚拟化软件的主流厂商之一。</p>
-<p>基于 Hypervisor 架构的 VMware ESX Server 可以直接运行在裸机上。</p>
-<p>VMware Workstation 是 VMware 面向桌面的主打产品。Workstation 基于宿主模型，宿主机操作系统可以是 Windows 或者 Linux。</p>
-<h4 id="hyper-v"><a class="header" href="#hyper-v">Hyper-V</a></h4>
-<p>Hyper-V 是微软提出的一种系统管理程序虚拟化技术，它的主要作用是管理、调度虚拟机的创建和运行，并提供硬件资源的虚拟化。</p>
-<h4 id="kvm"><a class="header" href="#kvm">KVM</a></h4>
-<p>KVM（Kernel-based Virtual Machine）是一款开源的虚拟机软件，最早由 Qumranet 公司开发，并于 2007 年 2 月被集成到 Linux 2.6.20 内核中，称为 Linux 内核的一部分。</p>
-<p>随着越来越多的虚拟化功能被加入到 Linux 内核中，有说法认为 Linux 已经是一个 Hypervisor，因此，KVM 是 Hypervisor 模型。</p>
-<p>KVM 的宿主操作系统必须是 Linux，支持的客户机操作系统包括 Linux、Windows、Solaris 和 BSD，只能运行在支持虚拟化扩展的 x86 和 x86_64 硬件架构上，这意味着 KVM 不能运行在老式 CPU 上，新 CPU 如果不支持虚拟化扩展，也不能运行（如英特尔的 Atom 处理器）。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815151122500.png" alt="image-20240815151122500" /></p>
-<h2 id="三xen-虚拟化技术"><a class="header" href="#三xen-虚拟化技术">三、Xen 虚拟化技术</a></h2>
-<h4 id="架构"><a class="header" href="#架构">架构</a></h4>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815151735652.png" alt="image-20240815151735652" /></p>
-<p>Xen 虚拟化固件（Xen Virtual Firmware）是一个虚拟的 BIOS，它被加载到每一个 HVM 虚拟域以提供标准的启动指令，保证客户机操作系统在正常启动过程中能得到标准的 PC 兼容的软件环境。</p>
-<p><strong>独立设备驱动域（IDD）</strong></p>
-<p>在 Xen 结构中，所有的虚拟域操作系统访问硬件设备都要经过 Dom0，如果某一个硬件设备的驱动程序存在某些漏洞，那它就有可能摧毁整个 Dom0 的内核，从而导致整个系统崩溃。为了解决这个问题，Xen 考虑将 Dom0 中的设备驱动模块移动到另一个虚拟域中，一方面可以降低 Dom0 的运行负载，另一方面也可以降低系统的风险。</p>
-<p><strong>非特权虚拟域 U（DomU）</strong></p>
-<p>DomU 是除 Dom0 以外的虚拟域，由于 DomU 不能像 Dom0 一样直接访问物理 I/O 设备，因此，称为非特权域。</p>
-<p><strong>硬件虚拟域（HVM）</strong></p>
-<p>Xen 在设计之初为了追求高性能，采用了半虚拟化技术，需要少量修改客户机操作系统的内核与 Xen Hypervisor 进行协同工作。后期在得到 Intel 和 AMD 的 VT-x 及 SVM 硬件虚拟技术的支持后，Xen 能够实现全虚拟化，此时客户机操作系统的内核不需要修改，Windows XP 这种非开源的操作系统可以在其上运行，弥补了半虚拟化时的不足。</p>
-<h4 id="启动"><a class="header" href="#启动">启动</a></h4>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815152106216.png" alt="image-20240815152106216" /></p>
-<h2 id="四kvm-虚拟化技术"><a class="header" href="#四kvm-虚拟化技术">四、KVM 虚拟化技术</a></h2>
-<h4 id="kvm-1"><a class="header" href="#kvm-1">KVM</a></h4>
-<p>KVM 全称是 Kernel-based Virtual Machine，是一个基于 Linux 环境的开源虚拟化解决方案。</p>
-<p>与 Xen、VMware 等提供完整解决方案的商业化虚拟产品不同，KVM 的思想是在 Linux 内核的基础上添加虚拟机管理模块，重用 Linux 内核中已经完善的进程调度、内存管理、IO 管理等部分，<strong>使之成为一个可以支持运行虚拟机的 Hypervisor</strong>。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815152531925.png" alt="image-20240815152531925" /></p>
-<p>在 KVM 中，一个虚拟机就是一个传统的 Linux 中的进程（原文说是线程，感觉是个笔误），拥有自己的 PID 号，也可以被 kill 系统调用直接杀死（在这种情况下，虚拟机的行为表现为「突然断电」）。在一个 Linux 系统中，有多少个 VM，就有多少个进程。</p>
-<p>OS不需要修改就能直接运行再KVM上。</p>
-<p>KVM支持嵌套虚拟化，虚拟机中能再次虚拟其他主机。</p>
-<p><strong>KVM 体现了 Linux 系统的哲学：只做一件事情，但是要做得最好。</strong></p>
-<p>要不我也只做一件事，固件，尝试做到最好。但是有点难，因为要吃饭，要顺应时代潮流。</p>
-<p>在 KVM 的核心模块中，包含了 IOMMU、中断控制、kvm arch、设备管理等部分的代码，这些代码形成了虚拟机管理的核心功能。从这些功能中可以看到，KVM 并没有尝试实现一个完整的 PC 系统虚拟化，<strong>而将最重要的 CPU 虚拟化、I/O 虚拟化和内存虚拟化部分针对硬件辅助的能力进行了有效的抽象和对接，并且暴露出 API 供上层应用使用。</strong></p>
-<p>KVM 结构体在 KVM 的系统架构中代表一个具体的虚拟机。当通过 VM_CREATE_KVM 指令字创建一个新的 KVM 虚拟机之后，就会创建一个新的 KVM 结构体对象。KVM 结构体对象中包含了 vCPU、内存、APIC、IRQ、MMU、Event 事件管理等信息。</p>
-<h4 id="qemu-kvm"><a class="header" href="#qemu-kvm">qemu-kvm</a></h4>
-<p>qemu-kvm 是 KVM 所支持开发的一个 QEMU 版本，这个版本整合了 KVM 的加速支持，但是也重用了 QEMU 的体系结构、PC 机平台模拟等功能，充分发挥了二者的优点</p>
-<p>了支持 KVM 之外，QEMU 还支持全模拟化和 kqemu 加速模块等方式，这三种方式的架构区别如图</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815153448777.png" alt="image-20240815153448777" /></p>
-<p>第一种是借助额外的模块实现内核态的加速；</p>
-<p>第二种是用户态直接运行，全虚拟化；</p>
-<p>第三种模式则是 KVM 官方提供的 kvm-qemu 加速模式。运行在内核态的 KVM 模块通过/dev/kvm 字符设备文件向外提供操作接口。KVM 通过提供 libkvm 这个操作库，将/dev/kvm 这一层面的 ioctl 类型的 API 转化成为通常意义上的函数 API 调用，提供给 QEMU 的相应适配层，通过 QEMU 的支持来完成整个虚拟化工作。</p>
-<h4 id="libvirt-和-virt-manager"><a class="header" href="#libvirt-和-virt-manager">libvirt 和 virt-manager</a></h4>
-<p>在很多开源版本的 qemu-kvm 实现中，并不仅仅提供 qemu-kvm 软件来进行管理，而引入了一个叫做 libvirt 的库和 virt-manager 进行管理。</p>
-<p>virt-manager 是一个基于 Python 和 pygtk 编写的虚拟机管理工具前端，通过引用 libvirt 来进行桌面环境下的虚拟机管理</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815154957616.png" alt="image-20240815154957616" /></p>
-<h2 id="五虚拟化软件开放接口"><a class="header" href="#五虚拟化软件开放接口">五、虚拟化软件开放接口</a></h2>
-<p>ibvirt 是一套免费、开源的支持 Linux 下主流虚拟化工具的 C 函数库，支持与 C、C++、Ruby、Python 等多种主流开发语言的绑定。libvirt 的主要目标是为包括 Xen 在内的各种虚拟化工具提供一套方便、可靠的编程接口，用一种单一的方式管理多种不同的虚拟化提供方式和 Hypervisor，避免学习、使用不同 Hypervisor 的特定工具。</p>
-<p>libvirt 支持各种虚拟机监控程序，包括 Xen、KVM，以及 QEMU 和用于其他操作系统的许多虚拟产品。关于 libvirt 的官方描述如下。</p>
-<p>● libvirt 是一种为最新的 Linux（及其他操作系统）提供虚拟化功能的工具包。</p>
-<p>● libvirt 是遵循 GUN 公共许可的免费软件。</p>
-<p>● libvirt 是一种长期稳定的 C 语言 API。</p>
-<p>● libvirt 提供一组通用语言的绑定。</p>
-<p>● libvirt 是一个 DMTF（Distributed Management Task Force，分布式管理任务组）虚拟化模式的 CIM（Computer Integrated Manufacturing，计算机集成制造）提供者。</p>
-<p>● libvirt 是一个实现 AMQP（Advanced Message Queuing Protocol，消息队列协议）/Qpid（AMQP 的一个实现）消息系统的 QMF（Query Management Facility，查询管理应用程序）代理。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/image-20240815155434472.png" alt="image-20240815155434472" /></p>
-<h2 id="六总结"><a class="header" href="#六总结">六、总结</a></h2>
-<p>虚拟化技术的发展，开始是从软件虚拟化开始，有很多问题，软件没办法解决，硬件开始逐渐介入，从架构角度增加一些功能，丰富完善虚拟化技术，使得虚拟化性能和完备性逐步提高，满足市场的需求。</p>
-<p>软硬件协同发展、共同进步促进了虚拟化技术的长足可持续性发展。</p>
-<h2 id="参考"><a class="header" href="#参考">参考：</a></h2>
-<p>《虚拟化技术原理与实现》</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="hypervisor"><a class="header" href="#hypervisor">Hypervisor</a></h1>
-<p>[toc]</p>
-<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
-<h4 id="type-1-hypervisor"><a class="header" href="#type-1-hypervisor">Type 1 Hypervisor</a></h4>
-<p>可以本地安装并直接在物理主机上运行的Hypervisor称为Type 1 Hypervisor。</p>
-<h6 id="关键指标"><a class="header" href="#关键指标">关键指标</a></h6>
-<ul>
-<li>Type 1 Hypervisor可以直接安装在裸机系统或物理主机上。</li>
-<li><strong>它不需要先安装或可用的操作系统 (OS)</strong>，即可将自身部署在服务器上。</li>
-<li>直接访问 CPU、内存、网络、物理存储。</li>
-<li>硬件利用效率更高，提供最佳性能。</li>
-<li>由于没有任何额外的硬件访问层，因此安全性更高。</li>
-<li>每个Type 1 Hypervisor始终需要专用的物理机。</li>
-<li>可以成本更高，更适合企业级解决方案。</li>
-<li>VMware ESXi、Citrix Hypervisor和Microsoft Hyper-V是Type 1 Hypervisor的一些示例。</li>
-</ul>
-<h4 id="type-2-hypervisor"><a class="header" href="#type-2-hypervisor">Type 2 Hypervisor</a></h4>
-<p>无法本地安装且需要操作系统才能在物理主机上运行的管理程序称为类型 2 管理程序。</p>
-<h6 id="关键指标-1"><a class="header" href="#关键指标-1">关键指标</a></h6>
-<ul>
-<li>Type 2 hypervisor 不能直接安装在裸机系统或物理主机上。</li>
-<li><strong>它需要首先安装或可用的操作系统，以便部署自己。</strong></li>
-<li>间接访问 CPU、内存、网络、物理存储。</li>
-<li>由于需要额外的层 (OS) 来访问资源，因此硬件利用率可能会降低并导致性能滞后。</li>
-<li>由于主机操作系统的可用性，潜在的安全风险。</li>
-<li>每个Type 2 hypervisor不需要专用的物理机。单个主机上可以有多个。</li>
-<li>成本更低，更适合小型企业解决方案。</li>
-<li>VMware Workstation Player、VMware Workstation Pro和VirtualBox是Type 2 hypervisor的一些示例。</li>
-</ul>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/08_%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/images/hypervisor/image-20240718133210715.png" alt="image-20240718133210715" /></p>
-<h2 id="行业发展"><a class="header" href="#行业发展">行业发展</a></h2>
-<p>截取自：<a href="https://zhuanlan.zhihu.com/p/672508870">基于 RISC-V 的 Type-1 Hypervisor 的设计与实现</a></p>
-<h3 id="rvirt"><a class="header" href="#rvirt">RVirt</a></h3>
-<p>RVirt 是由 MIT PDOS 在 2018 年使用 Rust 开发的一个 <strong>RISC-V Type-1 hypervisor</strong>。RVirt 诞生时 RISC-V 虚拟化扩展仍然没有被提出，因此 MIT PDOS 采用了纯软件虚拟化的技术，RVirt 运行在 S-mode，客户操作系统运行在 U-mode，当客户操作系统执行特权指令或者读写 CSR 时将会陷入 hypervisor，hypervisor 会为客户操作系统维护影子状态。RVirt 可以在 QEMU virt 和 Hifive Unleased 开发板上运行 fedora 操作系统。RVirt 的优点是可以在任何实现了 M，S，U 特权级的 RISC-V 芯片上运行，缺点是性能低。</p>
-<h3 id="bao-hypervisor"><a class="header" href="#bao-hypervisor">Bao-hypervisor</a></h3>
-<p>Bao hypervisor是一个轻量级、安全、可靠、高效并且开源的 hypervisor 解决方案，旨在为现代多核嵌入式系统提供强大的虚拟化能力。与传统虚拟化解决方案相比，Bao hypervisor 可以更好地满足嵌入式系统对实时性、安全性和可靠性等方面的要求。</p>
-<p>Bao 的架构采用静态分区架构，并支持硬件辅助虚拟化技术。每个分区都被分配了一组硬件资源，并且这些资源在运行时不会发生变化。这种方法可以提高系统的可预测性和安全性，并减少了虚拟化开销。</p>
-<p>Bao 是一个轻量级 hypervisor，具有小巧、高效、可裁剪等特点，并且可以提供强大的空间和时间隔离。作者进行了一些实验来评估 Bao 的性能。实验结果表明，Bao 启动速度快、内存占用率低，并且中断延迟较小。</p>
-<p>目前 Bao 已经支持了 RISC-V 虚拟化技术并且成功在添加了 Hypervisor Extension 的 rocket chip 以及 CVA6 软核上成功运行。</p>
-<h3 id="xvisor"><a class="header" href="#xvisor">Xvisor</a></h3>
-<p>Xvisor 是一个完整的单体式虚拟化管理程序，支持全虚拟化和半虚拟化。它旨在提供一个轻量级的虚拟化管理程序，可用于嵌入式系统，具有较小的开销和内存占用。Xvisor 主要提供全虚拟化客户机，并通过可选的 VirtIO 设备提供半虚拟化。所有核心组件都作为单个软件层运行，包括 CPU 虚拟化、客户机 IO 模拟、后台线程、半虚拟化服务、管理服务和设备驱动程序。客户操作系统运行在 Xvisor 实现者称之为 Normal vCPUs 的特权较低的环境中。</p>
-<p>在 2019 年 Xvisor 根据当时的 RISC-V 虚拟化草案支持了 RISC-V 虚拟化，后续更新到 RISC-V Hypervisor Extension 1.0，不过目前 Xvisor 作者对于 Xvisor 已经疏于维护。</p>
-<h3 id="sel4"><a class="header" href="#sel4">seL4</a></h3>
-<p>seL4 是一种基于保密性和高度安全的微内核操作系统，由澳大利亚国立大学的 NICTA（现在成为CSIRO data61）团队开发。seL4具有严格的形式化验证，保证了其内核的功能正确性和安全性。这使得seL4成为在实时和安全领域进行高度可信和高保密度的应用的理想平台。</p>
-<p>seL4的特点包括以下几点：</p>
-<ul>
-<li>高度安全性：seL4的内核采用严格的数学证明，保证内核的正确性和安全性。</li>
-<li>微内核设计：seL4采用微内核设计，只包含操作系统最基本的功能。这使得它具有高度的可扩展性、可配置性和可移植性。</li>
-<li>高性能：由于seL4是一个精简的微内核，它不会附加额外的功能和复杂度，这使得它能够在嵌入式和高性能计算领域具有优势。</li>
-<li>开放源代码：seL4采用 GPLv2 开源协议，完全开放源代码。</li>
-<li>应用领域广泛：由于其高度安全和可信度，seL4在许多领域中得到广泛应用，如智能网联汽车、航空航天、国防、金融、医疗等。</li>
-<li>目前 seL4 已经为 RISC-V 虚拟化提供了支持。</li>
-</ul>
-<h3 id="kvm-2"><a class="header" href="#kvm-2">KVM</a></h3>
-<p>KVM（Kernel-based Virtual Machine）是一种基于Linux内核的虚拟化技术，它允许在相同的物理硬件上运行多个虚拟机（VM），每个VM都可以运行不同的操作系统。KVM利用虚拟化技术中的硬件辅助虚拟化技术（如Intel VT和AMD-V）来提高VM性能和安全性。</p>
-<p>KVM是一种开放源代码软件，它被许多组织和公司使用和支持，例如Red Hat、IBM、Intel等。KVM支持多种操作系统，包括Linux、Windows和BSD。此外，KVM还提供了一些管理工具，如virt-manager和virsh，使用户能够轻松创建、配置和管理虚拟机。</p>
-<p>KVM的优点包括可靠性、高性能、高安全性、灵活性和可扩展性。它可以在不同的硬件架构上运行。另外，由于它是Linux内核的一部分，因此它保持了与Linux内核的紧密集成，可以受益于Linux社区提供的驱动程序、功能和补丁。</p>
-<p>一些比较好的文章</p>
-<p><a href="https://zhuanlan.zhihu.com/p/672508870">基于 RISC-V 的 Type-1 Hypervisor 的设计与实现</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mit-6824-distributed-systems"><a class="header" href="#mit-6824-distributed-systems">MIT 6.824 Distributed Systems</a></h1>
-<p>6.824 是MIT开设的一门讲解分布式系统的课程。课程内容包括Golang语言的学习、分布式系统研究的动机、一致性协议算法、著名分布式系统软件论文讲解和一致性算法实现实验。这门课是一门实践性质比较强的课程。</p>
-<p>资源：</p>
-<p><a href="https://www.bilibili.com/video/BV1R7411t71W/?vd_source=e2650e9dfc4eb50f3b6d371091063d29">B站</a></p>
-<p>课程主页：<a href="https://link.zhihu.com/?target=https%3A//pdos.csail.mit.edu/6.824/schedule.html">https://pdos.csail.mit.edu/6.82</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-consistency-and-cache-coherence"><a class="header" href="#memory-consistency-and-cache-coherence">Memory consistency and cache coherence</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-consistency"><a class="header" href="#memory-consistency">Memory Consistency</a></h1>
-<p>[toc]</p>
-<h2 id="概述-2"><a class="header" href="#概述-2">概述</a></h2>
-<p>一个栗子：</p>
-<p>可以从现实世界中直观的感受一下我们为什么需要 consistency model。请考虑一所在线发布其课程安排的大学，假设计算机体系结构课程原定在 152 室。开课前一天，大学注册处决定将课程搬到 252 室。注册处发送电子邮件，要求网站管理员更新在线课程表，几分钟后，注册处会向所有注册的学生发送一条短信，要求学生去检查新的课程表。想象这样一个场景，网站管理员太忙而无法立即发布更新，一个勤奋的学生收到短信后，立即查看在线课程表，会观察到课程位置认为 152 室。尽管在线课程表最终更新为 252 室，并且注册处以正确的顺序执行“写入”，但这位勤奋的学生以不同的顺序观察它们，因此去了错误的房间。</p>
-<p>我们可以观察到电子邮件系统、人工网络管理员和短信系统的组合，代表了一个极其弱的 consistency model。为了防止勤奋的学生走错房间，大学注册处需要在发送电子邮件之后执行 FENCE 操作，以确保在线课程表在发送短信之前已经更新。</p>
-<p>计算机中的栗子：</p>
-<pre><code class="language-c">static int x = 0, y = 0;
-static int r1, r2;
-
-
-static void int thread_cpu0(void)
-{
-        x = 1;    /* 1) */
-        r1 = y;   /* 2) */
-}
-
-
-static void int thread_cpu1(void)
-{
-        y = 1;    /* 3) */
-        r2 = x;   /* 4) */
-}
-
-
-static void check_after_assign(void)
-{
-        printk("r1 = %d, r2 = %d\n", r1, r2);
-}
-</code></pre>
-<p>在多核系统上，我们知道两个函数4条操作执行可以互相交错。理论上来我们有以下6种排列组合。</p>
-<pre><code class="language-text">1) 2) 3) 4)
-1) 3) 2) 4)
-1) 3) 4) 2)
-3) 4) 1) 2)
-3) 1) 4) 2)
-3) 1) 2) 4)
-</code></pre>
-<p>当我们确保thread_cpu0和thread_cpu1执行完成后，调用check_after_assign()会打印什么提示信息呢？根据以上6种组合，我们可能会得到如下3种结果。</p>
-<pre><code class="language-c">r1 = 1, r2 = 1
-r1 = 0, r2 = 1   // 1) 2) 3) 4)
-r1 = 1, r2 = 0   // 3) 4) 1) 2)
-</code></pre>
-<p>这里就出了个问题，每个处理器都按照各自正确的顺序在执行，但r1 或者 r2 没有拿到正确的值，这就是王齐老师总是提到的"序"的问题。具有乱序处理器核心、write buffer、prefetching 和 multiple cache banks 的共享内存硬件中也可能发生类似的行为。</p>
-<p>有个问题，有了cache一致性，为什么还会出这种问题呢？如，write buffer 可能导致这个问题，数据都没到cache里，没到cache里，缓存一致性就不起作用了。</p>
-<p><img src="01_%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/09_Memory_Consistency/images/memory_consistency/image-20240724170156332.png" alt="image-20240724170156332" /></p>
-<p>此外，加入write buffer，可能出现更糟糕的情况，如 <code>1) 3) 2) 4)</code> 这个case，可能写操作都暂存在write buffer中，另一个core 互相全都没看见对方的修改，直接输出全是0。</p>
-<pre><code class="language-text">r1 = 0, r2 = 0
-</code></pre>
-<p>看起来像是按照 <code>3) 4) 1) 2)</code> 这顺序执行的。</p>
-<p>从这个例子可以看出，在共享存储系统中，需要对多处理器的访存操作的次序做出限制，才能保证程序执行的正确。</p>
-<p>存储一致性模型是多处理器系统设计者与应用程序员之间的一种约定，它给出了正确编写程序的标准，使得程序员无须考虑具体访存次序就能编写正确程序，而系统设计者则可以根据这个约定来优化设计提高性能。系统设计者通过对各处理器的访存操作完成次序加以必要的约束来满足存储一致性模型的要求。</p>
-<p>现代计算机为了提升处理性能，在硬件层面加入了各种优化等，最终导致了内存乱序访问的问题。由于不同处理器架构在硬件层面的优化程度不同，导致可能产生的内存乱序访问的行为也存在很大的差异。**内存一致性模型描述了这些可能产生的乱序访问行为的规则以及约束，以便软件开发人员在不清楚硬件实现细节的情况下，能够理解硬件的行为并正确编写并发代码。**比如，某个架构遵循TSO模型，作为软件工程师，你只需要知道，这个标准，按这个标准去写代码就行了，不用关心硬件的实现细节。</p>
-<p>内存一致性模型（Memory Consistency Model）就是用来描述多处理器对共享存储器的访问行为，在不同的内存一致性模型里，多线程对共享存储器的访问行为有非常大的差别。这些差别会严重影响程序的执行逻辑，甚至会造成软件逻辑问题。</p>
-<p>“<strong>单核乱序对程序员是透明的，只有其他核才会受到乱序影响</strong>” —— core 0 能看到自己write buffer 中的内容，core1 也能看到自己的。</p>
-<h2 id="与缓存一致性的区别"><a class="header" href="#与缓存一致性的区别">与缓存一致性的区别</a></h2>
-<p>在英文里，这两个是不同的单词memory consistency and cache coherence，中文里不知道谁最先翻译的，给整成一样的了，这会带来很大的误解。</p>
-<p>cache一致性关注的是多个CPU看到一个地址的数据是否一致。<strong>内容一致</strong></p>
-<p>而内存一致性关注的是多个CPU看到多个地址数据读写的次序。<strong>次序关系</strong></p>
-<p>一个关注的是<strong>一个地址</strong>，一个关注的是<strong>多个地址</strong>的顺序。还是有点区别。</p>
-<h2 id="常见模型"><a class="header" href="#常见模型">常见模型</a></h2>
-<p>内存一致性关注对内存的读写操作访问，由此可得到4种不同的指令组合，依次为Store-Load、Store-Store、Load-Store、Load-Load，通过允许调整这些指令组合执行的顺序，可以获得不同的内存一致性模型。目前有多种内存一致性模型，从上到下模型的限制由强到弱，依次为：</p>
-<p>顺序一致性（Sequential Consistency，简写SC）模型；
-完全存储定序（Total Store Order，简写TSO）模型；x86-64
-部分存储定序（Part Store Order，简写PSO）模型；
-宽松存储（Relax Memory Order，简写RMO）模型。</p>
-<p>这些存储一致性模型对访存事件次序的限制不同，因而对程序员的要求以及所能得到的性能也不一样。<strong>存储一致性模型对访存事件次序施加的限制越弱越有利于提高性能，但编程越难</strong>。下面介绍具体的存储一致性模型。</p>
-<p>这四种内存一致性模型描述了在多处理器系统中处理器之间共享内存的不同策略。以下是对每种模型的详细解释和示例：</p>
-<h3 id="1-顺序一致性模型sequential-consistency-sc"><a class="header" href="#1-顺序一致性模型sequential-consistency-sc">1. 顺序一致性模型（Sequential Consistency, SC）</a></h3>
-<p>顺序一致性模型要求所有处理器的内存操作按照一个统一的全局顺序执行，即每个处理器的操作顺序在全局顺序中保持一致。</p>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>所有处理器的内存操作严格按照程序中指定的顺序执行。</li>
-<li>在所有处理器看来，所有内存操作发生的顺序是一致的。</li>
-</ul>
-<p><strong>示例</strong>：</p>
-<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
-3 -&gt; 1 -&gt; 4 -&gt; 2
-1 -&gt; 3 -&gt; 4 -&gt; 2 // 是否为可行的顺序
-3 -&gt; 1 -&gt; 2 -&gt; 4
-</code></pre>
-<ul>
-<li>
-<p>各个处理器上的操作顺序必须按照程序的顺序执行。</p>
-</li>
-<li>
-<p>所有处理器看到的操作顺序一致。</p>
-</li>
-</ul>
-<h5 id="解读"><a class="header" href="#解读">解读</a></h5>
-<h6 id="分析-1---3---4---2"><a class="header" href="#分析-1---3---4---2">分析 <code>1 -&gt; 3 -&gt; 4 -&gt; 2</code></a></h6>
-<ol>
-<li><code>1: x = 1</code> （CPU 0）</li>
-<li><code>3: y = 1</code> （CPU 1）</li>
-<li><code>4: r2 = x</code> （CPU 1）</li>
-<li><code>2: r1 = y</code> （CPU 0）</li>
-</ol>
-<p>我们需要检查 <code>CPU 0</code> 和 <code>CPU 1</code> 各自的操作顺序：</p>
-<ul>
-<li>对于 <code>CPU 0</code>，顺序是 <code>1 -&gt; 2</code></li>
-<li>对于 <code>CPU 1</code>，顺序是 <code>3 -&gt; 4</code></li>
-</ul>
-<p>在顺序一致性模型下，我们必须确保每个处理器的操作顺序在全局视图中保持一致。</p>
-<h6 id="全局视图的一致性"><a class="header" href="#全局视图的一致性">全局视图的一致性</a></h6>
-<p>根据顺序 <code>1 -&gt; 3 -&gt; 4 -&gt; 2</code>，我们有：</p>
-<ul>
-<li>操作 <code>4</code> 读取 <code>x</code>，应该看到的是操作 <code>1</code> 的结果，即 <code>r2 = 1</code></li>
-<li>操作 <code>2</code> 读取 <code>y</code>，应该看到的是操作 <code>3</code> 的结果，即 <code>r1 = 1</code></li>
-</ul>
-<h3 id="2-完全存储定序模型total-store-order-tso"><a class="header" href="#2-完全存储定序模型total-store-order-tso">2. 完全存储定序模型（Total Store Order, TSO）</a></h3>
-<p>TSO 模型允许写操作的重排序，但读取操作在看到前一写操作的结果之前不会继续。store和load的组合有4种。分别是store-store，store-load，load-load和load-store。TSO模型中，<strong>只存在store-load存在乱序</strong>，另外3种内存操作不存在乱序。</p>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>写操作可以重排序，但在读操作发生之前必须确保前一写操作的可见性。</li>
-<li>写操作被推送到写缓冲区，而读操作可以从写缓冲区中读取未提交的写操作。</li>
-</ul>
-<p><strong>示例</strong>：</p>
-<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
-3 -&gt; 1 -&gt; 4 -&gt; 2
-1 -&gt; 2 -&gt; 3 -&gt; 4
-3 -&gt; 4 -&gt; 1 -&gt; 2
-</code></pre>
-<p>但必须确保读操作看到之前写操作的结果。</p>
-<h3 id="3-部分存储定序模型partial-store-order-pso"><a class="header" href="#3-部分存储定序模型partial-store-order-pso">3. 部分存储定序模型（Partial Store Order, PSO）</a></h3>
-<p>PSO 模型允许写操作和读操作都进行重排序，但对某些特定的内存操作需要保持顺序。</p>
-<p>处理器一致性（Processor Consistency, PC） 松散一致性（Relaxed Consistency, RC）</p>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>写操作和读操作可以进行更广泛的重排序。</li>
-<li>通过显式的同步操作（如内存屏障）来保证某些操作的顺序性。</li>
-</ul>
-<p><strong>示例</strong>：</p>
-<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
-3 -&gt; 1 -&gt; 4 -&gt; 2
-1 -&gt; 2 -&gt; 3 -&gt; 4
-3 -&gt; 4 -&gt; 1 -&gt; 2
-2 -&gt; 1 -&gt; 4 -&gt; 3
-4 -&gt; 3 -&gt; 2 -&gt; 1
-</code></pre>
-<p>但通过内存屏障，可以强制某些操作按顺序执行。</p>
-<h3 id="4-宽松存储模型relaxed-memory-order-rmo"><a class="header" href="#4-宽松存储模型relaxed-memory-order-rmo">4. 宽松存储模型（Relaxed Memory Order, RMO）</a></h3>
-<p>RMO 模型允许最广泛的重排序，包括读写操作的重排序，通过显式的同步操作来保证必要的顺序。</p>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>读操作和写操作几乎可以完全自由地重排序。</li>
-<li>通过同步原语（如内存屏障）来保证必要的顺序。</li>
-</ul>
-<p><strong>示例</strong>：</p>
-<pre><code>1 -&gt; 3 -&gt; 2 -&gt; 4
-3 -&gt; 1 -&gt; 4 -&gt; 2
-1 -&gt; 2 -&gt; 3 -&gt; 4
-3 -&gt; 4 -&gt; 1 -&gt; 2
-2 -&gt; 1 -&gt; 4 -&gt; 3
-4 -&gt; 3 -&gt; 2 -&gt; 1
-2 -&gt; 4 -&gt; 1 -&gt; 3
-4 -&gt; 2 -&gt; 3 -&gt; 1
-</code></pre>
-<p>通过使用内存屏障，程序员可以强制某些关键操作按顺序执行，以确保数据一致性。</p>
-<h3 id="总结表格"><a class="header" href="#总结表格">总结表格</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>组合</th><th>SC</th><th>TSO</th><th>PSO</th><th>RMO</th></tr></thead><tbody>
-<tr><td>Store-Store</td><td>禁止重排序</td><td>禁止重排序</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>Store-Load</td><td>禁止重排序</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>Load-Load</td><td>禁止重排序</td><td>禁止重排序</td><td>禁止重排序</td><td>Yes</td></tr>
-<tr><td>Load-Store</td><td>禁止重排序</td><td>禁止重排序</td><td>禁止重排序</td><td>Yes</td></tr>
-</tbody></table>
-</div>
-<h2 id="如何保证顺序性"><a class="header" href="#如何保证顺序性">如何保证顺序性</a></h2>
-<p>如果我们确实不希望看到<code>r1 = 0, r2 = 0</code>的结果，我们该怎么办呢？Linux内核中提供了<code>smp_mb()</code>宏对不同架构的指令进行封装，<code>smp_mb()</code>的作用是阻止它后面的读写操作不会乱序到宏前面的指令前执行。他就像是个屏障一样，不容逾越。</p>
-<p>这个屏障把代码分成了两部分，每一个部分内部可以乱序，但之间不能乱。</p>
-<p>参考：</p>
-<ul>
-<li>
-<p><a href="https://pages.cs.wisc.edu/~markhill/papers/primer2020_2nd_edition.pdf">A Primer on Memory Consistency and Cache Coherence (2nd Edition)</a></p>
-</li>
-<li>
-<p>https://blog.csdn.net/qq_29328443/article/details/107616795</p>
-</li>
-<li>
-<p>https://blog.csdn.net/anyegongjuezjd/article/details/125954805</p>
-</li>
-<li>
-<p>https://zhuanlan.zhihu.com/p/141655129?from_voters_page=true</p>
-</li>
-<li>
-<p><a href="https://foxsen.github.io/archbase/%E5%A4%9A%E6%A0%B8%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%84.html#%E5%AD%98%E5%82%A8%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B">计算机体系结构基础</a></p>
-</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="固件-1"><a class="header" href="#固件-1">固件</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="arm固件启动顺序-1"><a class="header" href="#arm固件启动顺序-1">ARM固件启动顺序</a></h1>
-<h2 id="小core-1"><a class="header" href="#小core-1">小core</a></h2>
-<ol>
-<li>
-<p>硬件上电流程完成后，BMC释放系统内所有C2000 CHIP的POR_N，pervsoc开始做复位启动流程；</p>
-</li>
-<li>
-<p>在otprom valid且硬件逻辑做完SCP SRAM的BISR流程后，PVO(SCP)自动从ROM （otprom内容）开始取指执行；</p>
-</li>
-<li>
-<p>各SCP初始化各自的SRAM；</p>
-</li>
-<li>
-<p>SCP ROM FW 对GPIO初始化，读取CHIP ID,根据CHIP ID确定自己是否是主CHIP;</p>
-</li>
-<li>
-<p>根据是主还是从，初始化I2C/FSI（具体用哪个待定）为对应模式；</p>
-</li>
-<li>
-<p>主CHIP的SCP还需要初始化QSPI;</p>
-</li>
-<li>
-<p>主CHIP的SCP发起与其他CHIP的握手信号，检测系统中哪些CHIP在位；</p>
-</li>
-<li>
-<p>主CHIP的SCP与在位的从CHIP SCP建立数据通路；</p>
-</li>
-<li>
-<p>主CHIP的SCP从QSPI校验并搬运SCP RAM FW至主CHIP的SRAM;</p>
-</li>
-<li>
-<p>主CHIP的SCP透过步骤8已打通的数据通路，将SCP RAM FW和签名数据包传递给从SCP,从SCP将其放至对应的SRAM:</p>
-</li>
-<li>
-<p>各CHIP的SCP跳至对应的SRAM,运行SCP RAM FW:</p>
-</li>
-<li>
-<p>主CHIP的SCP读取QSPI有关C2C的配置，并根据需要分发给对应的SCP；</p>
-</li>
-<li>
-<p>主CHIP的SCP与从CHIP的SCP配合，根据C2C配置，初始化C2C;</p>
-</li>
-<li>
-<p>各SCP根据 CHIP ID初始化CMN、OCM(SLC)和SAM;</p>
-</li>
-<li>
-<p>各CHIP的SCP校验、加载MCP RAM FW,启动MCP(待确认)；+</p>
-</li>
-<li>
-<p>各SCP初始化对应CHIP内大核的L2、NCU、SCOM/FIR;+</p>
-</li>
-<li>
-<p>主CHIP的SCP校验并搬运 Hostboot base 镜像至主CHIP的OCM(SLC);+</p>
-</li>
-<li>
-<p>主CHIP的SCP启动主CHIP内的第一个可用大核的第一个线程；</p>
-</li>
-<li>
-<p>主大核第一个线程开始从srest（0x100）取指执行。</p>
-</li>
-</ol>
-<h2 id="大core-hostboot-1"><a class="header" href="#大core-hostboot-1">大core-hostboot</a></h2>
-<ol>
-<li>
-<p>设置kernel other thread spinlock,此时只允许第一个thread往前走；</p>
-</li>
-<li>
-<p>设置hostboot kernel堆栈，从汇编跳转至C/C++入口main函数；+</p>
-</li>
-<li>
-<p>调用hostboot kernel模块内的静态构造函数；</p>
-</li>
-<li>
-<p>初始化MMU(SLB/TLB),此时DIMM未准备好，只能用OCM(SLC,一个芯片多有28 核* 2MB=56MB，多能启用3/4）；</p>
-</li>
-<li>
-<p>初始化时间管理的TB频率和CPU对象；</p>
-</li>
-<li>
-<p>写Scratch寄存器，通知FSP/BMC;</p>
-</li>
-<li>
-<p>为主CPU创建init main任务；</p>
-</li>
-<li>
-<p>设置 kernel other thread spinlock为1，允许其它 thread往前走；</p>
-</li>
-<li>
-<p>hostboot 进入task 调度，所有task 运行在user 模式，而kernel 服务运行在 hypersior 模式；</p>
-</li>
-<li>
-<p>init main任务初始化VFS;</p>
-</li>
-<li>
-<p>VFS遍历base modules，设置对应的模块的代码段和数据段属性，并调用对应模块</p>
-</li>
-</ol>
-<p>的init函数；</p>
-<ol start="12">
-<li>
-<p>创建initservice任务；</p>
-</li>
-<li>
-<p>initservice 按g_taskinfolist列表调用列表中的模块的初始化入口函数；</p>
-</li>
-<li>
-<p>secureboot_base/ipmibase/pnor/vfs/extinitsvc等基本模块初始化；</p>
-</li>
-<li>
-<p>动态验证并从hostboot extended image中加载其他模块；</p>
-</li>
-<li>
-<p>extinitsvc 模块按g_exttaskinfolist 列表加载并初始化其他模块；</p>
-</li>
-<li>
-<p>后一个模块是istepdisp，到此，必要的hostboot 模块完成初始化；</p>
-</li>
-<li>
-<p>按istep执行启动流程（详细流程参见后面hostboot章节）；</p>
-</li>
-<li>
-<p>istep 21.03加载、验证、解压payload(skiboot,OPAL);+</p>
-</li>
-<li>
-<p>跳至payload(skiboot,OPAL)。</p>
-</li>
-</ol>
-<h2 id="大core-skiboot-1"><a class="header" href="#大core-skiboot-1">大core-skiboot</a></h2>
-<ol>
-<li>
-<p>从大端转换成小端（C2000计划skiboot用小端编译）：</p>
-</li>
-<li>
-<p>主thread 判断 skiboot 被加载的位置并根据需要做 relocate操作，其他thread则 等待；</p>
-</li>
-<li>
-<p>主thread 设置 boot flag=1,允许其他 thread 往前走；</p>
-</li>
-<li>
-<p>主 thread 跳至 main cpu entry,其他 thread 则跳至 secondary cpu entry;</p>
-</li>
-<li>
-<p>初始化uart(console);</p>
-</li>
-<li>
-<p>初始化skiboot启动阶段用的中断/异常向量表；</p>
-</li>
-<li>
-<p>调用skiboot相关库的构造函数；</p>
-</li>
-<li>
-<p>初始化opal call table;</p>
-</li>
-<li>
-<p>处理 hostboot 传过来的 device tree 或HDAT;</p>
-</li>
-<li>
-<p>根据DT初始化SCOM/eSPI(LPC):</p>
-</li>
-<li>
-<p>根据DT初始化内存可用和保留区域（C2000的DIMM初始化应在其前面）；</p>
-</li>
-<li>
-<p>根据DT初始化homer（C2000待确认是否需要）；</p>
-</li>
-</ol>
-<p>13.根据DT初始化所有可用CPU(thread);</p>
-<p>14.将opal信息加到DT;</p>
-<p>15.检测运行平台，并根据平台作配置：</p>
-<p>16.根据平台配置，初始化BMC相关的ipmi/BT/UART;</p>
-<p>17.初始化中断控制器（GIC）；</p>
-<p>18.让所有可用CPU（thread）进入可用状态；</p>
-<p>19.设置sreset，以实现CPU核的电源管理；</p>
-<p>20.初始化TOD，同步TOD时钟；</p>
-<p>21.初始化sensor 相关的OPAL接口；</p>
-<p>22.调用平台初始化接口；</p>
-<p>23.NV初始化；</p>
-<p>24.安全启动（jiayu）初始化；</p>
-<p>25.可信启动（TPM）初始化；</p>
-<p>26.初始化opal console(UART)接口；</p>
-<ol start="27">
-<li>PCIE HB初始化和PCIE枚举； (RC初始化，CXL与PCIe枚举，device tree 资源汇报等)</li>
-</ol>
-<p>28.PCIE SLOT初始化；</p>
-<p>29.回收未使用内存；</p>
-<p>30.更新保留内存区域；</p>
-<p>31.加载、验证、解压zImage(boot loader内核和petitboot);</p>
-<p>32.启动boot loader内核。</p>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/ARM%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/image-20240704111929075.png" alt="image-20240704111929075" /></p>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/ARM%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/image-20240704111945789.png" alt="image-20240704111945789" /></p>
-<p>CMN OCM(on chip memory) 是L3 cache，在没有DDR 的时候就使用这个组件来运行代码。与Intel的cache as ram 类似。</p>
-<p>当OCM 当做memory 时候的时候，CMN OCM(on chip memory) 不能使用28*2=56M 全部缓存，只能用一部分，一般不超过3/4，实际只使用了32M。</p>
-<p>测试流程：</p>
-<p>SCP ram 中进行DDR training，不需要使用OCM 功能，将flash 中的内容直接搬到DDR 开始运行。</p>
-<p>如果不开启OCM 功能，地址不会路由到SNF 节点中去。</p>
-<p>标准流程：</p>
-<p>SCP 中开启OCM 功能，SCP RAM将hostboot 搬到OCM 中去运行，skiboot 早期同样在OCM 中运行，在skiboot 中进行ddr training，然后搬运代码到DDR，关闭OCM，刷新OCM，开启cache 功能。</p>
-<p>hostboot会将skiboot 搬到0x800 0000 处。</p>
-<p>32M 最大的地址是0x200 0000, 而skiboot 默认会将自己搬到0x3000 0000 来运行，所以开了OCM，即不能去那里运行，当前代码使用的是0x0，也就是搬到0x0处运行。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="risc-v-firmware-1"><a class="header" href="#risc-v-firmware-1">RISC-V Firmware</a></h1>
-<h2 id="概述-3"><a class="header" href="#概述-3">概述</a></h2>
-<p>Firmware 启动的一般流程</p>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711102511545.png" alt="image-20240711102511545" /></p>
-<h2 id="arm64-vs-risc-v-1"><a class="header" href="#arm64-vs-risc-v-1">ARM64 vs RISC-V</a></h2>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711103010418.png" alt="image-20240711103010418" /></p>
-<p>uboot处可以替换为EDK2，可以从PEI开始，也可以从DXE直接开始。</p>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711103301123.png" alt="image-20240711103301123" /></p>
-<p>对应起来就是：</p>
-<p>ZSBL: SCP ROM</p>
-<p>FSBL: SCP RAM</p>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/RISCV_firmware/image-20240711105826248.png" alt="image-20240711105826248" /></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="cache-as-ram-and-on-chip-memory-1"><a class="header" href="#cache-as-ram-and-on-chip-memory-1">Cache as RAM and On Chip Memory</a></h1>
-<h2 id="概述-4"><a class="header" href="#概述-4">概述</a></h2>
-<p>不同架构对这个问题有不同的描述，</p>
-<p>x86中叫做Cache as RAM, CAR;</p>
-<p>ARM 架构中叫On Chip Memory，OCM。</p>
-<p>本质上都是一样的，在DDR还没准备好的时候，使用cache作为RAM，来运行C语言程序。</p>
-<h2 id="car-1"><a class="header" href="#car-1">CAR</a></h2>
-<h3 id="ocm-1"><a class="header" href="#ocm-1">OCM</a></h3>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="system-table-1"><a class="header" href="#system-table-1">System Table</a></h1>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/EDK2_SYS_TABLE/image-20240729101921741.png" alt="image-20240729101921741" /></p>
-<p>在 <code>MdeModulePkg\Core\Dxe\DxeMain\DxeMain.c</code> 中创建。</p>
-<pre><code class="language-c">  //
-  // Allocate the EFI System Table and EFI Runtime Service Table from EfiRuntimeServicesData
-  // Use the templates to initialize the contents of the EFI System Table and EFI Runtime Services Table
-  //
-  gDxeCoreST = AllocateRuntimeCopyPool (sizeof (EFI_SYSTEM_TABLE), &amp;mEfiSystemTableTemplate);
-  ASSERT (gDxeCoreST != NULL);
-
-  gDxeCoreRT = AllocateRuntimeCopyPool (sizeof (EFI_RUNTIME_SERVICES), &amp;mEfiRuntimeServicesTableTemplate);
-  ASSERT (gDxeCoreRT != NULL);
-
-  gDxeCoreST-&gt;RuntimeServices = gDxeCoreRT;
-</code></pre>
-<p>结构体</p>
-<pre><code class="language-c">///
-/// EFI System Table
-///
-typedef struct {
-  ///
-  /// The table header for the EFI System Table.
-  ///
-  EFI_TABLE_HEADER                  Hdr;
-  ///
-  /// A pointer to a null terminated string that identifies the vendor
-  /// that produces the system firmware for the platform.
-  ///
-  CHAR16                            *FirmwareVendor;
-  ///
-  /// A firmware vendor specific value that identifies the revision
-  /// of the system firmware for the platform.
-  ///
-  UINT32                            FirmwareRevision;
-  ///
-  /// The handle for the active console input device. This handle must support
-  /// EFI_SIMPLE_TEXT_INPUT_PROTOCOL and EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL.
-  ///
-  EFI_HANDLE                        ConsoleInHandle;
-  ///
-  /// A pointer to the EFI_SIMPLE_TEXT_INPUT_PROTOCOL interface that is
-  /// associated with ConsoleInHandle.
-  ///
-  EFI_SIMPLE_TEXT_INPUT_PROTOCOL    *ConIn;
-  ///
-  /// The handle for the active console output device.
-  ///
-  EFI_HANDLE                        ConsoleOutHandle;
-  ///
-  /// A pointer to the EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL interface
-  /// that is associated with ConsoleOutHandle.
-  ///
-  EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL   *ConOut;
-  ///
-  /// The handle for the active standard error console device.
-  /// This handle must support the EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL.
-  ///
-  EFI_HANDLE                        StandardErrorHandle;
-  ///
-  /// A pointer to the EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL interface
-  /// that is associated with StandardErrorHandle.
-  ///
-  EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL   *StdErr;
-  ///
-  /// A pointer to the EFI Runtime Services Table.
-  ///
-  EFI_RUNTIME_SERVICES              *RuntimeServices;
-  ///
-  /// A pointer to the EFI Boot Services Table.
-  ///
-  EFI_BOOT_SERVICES                 *BootServices;
-  ///
-  /// The number of system configuration tables in the buffer ConfigurationTable.
-  ///
-  UINTN                             NumberOfTableEntries;
-  ///
-  /// A pointer to the system configuration tables.
-  /// The number of entries in the table is NumberOfTableEntries.
-  ///
-  EFI_CONFIGURATION_TABLE           *ConfigurationTable;
-} EFI_SYSTEM_TABLE;
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-event-1"><a class="header" href="#edk2-event-1">EDK2 EVENT</a></h1>
-<p>[toc]</p>
-<h2 id="简介-3"><a class="header" href="#简介-3">简介</a></h2>
-<p>先来回顾一下中断处理的过程。正常执行代码，中断进来了，执行中断处理函数，中断处理函数结束后，继续执行未完成的代码。</p>
-<p>异步操作，就是中断。UEFI 不支持中断，是个单核单线程的架构。只有时钟中断。</p>
-<p>说到 做定时/计数器 ，最经典的当数intel兼容的8253/8254定时器，它几乎是所有的PC必须兼容支持的一颗IC，当然在其他的微处理器系统当中也是支持的，比如MSC8051,以及其他的微处理器当中。</p>
-<p>几乎所有的Timer都能在不需要外力干涉的情况下在系统的时钟脉冲的驱动之下，自动计数，并且在计数值到达预设值的时候会通知cpu去执行特定的动作，并且在处理完之后能自动接着计数，不辞辛劳做着机械性的无差错的动作。</p>
-<p>在PC/AT架构UEFI当中我们通常会使用8254来作为核心心跳Timer，它工作在mode 3，时钟频率是1.1931816MHz，设定的tick（mTimerPeriod）间隔，默认是1ms（10000个tick基础计数单位=10000*100ns），并且打开CPU中断IRQ0。当计数器减到0的时候，就会通过OUT pin给8259的IRQ0发送中断，这个时候CPU就会中断当前操作，进行Timer的中断处理服务。</p>
-<p>当然前提是我们在此之前有准备好cpu archprotocol和Legacy8259Protocol，设置好中断向量表,当中断到来的时候，cpu会从IDT表中依据中断号，调用Timer中断服务TimerInterruptHandler。</p>
-<h2 id="timer中断-1"><a class="header" href="#timer中断-1">Timer中断</a></h2>
-<p>现在再来看Timer中断异常是怎么做的，它会提供哪些服务，以下是简单的列举。</p>
-<p>**1.**关中断</p>
-<p>**2.**清除中断源</p>
-<p>**3.**获取系统时间锁（关中断，虽然中断此时是关的）</p>
-<p>**4.**调用注册的具体的Timer服务，这里我们称之为CoreTimerTick(mTimerPeriod)/CoreTimerTick(100ms)，它是在TimerArchprotocol被install的时候由EVT_NOTIFY_SIGNAL类型的Event来触发注册的。</p>
-<p>**5.**全局Sytem time累加mEfiSystemTime =mEfiSystemTime+ 1Tick(100ms)</p>
-<p><strong>6.</strong> 在timer event list双向链表当中查找已经到时间了的event，如果找到，就使用BS-&gt;SignalEvent去signal它们。</p>
-<p>BS-&gt;SignalEvent---&gt;CoreNotifyEvent--&gt;CoreRestoreTpl--&gt;CoreDispatchEventNotifies--&gt;A.如果是EVT_NOTIFY_SIGNAL类型，就清除count（Event-&gt;SignalCount = 0），然后嵌套直接调用Event-&gt;NotifyFunction (Event, Event-&gt;NotifyContext)函数，此时中断是开的，然后清除该Tpl的gEventPending mask bit，清除该event。</p>
-<p>**7.**释放系统时间锁（开中断，虽然中断此时是关的）</p>
-<p>**8.**开中断</p>
-<p>注：在完成上面的步骤之前，我们需要先初始化一些数据结构：</p>
-<p>​    <strong>1.</strong> gEventQueue--- 双向链表数组，A list of event's to notify for each priority level，被触发，待执行的；</p>
-<p>​    <strong>2.</strong> mEfiTimerList----双向链表，所有的等待timer触发的event列表。</p>
-<p>​    <strong>3.</strong> gEventSignalQueue ---双向链表A list of events to signal based on EventGroup type</p>
-<p>​    <strong>4.</strong> 对于EVT_NOTIFY_WAIT类型的event，我们使用BS-&gt; <strong>CoreCheckEvent</strong>-&gt;CoreNotifyEvent--&gt;CoreRestoreTpl--&gt;CoreDispatchEventNotifies来激活，它同样是往 gEventQueue插入IEvent的节点。</p>
-<p>gEventPending  使用位图来保存gEventQueue是否含有某个优先级的链表（就是个索引，哪个优先级有就置1，不然置0）</p>
-<p>gEventPending是一个32位的二进制串，置1说明此位有事件已经被触发，等着你执行</p>
-<p>在传统 x86 体系结构中，中断请求线（IRQ）与中断向量之间的映射通常如下：</p>
-<ul>
-<li>IRQ0: 定时器（时钟滴答）主要用来<strong>操作系统调度</strong>和<strong>系统时间维护</strong></li>
-<li>IRQ1: 键盘</li>
-<li>IRQ2: 级联中断控制器（用于从片级中断）</li>
-<li>IRQ3: 串行端口 2（COM2）</li>
-<li>IRQ4: 串行端口 1（COM1）</li>
-<li>IRQ5: 通常是备用或用户定义</li>
-<li>IRQ6: 软盘控制器</li>
-<li>IRQ7: 并行端口 1（LPT1）</li>
-<li>其他 IRQ 线路连接到其他设备，如硬盘控制器、声卡、网卡等。</li>
-</ul>
-<h2 id="event-优先级-1"><a class="header" href="#event-优先级-1">event 优先级</a></h2>
-<pre><code class="language-c">
-//
-// Task priority level
-//
-#define TPL_APPLICATION       4
-#define TPL_CALLBACK          8
-#define TPL_NOTIFY            16
-#define TPL_HIGH_LEVEL        31
-</code></pre>
-<p>31这个等级就是用来加锁的，直接拉到最高，就没有中断进来了。</p>
-<h2 id="初始化流程-1"><a class="header" href="#初始化流程-1">初始化流程</a></h2>
-<p><img src="02_%E5%9B%BA%E4%BB%B6/images/EDK2_EVENT/image-20240716144753316.png" alt="image-20240716144753316" /></p>
-<p>从DXE main 开始看起</p>
-<pre><code class="language-c">  //
-  // Initialize the Event Services
-  //
-  Status = CoreInitializeEventServices ();
-
-...
-
-  //
-  // Register for the GUIDs of the Architectural Protocols, so the rest of the
-  // EFI Boot Services and EFI Runtime Services tables can be filled in.
-  // Also register for the GUIDs of optional protocols.
-  //
-  CoreNotifyOnProtocolInstallation ();
-
-</code></pre>
-<p>上面干了两个事，一个是初始化event 相关的结构，一个是初始化时钟中断处理函数。</p>
-<p>先看时钟中断处理函数</p>
-<pre><code class="language-c">/**
-  Called by the platform code to process a tick.
-
-  @param  Duration               The number of 100ns elapsed since the last call
-                                 to TimerTick
-
-**/
-VOID
-EFIAPI
-CoreTimerTick (
-  IN UINT64   Duration
-  )
-{
-  IEVENT          *Event;
-
-  //
-  // Check runtiem flag in case there are ticks while exiting boot services
-  //
-  CoreAcquireLock (&amp;mEfiSystemTimeLock);
-
-  //
-  // Update the system time
-  //
-  mEfiSystemTime += Duration;
-
-  //
-  // If the head of the list is expired, fire the timer event
-  // to process it
-  //
-  if (!IsListEmpty (&amp;mEfiTimerList)) {
-    Event = CR (mEfiTimerList.ForwardLink, IEVENT, Timer.Link, EVENT_SIGNATURE);
-
-    if (Event-&gt;Timer.TriggerTime &lt;= mEfiSystemTime) {
-      CoreSignalEvent (mEfiCheckTimerEvent);
-    }
-  }
-
-  CoreReleaseLock (&amp;mEfiSystemTimeLock);
-}
-</code></pre>
-<p>上锁，更新系统时间，处理所有的等待timer触发的event，把到期的事件处理一下。</p>
-<pre><code class="language-c">/**
-  Initializes "event" support.
-
-  @retval EFI_SUCCESS            Always return success
-
-**/
-EFI_STATUS
-CoreInitializeEventServices (
-  VOID
-  )
-{
-  UINTN        Index;
-
-  for (Index=0; Index &lt;= TPL_HIGH_LEVEL; Index++) {
-    InitializeListHead (&amp;gEventQueue[Index]);
-  }
-
-  CoreInitializeTimer ();
-
-  CoreCreateEventEx (
-    EVT_NOTIFY_SIGNAL,
-    TPL_NOTIFY,
-    EfiEventEmptyFunction,
-    NULL,
-    &amp;gIdleLoopEventGuid,
-    &amp;gIdleLoopEvent
-    );
-
-  return EFI_SUCCESS;
-}
-</code></pre>
-<ul>
-<li>初始化全局变量 gEventQueue--- 双向链表数组，A list of event's to notify for each priority level</li>
-<li>CoreInitializeTimer 注册一个事件</li>
-</ul>
-<pre><code class="language-c">/**
-  Initializes timer support.
-
-**/
-VOID
-CoreInitializeTimer (
-  VOID
-  )
-{
-  EFI_STATUS  Status;
-
-  Status = CoreCreateEventInternal (
-             EVT_NOTIFY_SIGNAL,
-             TPL_HIGH_LEVEL - 1,
-             CoreCheckTimers,
-             NULL,
-             NULL,
-             &amp;mEfiCheckTimerEvent
-             );
-  ASSERT_EFI_ERROR (Status);
-}
-</code></pre>
-<h2 id="事件完整生命周期-1"><a class="header" href="#事件完整生命周期-1">事件完整生命周期</a></h2>
-<h3 id="创建-1"><a class="header" href="#创建-1">创建</a></h3>
-<pre><code class="language-c">#include &lt;Uefi.h&gt;
-#include &lt;Library/UefiBootServicesTableLib.h&gt;
-#include &lt;Library/UefiLib.h&gt;
-
-EFI_EVENT TimerEvent;
-EFI_EVENT ExitBootServicesEvent;
-BOOLEAN TimerTriggered = FALSE;
-
-VOID EFIAPI TimerEventHandler(
-    IN EFI_EVENT Event,
-    IN VOID *Context
-) {
-    TimerTriggered = TRUE;
-    Print(L"Timer event triggered!\n");
-}
-
-EFI_STATUS
-EFIAPI
-UefiMain(
-    IN EFI_HANDLE ImageHandle,
-    IN EFI_SYSTEM_TABLE *SystemTable
-) {
-    EFI_STATUS Status;
-    
-    // 创建一个定时器事件，定时器在10000000 100ns (1秒)后触发
-    Status = gBS-&gt;CreateEvent(
-        EVT_TIMER | EVT_NOTIFY_SIGNAL,
-        TPL_CALLBACK,
-        TimerEventHandler,
-        NULL,
-        &amp;TimerEvent
-    );
-    if (EFI_ERROR(Status)) {
-        Print(L"Failed to create event: %r\n", Status);
-        return Status;
-    }
-
-    // 设置定时器，1秒后触发
-    Status = gBS-&gt;SetTimer(
-        TimerEvent,
-        TimerRelative,
-        10000000 // 100ns单位，10000000 = 1秒
-    );
-    if (EFI_ERROR(Status)) {
-        Print(L"Failed to set timer: %r\n", Status);
-        gBS-&gt;CloseEvent(TimerEvent);
-        return Status;
-    }
-
-    // 等待事件触发
-    while (!TimerTriggered) {
-        gBS-&gt;Stall(100000); // 暂停100ms
-    }
-
-    // 清理
-    gBS-&gt;CloseEvent(TimerEvent);
-
-    return EFI_SUCCESS;
-}
-
-</code></pre>
-<p>上面创建了一个定时器事件，1秒后触发。</p>
-<p>然后看一下gBS-&gt;CreateEvent这个函数，如何把这个事件放到全局队列中去的。</p>
-<pre><code class="language-c">typedef struct {
-    UINT32 Type;
-    EFI_TPL NotifyTpl;
-    EFI_EVENT_NOTIFY NotifyFunction;
-    VOID *NotifyContext;
-    BOOLEAN Triggered;
-} EFI_EVENT_INTERNAL;
-
-EFI_STATUS
-EFIAPI
-CreateEvent (
-    IN UINT32 Type,
-    IN EFI_TPL NotifyTpl,
-    IN EFI_EVENT_NOTIFY NotifyFunction,
-    IN VOID *NotifyContext,
-    OUT EFI_EVENT *Event
-) {
-    EFI_STATUS Status;
-    EFI_EVENT_INTERNAL *NewEvent;
-
-    // 参数验证
-    if (Event == NULL || (Type &amp; EVT_NOTIFY_SIGNAL &amp;&amp; NotifyFunction == NULL)) {
-        return EFI_INVALID_PARAMETER;
-    }
-
-    // 分配内存
-    NewEvent = AllocateZeroPool(sizeof(EFI_EVENT_INTERNAL));
-    if (NewEvent == NULL) {
-        return EFI_OUT_OF_RESOURCES;
-    }
-
-    // 初始化事件对象
-    NewEvent-&gt;Type = Type;
-    NewEvent-&gt;NotifyTpl = NotifyTpl;
-    NewEvent-&gt;NotifyFunction = NotifyFunction;
-    NewEvent-&gt;NotifyContext = NotifyContext;
-    NewEvent-&gt;Triggered = FALSE;
-
-    // 注册事件到事件调度队列中（这里用简化的方式表示）
-    Status = RegisterEvent(NewEvent);
-    if (EFI_ERROR(Status)) {
-        FreePool(NewEvent);
-        return Status;
-    }
-
-    // 返回事件句柄
-    *Event = (EFI_EVENT)NewEvent;
-
-    return EFI_SUCCESS;
-}
-</code></pre>
-<p>大概就是分配内存，把传进去的参数，赋值给event结构体中的元素。</p>
-<p>把event 存到全局变量中。</p>
-<pre><code class="language-c">  if ((Type &amp; EVT_NOTIFY_SIGNAL) != 0x00000000) {
-    //
-    // The Event's NotifyFunction must be queued whenever the event is signaled
-    //
-    InsertHeadList (&amp;gEventSignalQueue, &amp;IEvent-&gt;SignalLink);
-  }
-</code></pre>
-<p>然后就是触发，如果触发了，会往32位的bitmap变量里置1。先标记好，还没执行。</p>
-<h3 id="触发-1"><a class="header" href="#触发-1">触发</a></h3>
-<p>SignalEvent函数会将该event从全局链表里拿出来，放到32个链表中之一去，等待后面被执行。</p>
-<pre><code class="language-c">/**
-  Signals the event.  Queues the event to be notified if needed.
-
-  @param  UserEvent              The event to signal .
-
-  @retval EFI_INVALID_PARAMETER  Parameters are not valid.
-  @retval EFI_SUCCESS            The event was signaled.
-
-**/
-EFI_STATUS
-EFIAPI
-CoreSignalEvent (
-  IN EFI_EVENT    UserEvent
-  )
-</code></pre>
-<pre><code class="language-c">/**
-  Queues the event's notification function to fire.
-
-  @param  Event                  The Event to notify
-
-**/
-VOID
-CoreNotifyEvent (
-  IN  IEVENT      *Event
-  )
-{
-
-  //
-  // Event database must be locked
-  //
-  ASSERT_LOCKED (&amp;gEventQueueLock);
-
-  //
-  // If the event is queued somewhere, remove it
-  //
-
-  if (Event-&gt;NotifyLink.ForwardLink != NULL) {
-    RemoveEntryList (&amp;Event-&gt;NotifyLink);
-    Event-&gt;NotifyLink.ForwardLink = NULL;
-  }
-
-  //
-  // Queue the event to the pending notification list
-  //
-
-  InsertTailList (&amp;gEventQueue[Event-&gt;NotifyTpl], &amp;Event-&gt;NotifyLink);
-  gEventPending |= (UINTN)(1 &lt;&lt; Event-&gt;NotifyTpl);
-}
-</code></pre>
-<h3 id="调度-1"><a class="header" href="#调度-1">调度</a></h3>
-<p><strong>Duang</strong>，时钟中断来了。上面看过了，CoreTimerTick函数进来就上锁，上锁就是升级TPL，然后把时间中断都给处理了，最后就是restore TPL。</p>
-<p>在处理timer触发的event（mEfiTimerList）时候，同样也是先上锁，处理，解锁。</p>
-<p>这个解锁的时候，就是恢复TPL时候，会去调度所有的链表。</p>
-<pre><code class="language-c">  while (gEventPending != 0) 
-{
-    PendingTpl = (UINTN) HighBitSet64 (gEventPending);
-    if (PendingTpl &lt;= NewTpl) {
-      break;
-    }
-    gEfiCurrentTpl = PendingTpl;
-    if (gEfiCurrentTpl &lt; TPL_HIGH_LEVEL) {
-      CoreSetInterruptState (TRUE);
-    }
-    CoreDispatchEventNotifies (gEfiCurrentTpl);
-    //执行gEventQueue [gEfiCurrentTpl]队列里所有event的Notification函数
-  }
-</code></pre>
-<p>之前提过，gEventPending是一个32位的二进制串，置1说明此位有事件已经被触发，等着你执行</p>
-<p>那么这段就很好理解了</p>
-<ol>
-<li>
-<p>取出当前等待执行队列中优先级最高的，和准备恢复的优先级比较；</p>
-</li>
-<li>
-<p>如果队列中最大的TPL比要恢复的TPL小或者相同，退出函数；因为你还不够级别，不用执行队列里的。比如，当前队列最大的是16，当前任务要恢复的是17，那16这个TPL就没机会被执行，先执行17那一组。</p>
-</li>
-<li>
-<p>如果pending比要恢复的大，说明pending队列里最高TPL这个队列，就可以被执行了。比如，当前队列最大的是16，当前进程要恢复的是15，那么就可以执行16这个了。</p>
-</li>
-</ol>
-<p>这样，当一个事件恢复自己的优先级，系统里比它优先级高的事件全都执行了——至于这些事件什么时候触发，是的，在时钟中断里触发。</p>
-<p>时间中断和waitforevent的优先级都是4。以时钟中断为例，时钟每10ms中断一次，每次中断先把自己的优先级拉到31，再调用RestoreTpl把自己的优先级降回4, 按照上面的描述，从31降到4的时候，会把30到5中被触发的队列，挨个撸一遍，最终到4 的结束。</p>
-<h4 id="coretimertick函数定义-1"><a class="header" href="#coretimertick函数定义-1">CoreTimerTick函数定义</a></h4>
-<h5 id="函数定义-1"><a class="header" href="#函数定义-1">函数定义</a></h5>
-<pre><code class="language-c">/**
-  Lowers the task priority to the previous value.   If the new
-  priority unmasks events at a higher priority, they are dispatched.
-
-  @param  NewTpl  New, lower, task priority
-
-**/
-VOID
-EFIAPI
-CoreRestoreTpl (
-  IN EFI_TPL NewTpl
-  )
-</code></pre>
-<h5 id="变量声明-2"><a class="header" href="#变量声明-2">变量声明</a></h5>
-<pre><code class="language-c">{
-  EFI_TPL     OldTpl;
-  EFI_TPL     PendingTpl;
-</code></pre>
-<ul>
-<li><code>OldTpl</code>: 记录当前任务优先级。</li>
-<li><code>PendingTpl</code>: 用于记录挂起事件的最高优先级。</li>
-</ul>
-<h5 id="检查新优先级-1"><a class="header" href="#检查新优先级-1">检查新优先级</a></h5>
-<pre><code class="language-c">  OldTpl = gEfiCurrentTpl;
-  if (NewTpl &gt; OldTpl) {
-    DEBUG ((EFI_D_ERROR, "FATAL ERROR - RestoreTpl with NewTpl(0x%x) &gt; OldTpl(0x%x)\n", NewTpl, OldTpl));
-    ASSERT (FALSE);
-  }
-  ASSERT (VALID_TPL (NewTpl));
-</code></pre>
-<ul>
-<li><code>OldTpl = gEfiCurrentTpl</code>: 保存当前任务优先级。</li>
-<li>检查<code>NewTpl</code>是否有效以及是否低于当前优先级。如果<code>NewTpl</code>高于<code>OldTpl</code>，则记录错误并触发断言失败。</li>
-</ul>
-<h5 id="确保中断使能-1"><a class="header" href="#确保中断使能-1">确保中断使能</a></h5>
-<pre><code class="language-c">  if (OldTpl &gt;= TPL_HIGH_LEVEL  &amp;&amp;  NewTpl &lt; TPL_HIGH_LEVEL) {
-    gEfiCurrentTpl = TPL_HIGH_LEVEL;
-  }
-</code></pre>
-<ul>
-<li>如果当前优先级为高优先级（<code>TPL_HIGH_LEVEL</code>）及以上，并且新优先级低于<code>TPL_HIGH_LEVEL</code>，则将当前优先级设置为<code>TPL_HIGH_LEVEL</code>，确保中断使能状态。</li>
-</ul>
-<h5 id="调度挂起的事件-1"><a class="header" href="#调度挂起的事件-1">调度挂起的事件</a></h5>
-<pre><code class="language-c">  while (gEventPending != 0) {
-    PendingTpl = (UINTN) HighBitSet64 (gEventPending);
-    if (PendingTpl &lt;= NewTpl) {
-      break;
-    }
-
-    gEfiCurrentTpl = PendingTpl;
-    if (gEfiCurrentTpl &lt; TPL_HIGH_LEVEL) {
-      CoreSetInterruptState (TRUE);
-    }
-    CoreDispatchEventNotifies (gEfiCurrentTpl);
-  }
-</code></pre>
-<ul>
-<li><code>while (gEventPending != 0)</code>: 当存在挂起事件时循环处理。</li>
-<li><code>PendingTpl = (UINTN) HighBitSet64 (gEventPending)</code>: 获取挂起事件的最高优先级。</li>
-<li>如果<code>PendingTpl</code>低于或等于<code>NewTpl</code>，则退出循环。</li>
-<li>设置当前优先级为<code>PendingTpl</code>，并在优先级低于<code>TPL_HIGH_LEVEL</code>时启用中断。</li>
-<li>调用<code>CoreDispatchEventNotifies</code>处理该优先级的挂起事件。</li>
-</ul>
-<h5 id="设置新的优先级并确保中断使能-1"><a class="header" href="#设置新的优先级并确保中断使能-1">设置新的优先级并确保中断使能</a></h5>
-<pre><code class="language-c">  gEfiCurrentTpl = NewTpl;
-
-  if (gEfiCurrentTpl &lt; TPL_HIGH_LEVEL) {
-    CoreSetInterruptState (TRUE);
-  }
-
-}
-</code></pre>
-<ul>
-<li>最后，设置当前任务优先级为<code>NewTpl</code>。</li>
-<li>如果新的优先级低于<code>TPL_HIGH_LEVEL</code>，确保中断使能状态。</li>
-</ul>
-<h4 id="coredispatcheventnotifies函数定义-1"><a class="header" href="#coredispatcheventnotifies函数定义-1">CoreDispatchEventNotifies函数定义</a></h4>
-<pre><code class="language-c">/**
-  Dispatches all pending events.
-
-  @param  Priority               The task priority level of event notifications
-                                 to dispatch
-
-**/
-VOID
-CoreDispatchEventNotifies (
-  IN EFI_TPL      Priority
-  )
-</code></pre>
-<h5 id="变量声明-3"><a class="header" href="#变量声明-3">变量声明</a></h5>
-<pre><code class="language-c">{
-  IEVENT          *Event;
-  LIST_ENTRY      *Head;
-</code></pre>
-<ul>
-<li><code>Event</code>: 指向当前处理的事件。</li>
-<li><code>Head</code>: 指向指定优先级事件队列的头部。</li>
-</ul>
-<h5 id="获取全局事件锁-1"><a class="header" href="#获取全局事件锁-1">获取全局事件锁</a></h5>
-<pre><code class="language-c">  CoreAcquireEventLock ();
-  ASSERT (gEventQueueLock.OwnerTpl == Priority);
-  Head = &amp;gEventQueue[Priority];
-</code></pre>
-<ul>
-<li><code>CoreAcquireEventLock ()</code>: 获取全局事件锁，以确保对全局事件队列的访问是线程安全的。</li>
-<li><code>ASSERT (gEventQueueLock.OwnerTpl == Priority)</code>: 确保当前的任务优先级与传入的优先级一致。</li>
-<li><code>Head = &amp;gEventQueue[Priority]</code>: 获取指定优先级的事件队列的头部。</li>
-</ul>
-<h5 id="循环处理挂起事件-1"><a class="header" href="#循环处理挂起事件-1">循环处理挂起事件</a></h5>
-<pre><code class="language-c">  while (!IsListEmpty (Head)) {
-
-    Event = CR (Head-&gt;ForwardLink, IEVENT, NotifyLink, EVENT_SIGNATURE);
-    RemoveEntryList (&amp;Event-&gt;NotifyLink);
-
-    Event-&gt;NotifyLink.ForwardLink = NULL;
-</code></pre>
-<ul>
-<li><code>while (!IsListEmpty (Head))</code>: 循环遍历队列中的所有挂起事件，直到队列为空。</li>
-<li><code>Event = CR (Head-&gt;ForwardLink, IEVENT, NotifyLink, EVENT_SIGNATURE)</code>: 从队列中取出第一个事件。</li>
-<li><code>RemoveEntryList (&amp;Event-&gt;NotifyLink)</code>: 从队列中移除该事件。</li>
-<li><code>Event-&gt;NotifyLink.ForwardLink = NULL</code>: 标记事件已经从通知队列中移除。</li>
-</ul>
-<h5 id="处理signal类型事件-1"><a class="header" href="#处理signal类型事件-1">处理SIGNAL类型事件</a></h5>
-<pre><code class="language-c">    if ((Event-&gt;Type &amp; EVT_NOTIFY_SIGNAL) != 0) {
-      Event-&gt;SignalCount = 0;
-    }
-</code></pre>
-<ul>
-<li>如果事件类型包含<code>EVT_NOTIFY_SIGNAL</code>，则清除其<code>SignalCount</code>，即将其标记为未触发。</li>
-</ul>
-<h5 id="释放全局事件锁并调用事件回调函数-1"><a class="header" href="#释放全局事件锁并调用事件回调函数-1">释放全局事件锁并调用事件回调函数</a></h5>
-<pre><code class="language-c">    CoreReleaseEventLock ();
-
-    ASSERT (Event-&gt;NotifyFunction != NULL);
-    Event-&gt;NotifyFunction (Event, Event-&gt;NotifyContext);
-</code></pre>
-<ul>
-<li><code>CoreReleaseEventLock ()</code>: 释放全局事件锁，使得其他线程可以访问全局事件队列。</li>
-<li><code>ASSERT (Event-&gt;NotifyFunction != NULL)</code>: 确保事件的回调函数不为空。</li>
-<li><code>Event-&gt;NotifyFunction (Event, Event-&gt;NotifyContext)</code>: 调用事件的回调函数，处理事件。</li>
-</ul>
-<h5 id="重新获取全局事件锁以处理下一个事件-1"><a class="header" href="#重新获取全局事件锁以处理下一个事件-1">重新获取全局事件锁以处理下一个事件</a></h5>
-<pre><code class="language-c">    CoreAcquireEventLock ();
-  }
-</code></pre>
-<ul>
-<li><code>CoreAcquireEventLock ()</code>: 重新获取全局事件锁，以处理下一个挂起的事件。</li>
-</ul>
-<h5 id="清除挂起事件标志并释放全局事件锁-1"><a class="header" href="#清除挂起事件标志并释放全局事件锁-1">清除挂起事件标志并释放全局事件锁</a></h5>
-<pre><code class="language-c">  gEventPending &amp;= ~(UINTN)(1 &lt;&lt; Priority);
-  CoreReleaseEventLock ();
-}
-</code></pre>
-<ul>
-<li><code>gEventPending &amp;= ~(UINTN)(1 &lt;&lt; Priority)</code>: 清除对应优先级的挂起事件标志，表示该优先级的事件已经处理完毕。</li>
-<li><code>CoreReleaseEventLock ()</code>: 最后一次释放全局事件锁。</li>
-</ul>
-<h2 id="一些其他-1"><a class="header" href="#一些其他-1">一些其他</a></h2>
-<ul>
-<li>不能全拉到31TPL，会死锁；</li>
-<li></li>
-</ul>
-<p>参考：</p>
-<p><a href="https://www.cnblogs.com/hammerqiu/p/10701348.html">Blog</a></p>
-<p><a href="https://blog.csdn.net/Hannle/article/details/124084678">Blog</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="edk2-memory-map-1"><a class="header" href="#edk2-memory-map-1">EDK2 MEMORY MAP</a></h1>
 <p>启动时候，获取内存布局信息</p>
 <p>GetMemoryMap</p>
@@ -3643,6 +2798,61 @@ typedeflong BaseType_t;
 typedefunsigned long UBaseType_t;
 
 #endif/* PORTMACRO_H */
+</code></pre>
+<p>创建任务有两种方式：</p>
+<ul>
+<li>一种是在main里，挨个创建任务，最后开启调度器；</li>
+<li>另一种是在main里只创建一个任务，在这个任务中去创建其他任务，都创建好了以后，将主任务删除，最后开启调度器。</li>
+</ul>
+<p>任务创建</p>
+<pre><code class="language-c">BaseType_t xTaskCreate( TaskFunction_t pxTaskCode, // 函数指针, 任务函数
+                        const char * const pcName, // 任务的名字
+                        const configSTACK_DEPTH_TYPE usStackDepth, // 栈大小,单位为word,10表示40字节
+                        void * const pvParameters, // 调用任务函数时传入的参数
+                        UBaseType_t uxPriority,    // 优先级
+                        TaskHandle_t * const pxCreatedTask ); // 任务句柄, 以后使用它来操作这个任务
+
+</code></pre>
+<p>创建任务函数，在这里面创建任务，最后将自己删除。</p>
+<p>创建子任务时候，在临界区内创建。</p>
+<p>临界段用一句话概括就是一段在执行的时候不能被中断的代码段。</p>
+<p>那么什么情况下临界段会被打断？一个是系统调度，还有一个就是外部中断。在FreeRTOS，系统调度，最终也是产生PendSV中断，在 PendSV Handler里面实现任务的切换，所以还是可以归结为中断。既然这样，FreeRTOS对临界段的保护最终还是回到对中断的开和关的控制。</p>
+<p>看样子就是屏蔽所有中断，“我创建任务的时候，什么中断都不处理”。</p>
+<pre><code class="language-c">/**
+  * @brief  freertos first creat task
+  * @note   This function is used to creat app task and delect self.
+  * @param  *p
+  * @param  None
+  * @retval None
+  */
+static void creat_task(void *p)
+{
+    os_printf("%s", __FUNCTION__);
+    int cnt = 0;
+
+    /* creat app task in this 在这里创建应用任务 */
+    taskENTER_CRITICAL();
+
+    extern int app_init(void);
+    app_init();
+
+    taskEXIT_CRITICAL();
+    /* creat app task in this 在这里创建应用任务 */
+
+    /* delay task 延时退出，并删除本任务 */
+    while(1){
+        os_printf("this is creat task:idle-%d", cnt++);
+        vTaskDelay(1000);
+
+        if (cnt &gt;= 10){
+            break;
+        }
+    }
+
+    os_printf("delete creat task");
+
+    vTaskDelete(xTask_creat);
+}
 </code></pre>
 <h2 id="参考-1"><a class="header" href="#参考-1">参考：</a></h2>
 <ul>
@@ -5010,7 +4220,7 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-hot-plug"><a class="header" href="#pcie-hot-plug">PCIe Hot-Plug</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-power-management"><a class="header" href="#pcie-power-management">PCIe Power Management</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dpc梳理"><a class="header" href="#dpc梳理"><em>DPC梳理</em></a></h1>
-<h2 id="概述-5"><a class="header" href="#概述-5">概述</a></h2>
+<h2 id="概述-3"><a class="header" href="#概述-3">概述</a></h2>
 <p>DPC的全称是downstream port containment，是PCIe Spec 3.1 中新引入的一个功能，是针对root port和pcie switch检测到不可修正错误时候，就会halt下游端口的数据通路，以防止数据损坏的扩散。DPC 提供的这种机制，使软件有机会修正错误。</p>
 <p>DPC触发条件是检测到unmasked uncorrectable error 或者是接收到下游发送的ERR_FATAL 或者 ERR_NONFATAL 信息，此外，还提供了一种软件触发DPC的方式，该方式可以为系统软件或者固件提供测试的接口。</p>
 <p>当DPC 被触发，它会做出的动作为，DP会立刻设置DPC Trigger Status bit and DPC Trigger Reason field，并且通过设置LTSSM到disable状态来切断当前的link。LTSSM会一直处于disable状态，直到DPC Trigger Status bit 被清除。</p>
@@ -5078,7 +4288,7 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 <p>对于给定的DL_ACTIVE事件，如果端口要发送ERR_COR消息和MSI/MSI-X事务，则端口必须在发送MSI/MSI-X事务之前发送ERR_COR消息。</p>
 <p>如果使用INTx机制发出DL_ACTIVE中断信号，则没有相应的要求，因为在路由时，INTx消息不一定保持相对于ERR_COR消息的顺序。</p>
 <h1 id="edpc"><a class="header" href="#edpc"><strong>eDPC</strong></a></h1>
-<h2 id="简介-4"><a class="header" href="#简介-4"><strong>简介</strong></a></h2>
+<h2 id="简介-3"><a class="header" href="#简介-3"><strong>简介</strong></a></h2>
 <p>eDPC 与DPC功能同样是PCIe Spec 3.1中引入的新功能，其是 在DPC功能引入后，是对DPC功能增加了新的扩展功能，其扩展功能主要实现了对RP PIO（Root Port Programmed I/O）错误的控制。</p>
 <p>RP PIO错误控制功能是指PCIe设备在使用RP PIO模式进行数据传输时，对数据传输过程中出现的错误进行控制和处理的功能。</p>
 <p>通过DPC capability 寄存器的bit5 我们可以知道当前RP是否支持eDPC功能。</p>
@@ -6259,7 +5469,7 @@ int main() {
 输出：6
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 </code></pre>
-<p>动态规划</p>
+<p>有点类似前缀和或者动态规划，如果前面的和，对后面的元素起副作用，就将前面的抛弃。</p>
 <pre><code class="language-c++">class Solution {
 public:
     int maxSubArray(vector&lt;int&gt;&amp; nums) {
@@ -6307,51 +5517,25 @@ public:
 public:
     vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
         sort(intervals.begin(), intervals.end());
-
-        vector&lt;vector&lt;int&gt;&gt; ans;
-
-        for (int i = 0; i&lt;intervals.size();) {
-            int t = intervals[i][1];
-            int j = i + 1;
-
-            while (j &lt; intervals.size() &amp;&amp; intervals[j][0] &lt;= t) {
-                t = max(t, intervals[j][1]);
-                j++;
+        vector&lt;vector&lt;int&gt;&gt; merged;
+        
+        for (int i=0; i&lt;intervals.size(); ){  
+            int left = intervals[i][0];
+            int right = intervals[i][1];
+            // 如果右指针大于等于下一个区间的左边，那么就可以进行合并了
+            while (i+1 &lt; intervals.size() &amp;&amp; right &gt;= intervals[i+1][0]){
+                // 右指针取当前右指针和下一个区间右边中的较大的
+                right = max(right, intervals[i+1][1]);
+                i++;
             }
-
-            ans.push_back({intervals[i][0], t});
-            i = j;
+            // 跳出循环了，说明下一个不用合并，可以暂时记录下当前的区间
+            merged.push_back({left, right});
+            i++;
         }
-
-        return ans;
-
+        return merged;
     }
 };
 </code></pre>
-<ul>
-<li>
-<p>对 vector&lt;vector<int>&gt; 排序，需要按照先比较区间开始，如果相同再比较区间结束，使用默认的排序规则即可</p>
-</li>
-<li>
-<p>使用双指针，左边指针指向当前区间的开始</p>
-</li>
-<li>
-<p>使用一个变量来记录连续的范围 t</p>
-</li>
-<li>
-<p>右指针开始往后寻找，如果后续的区间的开始值比 t 还小，说明重复了，可以归并到一起</p>
-</li>
-<li>
-<p>此时更新更大的结束值到 t</p>
-</li>
-<li>
-<p>直到区间断开，将 t 作为区间结束，存储到答案里</p>
-</li>
-<li>
-<p>然后移动左指针，跳过中间已经合并的区间</p>
-</li>
-</ul>
-<p>链接：https://leetcode.cn/problems/merge-intervals/solutions/204318/merge-intervals-by-ikaruga/</p>
 <h2 id="66-加一"><a class="header" href="#66-加一"><a href="https://leetcode.cn/problems/plus-one/">66. 加一</a></a></h2>
 <pre><code>输入：digits = [4,3,2,1]
 输出：[4,3,2,2]
@@ -7116,6 +6300,66 @@ public:
             i++;
             j--;
         }
+
+    }
+};
+</code></pre>
+<h2 id="151-反转字符串中的单词"><a class="header" href="#151-反转字符串中的单词"><a href="https://leetcode.cn/problems/reverse-words-in-a-string/">151. 反转字符串中的单词</a></a></h2>
+<pre><code>输入：s = "  hello world  "
+输出："world hello"
+</code></pre>
+<pre><code class="language-c++">class Solution {
+public:
+    string reverseWords(string s) {
+        string ans;
+        vector&lt;string&gt; v_temp;
+
+        int first = 0;
+        int last = s.size() - 1;
+
+        int i = 0;
+
+
+        // 移除前面的空格
+        while (s[i] == ' ') {
+            i++;
+        }
+        first = i;
+
+        // 移除后面的空格
+        i = s.size() - 1;
+        while (s[i] == ' ') {
+            i--;
+        }
+        last = i;
+
+        string curr_str = "";
+        // 增加一个空的尾巴，方便遍历
+        s += ' ';
+
+        for (int i = first; i &lt;= last + 1; i++) {
+            
+            if (s[i] != ' ') {
+                curr_str += s[i];
+            } else {
+                // 遇到多个空格，直接跳过
+                while (s[i] == ' ' &amp;&amp; s[i+1] == ' ') {
+                    i++;
+                }
+                v_temp.push_back(curr_str);
+                curr_str = "";
+            }
+        }
+
+        reverse(v_temp.begin(), v_temp.end());
+
+        for (auto c:v_temp) {
+            ans += c;
+            ans += ' '; 
+        }
+
+        // 构造ans时候，最后多加了一个空格，删除
+        return ans.substr(0, ans.size() - 1);
 
     }
 };

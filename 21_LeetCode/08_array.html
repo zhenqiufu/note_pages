@@ -180,7 +180,7 @@
 输出：6
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 </code></pre>
-<p>动态规划</p>
+<p>有点类似前缀和或者动态规划，如果前面的和，对后面的元素起副作用，就将前面的抛弃。</p>
 <pre><code class="language-c++">class Solution {
 public:
     int maxSubArray(vector&lt;int&gt;&amp; nums) {
@@ -228,51 +228,25 @@ public:
 public:
     vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
         sort(intervals.begin(), intervals.end());
-
-        vector&lt;vector&lt;int&gt;&gt; ans;
-
-        for (int i = 0; i&lt;intervals.size();) {
-            int t = intervals[i][1];
-            int j = i + 1;
-
-            while (j &lt; intervals.size() &amp;&amp; intervals[j][0] &lt;= t) {
-                t = max(t, intervals[j][1]);
-                j++;
+        vector&lt;vector&lt;int&gt;&gt; merged;
+        
+        for (int i=0; i&lt;intervals.size(); ){  
+            int left = intervals[i][0];
+            int right = intervals[i][1];
+            // 如果右指针大于等于下一个区间的左边，那么就可以进行合并了
+            while (i+1 &lt; intervals.size() &amp;&amp; right &gt;= intervals[i+1][0]){
+                // 右指针取当前右指针和下一个区间右边中的较大的
+                right = max(right, intervals[i+1][1]);
+                i++;
             }
-
-            ans.push_back({intervals[i][0], t});
-            i = j;
+            // 跳出循环了，说明下一个不用合并，可以暂时记录下当前的区间
+            merged.push_back({left, right});
+            i++;
         }
-
-        return ans;
-
+        return merged;
     }
 };
 </code></pre>
-<ul>
-<li>
-<p>对 vector&lt;vector<int>&gt; 排序，需要按照先比较区间开始，如果相同再比较区间结束，使用默认的排序规则即可</p>
-</li>
-<li>
-<p>使用双指针，左边指针指向当前区间的开始</p>
-</li>
-<li>
-<p>使用一个变量来记录连续的范围 t</p>
-</li>
-<li>
-<p>右指针开始往后寻找，如果后续的区间的开始值比 t 还小，说明重复了，可以归并到一起</p>
-</li>
-<li>
-<p>此时更新更大的结束值到 t</p>
-</li>
-<li>
-<p>直到区间断开，将 t 作为区间结束，存储到答案里</p>
-</li>
-<li>
-<p>然后移动左指针，跳过中间已经合并的区间</p>
-</li>
-</ul>
-<p>链接：https://leetcode.cn/problems/merge-intervals/solutions/204318/merge-intervals-by-ikaruga/</p>
 <h2 id="66-加一"><a class="header" href="#66-加一"><a href="https://leetcode.cn/problems/plus-one/">66. 加一</a></a></h2>
 <pre><code>输入：digits = [4,3,2,1]
 输出：[4,3,2,2]
