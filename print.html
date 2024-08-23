@@ -4218,6 +4218,16 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-interrupt"><a class="header" href="#pcie-interrupt">PCIe Interrupt</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-hot-plug"><a class="header" href="#pcie-hot-plug">PCIe Hot-Plug</a></h1>
+<p>C2000 PCIe controller不支持native hotplug，硬件采用perv_soc + pca9555方案来支持PCIe hotplug。因此与PCIe Spec中建议的Async hot-plug 参考模型略有不同。</p>
+<p>直接操作PCIe controller中slot相关寄存器并不能产生对应的效果，需要Perv Soc 结合自研寄存器以及PCIe capability寄存器的状态来模拟对应的操作，如slot power控制，LED状态控制等。</p>
+<p>其整体数据流通方式如图所示：</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240823163751482.png" alt="image-20240823163751482" /></p>
+<p>异步热插拔与通知热插拔区别与联系：</p>
+<p>\1. Native通知式热插拔使用Attention Button信号，异步热插拔使用Presence Detect信号。但是对于C2000来说，这部分信号都是由PCA9555封装起来了，最后通过GPIO发送到Perv Soc，最终Perv Soc通过写自研寄存器改变slot状态并触发hot-plug中断；</p>
+<p>\2. 根据PCCS设计说明书描述可以看出，在C2000上，<strong>通知式热插入与异步热插入逻辑相同</strong>，都是通过PCA9555接收到插入信号，然后触发中断；这与kernel期望的流程不太相符，最终方案还需要再与kernel确认；</p>
+<p>\3. 对于异步热移除来说，除了正常的hot-plug中断，还需要使用DPC中断，这是因为异步热移除会导致当前链路中的traffic突然停止，可能会产生UR error或者 CA error，需要合理的机制来处理这些错误，提高系统的稳定性。DPC中断触发以后会将LTSSM 状态切换到Disabled 状态，并保持在该状态。</p>
+<p>参考模型中给出的步骤是，OS通过中断得知PD 发生改变，OS设置DPC Software Trigger bit触发DPC，然后DPC再发送ERR_COR 给FW 或者发送DPC中断给OS。</p>
+<p>\4. 当错误处理结束，需要清除DPC中断并释放DPC</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-power-management"><a class="header" href="#pcie-power-management">PCIe Power Management</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dpc梳理"><a class="header" href="#dpc梳理"><em>DPC梳理</em></a></h1>
 <h2 id="概述-3"><a class="header" href="#概述-3">概述</a></h2>
