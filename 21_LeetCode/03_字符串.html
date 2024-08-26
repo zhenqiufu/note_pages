@@ -283,7 +283,7 @@ public:
         int ans = 0;
 
         // 开始遍历字符串 s
-        for (int i = 0; i &lt; n; i++) {
+        for (int left = 0; left &lt; n; left++) {
             // 如果不是第一个字符，移除左指针对应的字符，即窗口左边界向右移动一位
             while (right &lt; n &amp;&amp; !set.count(s[right])) {
                 set.insert(s[right]);
@@ -291,8 +291,9 @@ public:
             }
 
             // 计算当前窗口的长度并更新最大长度
-            ans = max(ans, right - i);
-            set.erase(s[i]);
+            // 现在right已经到了重复元素处，也就是界外了，所以不用-1
+            ans = max(ans, right - left);
+            set.erase(s[left]);
         }
 
         return ans;
@@ -309,7 +310,9 @@ public:
 public:
     string longestPalindrome(string s) {
         vector&lt;vector&lt;int&gt;&gt; dp(s.size(), vector&lt;int&gt;(s.size(), false));
+        //至少有一个，所有len = 1
         int start = 0, maxlen = 1;
+        // 左指针要到0，右指针要到末尾
         for (int i = s.size() - 1; i &gt;= 0; i--) {
             for (int j = i; j &lt; s.size(); j++) {
                 // 判断了 `s[i...j]` 是否是一个回文子串
@@ -327,6 +330,7 @@ public:
     }
 };
 </code></pre>
+<p>关键点：dp要倒着来，这样才能判断i+1状态。</p>
 <p>关键点 <code>if (s[i] == s[j] &amp;&amp; (j - i &lt;= 1 || dp[i + 1][j - 1])) {</code></p>
 <p>这个条件判断了 <code>s[i...j]</code> 是否是一个回文子串：</p>
 <ul>
