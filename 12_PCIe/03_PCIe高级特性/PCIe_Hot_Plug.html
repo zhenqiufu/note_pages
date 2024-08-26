@@ -184,6 +184,12 @@
 <p>\3. 对于异步热移除来说，除了正常的hot-plug中断，还需要使用DPC中断，这是因为异步热移除会导致当前链路中的traffic突然停止，可能会产生UR error或者 CA error，需要合理的机制来处理这些错误，提高系统的稳定性。DPC中断触发以后会将LTSSM 状态切换到Disabled 状态，并保持在该状态。</p>
 <p>参考模型中给出的步骤是，OS通过中断得知PD 发生改变，OS设置DPC Software Trigger bit触发DPC，然后DPC再发送ERR_COR 给FW 或者发送DPC中断给OS。</p>
 <p>\4. 当错误处理结束，需要清除DPC中断并释放DPC</p>
+<p><img src="images/PCIe_Hot_Plug/image-20240826140643248.png" alt="image-20240826140643248" /></p>
+<p><img src="images/PCIe_Hot_Plug/image-20240826140704007.png" alt="image-20240826140704007" /></p>
+<p><img src="images/PCIe_Hot_Plug/image-20240826140803970.png" alt="image-20240826140803970" /></p>
+<p><img src="images/PCIe_Hot_Plug/image-20240826140810651.png" alt="image-20240826140810651" /></p>
+<p><img src="images/PCIe_Hot_Plug/image-20240826140817912.png" alt="image-20240826140817912" /></p>
+<p><img src="images/PCIe_Hot_Plug/image-20240826140913365.png" alt="image-20240826140913365" /></p>
 
                     </main>
 

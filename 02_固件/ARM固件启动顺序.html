@@ -175,6 +175,12 @@
                     <main>
                         <h1 id="arm固件启动顺序"><a class="header" href="#arm固件启动顺序">ARM固件启动顺序</a></h1>
 <h2 id="小core"><a class="header" href="#小core">小core</a></h2>
+<p>ROM：</p>
+<p>电源时钟串口GPIO I2C QSPI FALSH C2C SECURE BOOT</p>
+<p>RAM:</p>
+<p>电源时钟串口GPIO I2C QSPI FALSH</p>
+<p>I3C NVRAM OTP MAILBOX CMN C2C PCIe 枚举 资源分配 DDR 起大core</p>
+<p>================== ROM ====================</p>
 <ol>
 <li>
 <p>硬件上电流程完成后，BMC释放系统内所有C2000 CHIP的POR_N，pervsoc开始做复位启动流程；</p>
@@ -205,6 +211,7 @@
 </li>
 <li>
 <p>主CHIP的SCP透过步骤8已打通的数据通路，将SCP RAM FW和签名数据包传递给从SCP,从SCP将其放至对应的SRAM:</p>
+<p>================== RAM ====================</p>
 </li>
 <li>
 <p>各CHIP的SCP跳至对应的SRAM,运行SCP RAM FW:</p>
@@ -219,7 +226,7 @@
 <p>各SCP根据 CHIP ID初始化CMN、OCM(SLC)和SAM;</p>
 </li>
 <li>
-<p>各CHIP的SCP校验、加载MCP RAM FW,启动MCP(待确认)；+</p>
+<p>各CHIP的SCP校验、加载MCP RAM FW,启动MCP(待确认)；</p>
 </li>
 <li>
 <p>各SCP初始化对应CHIP内大核的L2、NCU、SCOM/FIR;+</p>

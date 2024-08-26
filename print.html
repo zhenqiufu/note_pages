@@ -1676,6 +1676,12 @@ r1 = 1, r2 = 0   // 3) 4) 1) 2)
 <div style="break-before: page; page-break-before: always;"></div><h1 id="固件-1"><a class="header" href="#固件-1">固件</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="arm固件启动顺序-1"><a class="header" href="#arm固件启动顺序-1">ARM固件启动顺序</a></h1>
 <h2 id="小core"><a class="header" href="#小core">小core</a></h2>
+<p>ROM：</p>
+<p>电源时钟串口GPIO I2C QSPI FALSH C2C SECURE BOOT</p>
+<p>RAM:</p>
+<p>电源时钟串口GPIO I2C QSPI FALSH</p>
+<p>I3C NVRAM OTP MAILBOX CMN C2C PCIe 枚举 资源分配 DDR 起大core</p>
+<p>================== ROM ====================</p>
 <ol>
 <li>
 <p>硬件上电流程完成后，BMC释放系统内所有C2000 CHIP的POR_N，pervsoc开始做复位启动流程；</p>
@@ -1706,6 +1712,7 @@ r1 = 1, r2 = 0   // 3) 4) 1) 2)
 </li>
 <li>
 <p>主CHIP的SCP透过步骤8已打通的数据通路，将SCP RAM FW和签名数据包传递给从SCP,从SCP将其放至对应的SRAM:</p>
+<p>================== RAM ====================</p>
 </li>
 <li>
 <p>各CHIP的SCP跳至对应的SRAM,运行SCP RAM FW:</p>
@@ -1720,7 +1727,7 @@ r1 = 1, r2 = 0   // 3) 4) 1) 2)
 <p>各SCP根据 CHIP ID初始化CMN、OCM(SLC)和SAM;</p>
 </li>
 <li>
-<p>各CHIP的SCP校验、加载MCP RAM FW,启动MCP(待确认)；+</p>
+<p>各CHIP的SCP校验、加载MCP RAM FW,启动MCP(待确认)；</p>
 </li>
 <li>
 <p>各SCP初始化对应CHIP内大核的L2、NCU、SCOM/FIR;+</p>
@@ -4203,6 +4210,7 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 <h2 id="错误分类-1"><a class="header" href="#错误分类-1">错误分类</a></h2>
 <p>PCIe将错误分成两大类， Uncorrectable errors 和 Correctable errors，其中 Uncorrectable errors 又被分成 Fatal 和 Non-Fatal。</p>
 <p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240819171933342.png" alt="image-20240819171933342" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826140319352.png" alt="image-20240826140319352" /></p>
 <p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826100451124.png" alt="image-20240826100451124" /></p>
 <p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826100458387.png" alt="image-20240826100458387" /></p>
 <p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826100518943.png" alt="image-20240826100518943" /></p>
@@ -4211,8 +4219,13 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 <p>pcie 提供两种错误上报机制，一种是 Completion Status 另一种是 error Messages（in-band）。</p>
 <h3 id="completion-status-1"><a class="header" href="#completion-status-1">Completion Status</a></h3>
 <p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826100744714.png" alt="image-20240826100744714" /></p>
+<p>枚举时候访问不存在的设备，会返回UR。</p>
+<h3 id="error-forwarding-data-poisoning"><a class="header" href="#error-forwarding-data-poisoning">Error Forwarding (data poisoning)</a></h3>
+<p>switch转发的时候，CRC校验失败，返回给请求者，说，下面返回的数据有问题，你要小心。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826140119383.png" alt="image-20240826140119383" /></p>
 <h3 id="error-messages-1"><a class="header" href="#error-messages-1">error Messages</a></h3>
 <p>error Messages 的包格式如下，可以看到 error Messages 是直接路由到 rp 的，需要 rp 去处理，其中 error message 中包含了 Requester ID 信息，rp 会将这个 Requester ID 保存起来，方便软件追踪问题。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826140239047.png" alt="image-20240826140239047" /></p>
 <p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_AER/image-20240826101053485.png" alt="image-20240826101053485" /></p>
 <h2 id="错误记录-1"><a class="header" href="#错误记录-1">错误记录</a></h2>
 <h3 id="baseline"><a class="header" href="#baseline">Baseline</a></h3>
@@ -4282,6 +4295,38 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-interrupt"><a class="header" href="#pcie-interrupt">PCIe Interrupt</a></h1>
+<p>[toc]</p>
+<h2 id="legacy"><a class="header" href="#legacy">Legacy</a></h2>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133537933.png" alt="image-20240826133537933" /></p>
+<p>例子</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133641902.png" alt="image-20240826133641902" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133803365.png" alt="image-20240826133803365" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133859932.png" alt="image-20240826133859932" /></p>
+<p>legacy 中断开关在control 寄存器，status寄存器有状态信息。</p>
+<p>interrupt pin 编号 irq</p>
+<p>interrupt Line 4根线选一个。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134118789.png" alt="image-20240826134118789" /></p>
+<p>message 模拟 intA</p>
+<h2 id="msi"><a class="header" href="#msi">MSI</a></h2>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134204835.png" alt="image-20240826134204835" /></p>
+<p>PCIe 总线规定当一个设备使用 MSI 中断机制时， 最多可以使用 <strong>32 个中断向量</strong>， 从而一个设备最多可以发送 32 种中断请求。   因此有32个vector。</p>
+<p>传输</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134254549.png" alt="image-20240826134254549" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133126490.png" alt="image-20240826133126490" /></p>
+<p>一个例子，这个只有一个向量。地址，和中断向量号。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134559068.png" alt="image-20240826134559068" /></p>
+<h2 id="msi-x"><a class="header" href="#msi-x">MSI-X</a></h2>
+<p>32个太少，向量号要连续。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134748688.png" alt="image-20240826134748688" /></p>
+<p>2048个中断向量。通过BAR的映射。指定一个bar，指定一个偏移地址。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133428808.png" alt="image-20240826133428808" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134918251.png" alt="image-20240826134918251" /></p>
+<p>一个栗子</p>
+<p>BIR = 11b，说明放到了bar3 里面了。</p>
+<p>offset是0 ，说明在bar3的offset0。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826134959816.png" alt="image-20240826134959816" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826135220071.png" alt="image-20240826135220071" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Interrupt/image-20240826133438274.png" alt="image-20240826133438274" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-hot-plug"><a class="header" href="#pcie-hot-plug">PCIe Hot-Plug</a></h1>
 <p>C2000 PCIe controller不支持native hotplug，硬件采用perv_soc + pca9555方案来支持PCIe hotplug。因此与PCIe Spec中建议的Async hot-plug 参考模型略有不同。</p>
 <p>直接操作PCIe controller中slot相关寄存器并不能产生对应的效果，需要Perv Soc 结合自研寄存器以及PCIe capability寄存器的状态来模拟对应的操作，如slot power控制，LED状态控制等。</p>
@@ -4293,7 +4338,29 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 <p>\3. 对于异步热移除来说，除了正常的hot-plug中断，还需要使用DPC中断，这是因为异步热移除会导致当前链路中的traffic突然停止，可能会产生UR error或者 CA error，需要合理的机制来处理这些错误，提高系统的稳定性。DPC中断触发以后会将LTSSM 状态切换到Disabled 状态，并保持在该状态。</p>
 <p>参考模型中给出的步骤是，OS通过中断得知PD 发生改变，OS设置DPC Software Trigger bit触发DPC，然后DPC再发送ERR_COR 给FW 或者发送DPC中断给OS。</p>
 <p>\4. 当错误处理结束，需要清除DPC中断并释放DPC</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240826140643248.png" alt="image-20240826140643248" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240826140704007.png" alt="image-20240826140704007" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240826140803970.png" alt="image-20240826140803970" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240826140810651.png" alt="image-20240826140810651" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240826140817912.png" alt="image-20240826140817912" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Hot_Plug/image-20240826140913365.png" alt="image-20240826140913365" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pcie-power-management"><a class="header" href="#pcie-power-management">PCIe Power Management</a></h1>
+<p>[toc]</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826143927072.png" alt="image-20240826143927072" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826144108552.png" alt="image-20240826144108552" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826144733290.png" alt="image-20240826144733290" /></p>
+<p>写power management cap寄存器，能切换状态。</p>
+<p>支持的状态在PMC寄存器中。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826144841203.png" alt="image-20240826144841203" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145105000.png" alt="image-20240826145105000" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145036491.png" alt="image-20240826145036491" /></p>
+<p>上游设备活跃度，会比下游的高。</p>
+<p>下游的更省电，下游先进入低功耗状态。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145124799.png" alt="image-20240826145124799" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145314663.png" alt="image-20240826145314663" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145628576.png" alt="image-20240826145628576" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145700039.png" alt="image-20240826145700039" /></p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_Power_management/image-20240826145754449.png" alt="image-20240826145754449" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dpc梳理"><a class="header" href="#dpc梳理"><em>DPC梳理</em></a></h1>
 <h2 id="概述-3"><a class="header" href="#概述-3">概述</a></h2>
 <p>DPC的全称是downstream port containment，是PCIe Spec 3.1 中新引入的一个功能，是针对root port和pcie switch检测到不可修正错误时候，就会halt下游端口的数据通路，以防止数据损坏的扩散。DPC 提供的这种机制，使软件有机会修正错误。</p>
@@ -4460,6 +4527,7 @@ InitializeResourcePool (&amp;PMem64Pool, PciBarTypePMem64);
 <p>line175：如果等待次级总线准备就绪失败，清除PCI_DPC_RECOVERED 状态，返回值设置为PCI_ERS_RESULT_DISCONNECT；</p>
 <p>line179：设置PCI_DPC_RECOVERED 状态，返回值设置为PCI_ERS_RESULT_RECOVERED ；</p>
 <p>line184：清除 DPC 恢复标志位，唤醒等待队列中的所有进程。然后返回。</p>
+<p><img src="12_PCIe/03_PCIe%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/images/PCIe_DPC/image-20240826145921974.png" alt="image-20240826145921974" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cxl"><a class="header" href="#cxl">CXL</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cxl基础"><a class="header" href="#cxl基础">CXL基础</a></h1>
 <p>[toc]</p>

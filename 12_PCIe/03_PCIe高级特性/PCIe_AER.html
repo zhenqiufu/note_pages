@@ -178,6 +178,7 @@
 <h2 id="错误分类"><a class="header" href="#错误分类">错误分类</a></h2>
 <p>PCIe将错误分成两大类， Uncorrectable errors 和 Correctable errors，其中 Uncorrectable errors 又被分成 Fatal 和 Non-Fatal。</p>
 <p><img src="images/PCIe_AER/image-20240819171933342.png" alt="image-20240819171933342" /></p>
+<p><img src="images/PCIe_AER/image-20240826140319352.png" alt="image-20240826140319352" /></p>
 <p><img src="images/PCIe_AER/image-20240826100451124.png" alt="image-20240826100451124" /></p>
 <p><img src="images/PCIe_AER/image-20240826100458387.png" alt="image-20240826100458387" /></p>
 <p><img src="images/PCIe_AER/image-20240826100518943.png" alt="image-20240826100518943" /></p>
@@ -186,8 +187,13 @@
 <p>pcie 提供两种错误上报机制，一种是 Completion Status 另一种是 error Messages（in-band）。</p>
 <h3 id="completion-status"><a class="header" href="#completion-status">Completion Status</a></h3>
 <p><img src="images/PCIe_AER/image-20240826100744714.png" alt="image-20240826100744714" /></p>
+<p>枚举时候访问不存在的设备，会返回UR。</p>
+<h3 id="error-forwarding-data-poisoning"><a class="header" href="#error-forwarding-data-poisoning">Error Forwarding (data poisoning)</a></h3>
+<p>switch转发的时候，CRC校验失败，返回给请求者，说，下面返回的数据有问题，你要小心。</p>
+<p><img src="images/PCIe_AER/image-20240826140119383.png" alt="image-20240826140119383" /></p>
 <h3 id="error-messages"><a class="header" href="#error-messages">error Messages</a></h3>
 <p>error Messages 的包格式如下，可以看到 error Messages 是直接路由到 rp 的，需要 rp 去处理，其中 error message 中包含了 Requester ID 信息，rp 会将这个 Requester ID 保存起来，方便软件追踪问题。</p>
+<p><img src="images/PCIe_AER/image-20240826140239047.png" alt="image-20240826140239047" /></p>
 <p><img src="images/PCIe_AER/image-20240826101053485.png" alt="image-20240826101053485" /></p>
 <h2 id="错误记录"><a class="header" href="#错误记录">错误记录</a></h2>
 <h3 id="baseline"><a class="header" href="#baseline">Baseline</a></h3>
