@@ -178,10 +178,75 @@
 <h2 id="错误分类"><a class="header" href="#错误分类">错误分类</a></h2>
 <p>PCIe将错误分成两大类， Uncorrectable errors 和 Correctable errors，其中 Uncorrectable errors 又被分成 Fatal 和 Non-Fatal。</p>
 <p><img src="images/PCIe_AER/image-20240819171933342.png" alt="image-20240819171933342" /></p>
+<p><img src="images/PCIe_AER/image-20240826100451124.png" alt="image-20240826100451124" /></p>
+<p><img src="images/PCIe_AER/image-20240826100458387.png" alt="image-20240826100458387" /></p>
+<p><img src="images/PCIe_AER/image-20240826100518943.png" alt="image-20240826100518943" /></p>
+<p>有些错误可能在某个平台上不是特别严重，因此可以给mask掉，不进行汇报。</p>
 <h2 id="错误上报方式"><a class="header" href="#错误上报方式">错误上报方式</a></h2>
+<p>pcie 提供两种错误上报机制，一种是 Completion Status 另一种是 error Messages（in-band）。</p>
+<h3 id="completion-status"><a class="header" href="#completion-status">Completion Status</a></h3>
+<p><img src="images/PCIe_AER/image-20240826100744714.png" alt="image-20240826100744714" /></p>
+<h3 id="error-messages"><a class="header" href="#error-messages">error Messages</a></h3>
+<p>error Messages 的包格式如下，可以看到 error Messages 是直接路由到 rp 的，需要 rp 去处理，其中 error message 中包含了 Requester ID 信息，rp 会将这个 Requester ID 保存起来，方便软件追踪问题。</p>
+<p><img src="images/PCIe_AER/image-20240826101053485.png" alt="image-20240826101053485" /></p>
 <h2 id="错误记录"><a class="header" href="#错误记录">错误记录</a></h2>
+<h3 id="baseline"><a class="header" href="#baseline">Baseline</a></h3>
+<p>pcie 在处理错误时会尽量的将错误信息记录下来，方便软件处理的时候更容易找到错误的源头。对于不支持 aer 的 pcie 设备，只能通过 Device Status 状态寄存器来保存错误的信息，如下，只有一个简单的标志。</p>
+<p><img src="images/PCIe_AER/image-20240826101416361.png" alt="image-20240826101416361" /></p>
+<p>部分错误也会映射到 PCI status （软件上的向后兼容）寄存器中：</p>
+<p><img src="images/PCIe_AER/image-20240826101440761.png" alt="image-20240826101440761" /></p>
+<h3 id="aer"><a class="header" href="#aer">AER</a></h3>
+<p>扩展了错误记录能力。如下面这个CE Status寄存器。</p>
+<p><img src="images/PCIe_AER/image-20240826102301213.png" alt="image-20240826102301213" /></p>
 <h2 id="aer相关寄存器"><a class="header" href="#aer相关寄存器">AER相关寄存器</a></h2>
+<p>UCE error status：指示当前发生了哪种错误；</p>
+<p>UCE error mask：可以通过软件设置，哪种error不上报；</p>
+<p>UCE error severity：是否将这个错误设置为fatal or non-fatal；</p>
+<p>CE类似，只是没有severity</p>
+<p><strong>Advanced Error Capabilities and Control Register</strong> :</p>
+<p><img src="images/PCIe_AER/image-20240826104114835.png" alt="image-20240826104114835" /></p>
+<p>向RP发error message 以后，这期间可能还会发生错误，这里的first error pointer 会记录最初发生的错误。</p>
+<p><strong>Root Error Command Register (Offset 2Ch)</strong></p>
+<p>RP 收到error message 是否向CPU 发出中断</p>
+<p><strong>Root Error Status Register (Offset 30h)</strong></p>
+<p>MSI 地址，还有标识收到了多少个error message</p>
+<p><img src="images/PCIe_AER/image-20240826104724828.png" alt="image-20240826104724828" /></p>
+<p><strong>Header Log：保存发生错误的TLP header</strong></p>
+<p><strong>Error Source Identification Register (Offset 34h)</strong></p>
+<p>记录最早收到error message的request ID。</p>
+<p><img src="images/PCIe_AER/image-20240826102143788.png" alt="image-20240826102143788" /></p>
+<p>Device Control 寄存器中有一些 bit 是错误上报的总开关，要使能 aer 功能的话，也需要将这些配置打开。</p>
+<p><img src="images/PCIe_AER/image-20240826102455382.png" alt="image-20240826102455382" /></p>
 <h2 id="错误上报流程"><a class="header" href="#错误上报流程">错误上报流程</a></h2>
+<p><img src="images/PCIe_AER/image-20240826101637474.png" alt="image-20240826101637474" /></p>
+<h2 id="一个栗子"><a class="header" href="#一个栗子">一个栗子</a></h2>
+<ul>
+<li>
+<p>EP 收到了一个malformed tlp， 默认fatal错误；</p>
+</li>
+<li>
+<p>EP将这个tlp header保存到Header logregister 中，将UCE status reg中的malformed tlp 置位；</p>
+</li>
+<li>
+<p>向RP发送fatal error message；</p>
+</li>
+<li>
+<p>rp 收到这个 error message 后，将 Root Error Status Register 中的 Fatal Error Messages Received 置位，并将这个 error message tlp 中的 requester id 记录到 Error Source Identification Register 中。</p>
+</li>
+<li>
+<p>随后，rp 向 cpu 发出中断。</p>
+</li>
+<li>
+<p>系统软件读取 rp 的 Roor Error Status 寄存器，获得当前发生的错误类型为 malformed tlp 错误，并且读取 Error Source Identification Register 得知发送这个 error message 的设备的 id 为 BDF=3.0.0 。</p>
+</li>
+<li>
+<p>系统软件开始遍历整个 pcie hierarchy 查找这个 BDF=3.0.0 的设备，得到 pci_dev 结构体，并获取该设备的配置空间寄存器的信息 Uncorrectable Error Status Register 和 Header Log Register ，</p>
+<p>将这些信息记录到 sys log 中（printk 才是 debug 的核心利器）。</p>
+</li>
+<li>
+<p>默认情况下 malformed tlp 是一个 Fatal 错误，系统软件需要和该设备进行一系列协商之后，可能会选择对 ep0 进行 reset 。</p>
+</li>
+</ul>
 <h2 id="参考"><a class="header" href="#参考">参考</a></h2>
 <ul>
 <li>
