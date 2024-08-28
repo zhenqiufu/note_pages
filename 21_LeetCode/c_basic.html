@@ -496,6 +496,41 @@ int main() {
 568         return dest;
 569 }
 </code></pre>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void* memcpy_custom(void* destination, const void* source, size_t num_bytes) {
+    // Cast void pointers to char pointers for byte-wise copying
+    char* dest = (char*)destination;
+    const char* src = (const char*)source;
+
+    // Copy num_bytes bytes from source to destination
+    for (size_t i = 0; i &lt; num_bytes; ++i) {
+        dest[i] = src[i];
+    }
+
+    return destination;
+}
+
+int main() {
+    char source[] = "Hello, world!";
+    char destination[20];
+
+    // Calculate the size of source array
+    size_t num_bytes = strlen(source) + 1; // +1 to include null terminator
+
+    // Copying memory using memcpy_custom function
+    memcpy_custom(destination, source, num_bytes);
+
+    // Print the copied string
+    printf("Source: %s\n", source);
+    printf("Destination: %s\n", destination);
+
+    return 0;
+}
+
+</code></pre>
 
                     </main>
 

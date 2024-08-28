@@ -3423,7 +3423,7 @@ VOID* CONST ReferenceAcpiTable = &amp;Cedt;
 <p><img src="12_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/data_link_layer/image-20240705144504223.png" alt="image-20240705144504223" /></p>
 <p><img src="12_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/data_link_layer/image-20240705153319533.png" alt="image-20240705153319533" /></p>
 <p><img src="12_PCIe/00_PCIe%E5%8D%8F%E8%AE%AE/images/data_link_layer/image-20240705153333401.png" alt="image-20240705153333401" /></p>
-<p>另外，<strong>传输TLP时候，在DLL层加的CRC是32bit，但是传世DLLP时候加的CRC是16bit</strong>。</p>
+<p>另外，<strong>传输TLP时候，在DLL层加的CRC是32bit，但是传输DLLP时候加的CRC是16bit</strong>。</p>
 <p>DLLP中DLLP Type用来指定包的类型，而最后16位的CRC用来做校验，其主要分为以下几种类型：</p>
 <div class="table-wrapper"><table><thead><tr><th>名称</th><th>Type</th><th>描述</th></tr></thead><tbody>
 <tr><td>Ack</td><td>00000000b</td><td>用于确认接收到的TLP数据包</td></tr>
@@ -5605,6 +5605,41 @@ int main() {
 568         return dest;
 569 }
 </code></pre>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void* memcpy_custom(void* destination, const void* source, size_t num_bytes) {
+    // Cast void pointers to char pointers for byte-wise copying
+    char* dest = (char*)destination;
+    const char* src = (const char*)source;
+
+    // Copy num_bytes bytes from source to destination
+    for (size_t i = 0; i &lt; num_bytes; ++i) {
+        dest[i] = src[i];
+    }
+
+    return destination;
+}
+
+int main() {
+    char source[] = "Hello, world!";
+    char destination[20];
+
+    // Calculate the size of source array
+    size_t num_bytes = strlen(source) + 1; // +1 to include null terminator
+
+    // Copying memory using memcpy_custom function
+    memcpy_custom(destination, source, num_bytes);
+
+    // Print the copied string
+    printf("Source: %s\n", source);
+    printf("Destination: %s\n", destination);
+
+    return 0;
+}
+
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="数组"><a class="header" href="#数组">数组</a></h1>
 <p>[toc]</p>
 <h2 id="53-最大子数组和"><a class="header" href="#53-最大子数组和"><a href="https://leetcode.cn/problems/maximum-subarray/">53. 最大子数组和</a></a></h2>
@@ -5884,6 +5919,33 @@ public:
     }
 };
 
+</code></pre>
+<p>没有花里花哨的花活，前缀和后缀乘积。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        vector&lt;long&gt; pre(nums.size(), 1);
+        vector&lt;long&gt; suf(nums.size(), 1);
+        vector&lt;int&gt; ans(nums.size(), 1);
+
+        for (int i = 1; i &lt; nums.size(); i++) {
+            pre[i] = pre[i-1] * nums[i - 1];
+        }
+
+
+        for (int i = nums.size() - 2; i &gt;= 0; i--) {
+            suf[i] = suf[i+1] * nums[i + 1];
+        }
+
+        for (int i = 0; i &lt; nums.size(); i++) {
+            ans[i] = pre[i] * suf[i];
+        }
+
+        return ans;
+
+
+    }
+};
 </code></pre>
 <h2 id="41-缺失的第一个正数"><a class="header" href="#41-缺失的第一个正数"><a href="https://leetcode.cn/problems/first-missing-positive/">41. 缺失的第一个正数</a></a></h2>
 <p>给你一个未排序的整数数组 <code>nums</code> ，请你找出其中没有出现的最小的正整数。</p>
@@ -8818,6 +8880,7 @@ public:
     int diameterOfBinaryTree(TreeNode* root) {
         ans = 1;
         depth(root);
+        // ans 计算的是节点数量，要计算边数就需要-1
         return ans - 1;
     }
     int depth(TreeNode* root) {
@@ -9054,6 +9117,10 @@ public:
 <pre><code>输入：s = "3[a]2[bc]"
 输出："aaabcbc"
 </code></pre>
+<p>数字入栈</p>
+<p>字母构造</p>
+<p>左入栈</p>
+<p>右出栈</p>
 <pre><code class="language-c++">class Solution {
 public:
     string decodeString(string s) {
@@ -9565,6 +9632,7 @@ public:
             prefixSum += num;
 
             // 检查当前前缀和减去 k 是否存在于哈希表中
+            // presum[j] - presum[i] = k, find (presum[j] - k)
             if (prefixSumCount.find(prefixSum - k) != prefixSumCount.end()) {
                 // 如果存在，则将出现的次数累加到结果中
                 count += prefixSumCount[prefixSum - k];
@@ -10100,9 +10168,12 @@ public:
             if (nums[right]) {
                 swap(nums[left], nums[right]);
                 left++;
+                right++;
+            } else {
+                // 如果数组有0，快指针先走一步
+                right++;
             }
-            // 如果数组有0，快指针先走一步
-            right++;
+            
         }
     }
 };
@@ -10129,6 +10200,8 @@ public:
             maxArea = max(maxArea, currentArea);
 
             // 移动指针：移动高度较小的指针，以寻找可能的更大面积
+            // 移动短边有可能变大，移动长边是不可能变大的，
+            // 因为长度变小，即使长边的下一个更高，但是总面积不会增大，总面积被短边锁死了。
             if (height[left] &lt; height[right]) {
                 left++;
             } else {
@@ -10748,20 +10821,26 @@ public:
 <pre><code class="language-c++">class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; generate(int numRows) {
-        vector&lt;vector&lt;int&gt;&gt; ans;       
-            for(int i=1;i&lt;=numRows;i++){
-                ans.push_back(vector&lt;int&gt;(i,1));
-            }
-            for(int i=2;i&lt;numRows;i++){
-                for(int j=1;j&lt;i;j++){
-                    ans[i][j]=ans[i-1][j]+ans[i-1][j-1];
-                }
+         vector&lt;vector&lt;int&gt;&gt; ans;
 
+         for (int i = 0; i &lt; numRows; i++) {
+            ans.push_back(vector&lt;int&gt;(i+1,1));
+
+            for (int j = 1; j &lt; i; j++) {
+                ans[i][j] = ans[i-1][j-1] + ans[i-1][j];
             }
-        
-        return ans;
+         }
+         return ans;
     }
 };
+</code></pre>
+<pre><code>
+[1]
+[1,1]
+[1,2,1]
+[1,3,3,1]
+[1,4,6,4,1]
+
 </code></pre>
 <h2 id="198-打家劫舍"><a class="header" href="#198-打家劫舍"><a href="https://leetcode.cn/problems/house-robber/">198. 打家劫舍</a></a></h2>
 <pre><code class="language-c++">class Solution {

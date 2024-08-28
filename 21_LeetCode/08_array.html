@@ -453,6 +453,33 @@ public:
 };
 
 </code></pre>
+<p>没有花里花哨的花活，前缀和后缀乘积。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        vector&lt;long&gt; pre(nums.size(), 1);
+        vector&lt;long&gt; suf(nums.size(), 1);
+        vector&lt;int&gt; ans(nums.size(), 1);
+
+        for (int i = 1; i &lt; nums.size(); i++) {
+            pre[i] = pre[i-1] * nums[i - 1];
+        }
+
+
+        for (int i = nums.size() - 2; i &gt;= 0; i--) {
+            suf[i] = suf[i+1] * nums[i + 1];
+        }
+
+        for (int i = 0; i &lt; nums.size(); i++) {
+            ans[i] = pre[i] * suf[i];
+        }
+
+        return ans;
+
+
+    }
+};
+</code></pre>
 <h2 id="41-缺失的第一个正数"><a class="header" href="#41-缺失的第一个正数"><a href="https://leetcode.cn/problems/first-missing-positive/">41. 缺失的第一个正数</a></a></h2>
 <p>给你一个未排序的整数数组 <code>nums</code> ，请你找出其中没有出现的最小的正整数。</p>
 <p>请你实现时间复杂度为 <code>O(n)</code> 并且只使用常数级别额外空间的解决方案。</p>

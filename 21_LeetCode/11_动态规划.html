@@ -220,20 +220,26 @@ public:
 <pre><code class="language-c++">class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; generate(int numRows) {
-        vector&lt;vector&lt;int&gt;&gt; ans;       
-            for(int i=1;i&lt;=numRows;i++){
-                ans.push_back(vector&lt;int&gt;(i,1));
-            }
-            for(int i=2;i&lt;numRows;i++){
-                for(int j=1;j&lt;i;j++){
-                    ans[i][j]=ans[i-1][j]+ans[i-1][j-1];
-                }
+         vector&lt;vector&lt;int&gt;&gt; ans;
 
+         for (int i = 0; i &lt; numRows; i++) {
+            ans.push_back(vector&lt;int&gt;(i+1,1));
+
+            for (int j = 1; j &lt; i; j++) {
+                ans[i][j] = ans[i-1][j-1] + ans[i-1][j];
             }
-        
-        return ans;
+         }
+         return ans;
     }
 };
+</code></pre>
+<pre><code>
+[1]
+[1,1]
+[1,2,1]
+[1,3,3,1]
+[1,4,6,4,1]
+
 </code></pre>
 <h2 id="198-打家劫舍"><a class="header" href="#198-打家劫舍"><a href="https://leetcode.cn/problems/house-robber/">198. 打家劫舍</a></a></h2>
 <pre><code class="language-c++">class Solution {

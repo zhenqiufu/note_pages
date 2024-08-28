@@ -1115,6 +1115,7 @@ public:
     int diameterOfBinaryTree(TreeNode* root) {
         ans = 1;
         depth(root);
+        // ans 计算的是节点数量，要计算边数就需要-1
         return ans - 1;
     }
     int depth(TreeNode* root) {

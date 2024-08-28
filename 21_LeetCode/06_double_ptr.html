@@ -191,9 +191,12 @@ public:
             if (nums[right]) {
                 swap(nums[left], nums[right]);
                 left++;
+                right++;
+            } else {
+                // 如果数组有0，快指针先走一步
+                right++;
             }
-            // 如果数组有0，快指针先走一步
-            right++;
+            
         }
     }
 };
@@ -220,6 +223,8 @@ public:
             maxArea = max(maxArea, currentArea);
 
             // 移动指针：移动高度较小的指针，以寻找可能的更大面积
+            // 移动短边有可能变大，移动长边是不可能变大的，
+            // 因为长度变小，即使长边的下一个更高，但是总面积不会增大，总面积被短边锁死了。
             if (height[left] &lt; height[right]) {
                 left++;
             } else {

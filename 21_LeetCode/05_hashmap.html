@@ -359,6 +359,7 @@ public:
             prefixSum += num;
 
             // 检查当前前缀和减去 k 是否存在于哈希表中
+            // presum[j] - presum[i] = k, find (presum[j] - k)
             if (prefixSumCount.find(prefixSum - k) != prefixSumCount.end()) {
                 // 如果存在，则将出现的次数累加到结果中
                 count += prefixSumCount[prefixSum - k];
