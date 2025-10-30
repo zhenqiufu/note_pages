@@ -1,0 +1,319 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PCIe AER - 跨越边界——固件工程师视角下的芯片与系统</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="涵盖硬件接口、芯片设计、固件开发、内核协同、AI基础设施的全栈技术知识库">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">跨越边界——固件工程师视角下的芯片与系统</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pcie-error-detection-and-handling"><a class="header" href="#pcie-error-detection-and-handling">PCIe Error Detection and Handling</a></h1>
+<p>[toc]</p>
+<h2 id="错误分类"><a class="header" href="#错误分类">错误分类</a></h2>
+<p>PCIe将错误分成两大类， Uncorrectable errors 和 Correctable errors，其中 Uncorrectable errors 又被分成 Fatal 和 Non-Fatal。</p>
+<p><img src="images/PCIe_AER/image-20240819171933342.png" alt="image-20240819171933342" /></p>
+<p><img src="images/PCIe_AER/image-20240826140319352.png" alt="image-20240826140319352" /></p>
+<p><img src="images/PCIe_AER/image-20240826100451124.png" alt="image-20240826100451124" /></p>
+<p><img src="images/PCIe_AER/image-20240826100458387.png" alt="image-20240826100458387" /></p>
+<p><img src="images/PCIe_AER/image-20240826100518943.png" alt="image-20240826100518943" /></p>
+<p>有些错误可能在某个平台上不是特别严重，因此可以给mask掉，不进行汇报。</p>
+<h2 id="错误上报方式"><a class="header" href="#错误上报方式">错误上报方式</a></h2>
+<p>pcie 提供两种错误上报机制，一种是 Completion Status 另一种是 error Messages（in-band）。</p>
+<h3 id="completion-status"><a class="header" href="#completion-status">Completion Status</a></h3>
+<p><img src="images/PCIe_AER/image-20240826100744714.png" alt="image-20240826100744714" /></p>
+<p>枚举时候访问不存在的设备，会返回UR。</p>
+<h3 id="error-forwarding-data-poisoning"><a class="header" href="#error-forwarding-data-poisoning">Error Forwarding (data poisoning)</a></h3>
+<p>switch转发的时候，CRC校验失败，返回给请求者，说，下面返回的数据有问题，你要小心。</p>
+<p><img src="images/PCIe_AER/image-20240826140119383.png" alt="image-20240826140119383" /></p>
+<h3 id="error-messages"><a class="header" href="#error-messages">error Messages</a></h3>
+<p>error Messages 的包格式如下，可以看到 error Messages 是直接路由到 rp 的，需要 rp 去处理，其中 error message 中包含了 Requester ID 信息，rp 会将这个 Requester ID 保存起来，方便软件追踪问题。</p>
+<p><img src="images/PCIe_AER/image-20240826140239047.png" alt="image-20240826140239047" /></p>
+<p><img src="images/PCIe_AER/image-20240826101053485.png" alt="image-20240826101053485" /></p>
+<h2 id="错误记录"><a class="header" href="#错误记录">错误记录</a></h2>
+<h3 id="baseline"><a class="header" href="#baseline">Baseline</a></h3>
+<p>pcie 在处理错误时会尽量的将错误信息记录下来，方便软件处理的时候更容易找到错误的源头。对于不支持 aer 的 pcie 设备，只能通过 Device Status 状态寄存器来保存错误的信息，如下，只有一个简单的标志。</p>
+<p><img src="images/PCIe_AER/image-20240826101416361.png" alt="image-20240826101416361" /></p>
+<p>部分错误也会映射到 PCI status （软件上的向后兼容）寄存器中：</p>
+<p><img src="images/PCIe_AER/image-20240826101440761.png" alt="image-20240826101440761" /></p>
+<h3 id="aer"><a class="header" href="#aer">AER</a></h3>
+<p>扩展了错误记录能力。如下面这个CE Status寄存器。</p>
+<p><img src="images/PCIe_AER/image-20240826102301213.png" alt="image-20240826102301213" /></p>
+<h2 id="aer相关寄存器"><a class="header" href="#aer相关寄存器">AER相关寄存器</a></h2>
+<p>UCE error status：指示当前发生了哪种错误；</p>
+<p>UCE error mask：可以通过软件设置，哪种error不上报；</p>
+<p>UCE error severity：是否将这个错误设置为fatal or non-fatal；</p>
+<p>CE类似，只是没有severity</p>
+<p><strong>Advanced Error Capabilities and Control Register</strong> :</p>
+<p><img src="images/PCIe_AER/image-20240826104114835.png" alt="image-20240826104114835" /></p>
+<p>向RP发error message 以后，这期间可能还会发生错误，这里的first error pointer 会记录最初发生的错误。</p>
+<p><strong>Root Error Command Register (Offset 2Ch)</strong></p>
+<p>RP 收到error message 是否向CPU 发出中断</p>
+<p><strong>Root Error Status Register (Offset 30h)</strong></p>
+<p>MSI 地址，还有标识收到了多少个error message</p>
+<p><img src="images/PCIe_AER/image-20240826104724828.png" alt="image-20240826104724828" /></p>
+<p><strong>Header Log：保存发生错误的TLP header</strong></p>
+<p><strong>Error Source Identification Register (Offset 34h)</strong></p>
+<p>记录最早收到error message的request ID。</p>
+<p><img src="images/PCIe_AER/image-20240826102143788.png" alt="image-20240826102143788" /></p>
+<p>Device Control 寄存器中有一些 bit 是错误上报的总开关，要使能 aer 功能的话，也需要将这些配置打开。</p>
+<p><img src="images/PCIe_AER/image-20240826102455382.png" alt="image-20240826102455382" /></p>
+<h2 id="错误上报流程"><a class="header" href="#错误上报流程">错误上报流程</a></h2>
+<p><img src="images/PCIe_AER/image-20240826101637474.png" alt="image-20240826101637474" /></p>
+<h2 id="一个栗子"><a class="header" href="#一个栗子">一个栗子</a></h2>
+<ul>
+<li>
+<p>EP 收到了一个malformed tlp， 默认fatal错误；</p>
+</li>
+<li>
+<p>EP将这个tlp header保存到Header logregister 中，将UCE status reg中的malformed tlp 置位；</p>
+</li>
+<li>
+<p>向RP发送fatal error message；</p>
+</li>
+<li>
+<p>rp 收到这个 error message 后，将 Root Error Status Register 中的 Fatal Error Messages Received 置位，并将这个 error message tlp 中的 requester id 记录到 Error Source Identification Register 中。</p>
+</li>
+<li>
+<p>随后，rp 向 cpu 发出中断。</p>
+</li>
+<li>
+<p>系统软件读取 rp 的 Roor Error Status 寄存器，获得当前发生的错误类型为 malformed tlp 错误，并且读取 Error Source Identification Register 得知发送这个 error message 的设备的 id 为 BDF=3.0.0 。</p>
+</li>
+<li>
+<p>系统软件开始遍历整个 pcie hierarchy 查找这个 BDF=3.0.0 的设备，得到 pci_dev 结构体，并获取该设备的配置空间寄存器的信息 Uncorrectable Error Status Register 和 Header Log Register ，</p>
+<p>将这些信息记录到 sys log 中（printk 才是 debug 的核心利器）。</p>
+</li>
+<li>
+<p>默认情况下 malformed tlp 是一个 Fatal 错误，系统软件需要和该设备进行一系列协商之后，可能会选择对 ep0 进行 reset 。</p>
+</li>
+</ul>
+<h2 id="参考"><a class="header" href="#参考">参考</a></h2>
+<ul>
+<li>
+<p><a href="https://www.pcietech.com/482.html/">PCIE错误的FIRMWARE FIRST MODEL和OS NATIVE MODEL</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/389745492">PCIe AER详解</a></p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/03_PCIe高级特性/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/03_PCIe高级特性/PCIe_DPC.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/03_PCIe高级特性/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/03_PCIe高级特性/PCIe_DPC.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

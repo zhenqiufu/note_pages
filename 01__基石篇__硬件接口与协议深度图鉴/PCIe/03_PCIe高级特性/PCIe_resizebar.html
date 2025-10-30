@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PCIe resizebar - 跨越边界——固件工程师视角下的芯片与系统</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="涵盖硬件接口、芯片设计、固件开发、内核协同、AI基础设施的全栈技术知识库">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">跨越边界——固件工程师视角下的芯片与系统</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h3 id="resizable-bar-功能"><a class="header" href="#resizable-bar-功能">Resizable BAR 功能</a></h3>
+<p>传统BAR的大小是固定的，PCI枚举器通过写入0xFFFFFFFFF到里面，然后读出来，mask掉最后的几个特殊位，从而知道该窗口有多大。这个Size是设备最小需要的，是固定写死的，没有任何商量的余地。PCI枚举器必须满足，否则该设备将不能正常工作。</p>
+<p>Resizable BAR也是一种BAR，不过这种BAR并不是Fixed的，而是可以变大小的。通过协议规定的方式，让PCIe host可以根据实际地址空间分配情况动态设定一个设备和CPU配置空间都可以接受的大小。(可以协商，最多6个BAR，单个BAR 最高支持8EB)</p>
+<p>近些年，主要是一些显卡会有这个需求，显卡的显存比较大，需要的BAR 比较大。</p>
+<p>PCIe 5.0 Spec Chapter 7.8.6 Resizable BAR Extended Capability 介绍了Resizable BAR相关内容。其Extended Capability ID number is 0x15。</p>
+<p><img src="images/PCIe_resizebar/image-20230914225857259.png" alt="image-20230914225857259" /></p>
+<p><img src="images/PCIe_resizebar/image-20230914225959255.png" alt="image-20230914225959255" /></p>
+<p><img src="images/PCIe_resizebar/image-20230914230652876.png" alt="image-20230914230652876" /></p>
+<blockquote>
+<p>Bus 01,Device 00,Function 00 - NVIDIA Corporation GA104M [Geforce RTX 3070 Ti Laptop GPU](PCI-Express Gen4@Gen4 x16@x8)
+......
+BAR0 0xFB000000 - 0xFBFFFFFF (Size=16MB,16MB aligned,32bit memory space)
+BAR1 0x0000007C00000000 - 0x0000007DFFFFFFFF (Size=8GB,16GB aligned,64bit memory space,prefetchable)
+BAR3 0x0000007E00000000 - 0x0000007E01FFFFFF (Size=32MB,8GB aligned,64bit memory space,prefetchable)
+......
+---- PCI Capability List ----
+......
+---- PCI Express Extended Capability List ----
+......
+PCI Express Extended Capability #8
+Caps Class 0x15 - Resizable BAR
+Caps Offset 0xBB0
+BAR0 Size 16MB (Support: 16MB )
+BAR1 Size 8GB (Support: 64MB 128MB 256MB 512MB 1024MB 2GB 4GB 8GB )
+BAR3 Size 32MB (Support: 32MB )
+......
+PCI registers
+Offset[0x000] DE 10 E0 24 06 00 10 00 A1 00 00 03 10 00 80 00 ...$............
+Offset[0x010] 00 00 00 FB 0C 00 00 00 7C 00 00 00 0C 00 00 00 ........|.......
+Offset[0x020] 7E 00 00 00 01 00 00 00 00 00 00 00 DE 10 E0 24 ~...............
+......
+Offset[0xBB0] 15 00 C1 C1 00 01 00 00 60 04 00 00 00 FC 03 00 ........`.......
+Offset[0xBC0] 01 0D 00 00 00 02 00 00 03 05 00 00 10 00 41 C1 ..............A.
+Offset[0xBD0] 06 00 00 00 00 00 00 00 10 00 10 00 00 00 00 00 ................
+Offset[0xBE0] 04 00 01 00 00 00 E0 24 73 05 00 00 01 00 00 00 .......$s.......
+Offset[0xBF0] 00 00 00 00 0C 00 00 00 00 00 00 00 0C 00 00 00 ................
+Offset[0xC00] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+......</p>
+</blockquote>
+<p>Enhanced Allocation Capability</p>
+<p><img src="images/PCIe_resizebar/image-20230913150949385.png" alt="image-20230913150949385" /></p>
+<p>相关的寄存器</p>
+<p>7.5.3.2 PCI Express Capabilities Register (Offset 02h) - Slot Implemented</p>
+<p>7.5.3.6 Link Capabilities Register (Offset 0Ch) - Surprise Down Error Reporting Capable</p>
+<p>Data Link Layer Link Active Reporting Capable</p>
+<p>7.5.3.9 Slot Capabilities Register (Offset 14h)</p>
+<p><strong>Resources</strong></p>
+<p><a href="https://zhuanlan.zhihu.com/p/531315203">Intel新上市Arc显卡要求的Resizable BAR是什么？ - 知乎 (zhihu.com)</a></p>
+<p>https://patchew.org/EDK2/20230511081011.2692963-1-minhnguyen1@os.amperecomputing.com/</p>
+<p>https://blog.csdn.net/weixin_43405280/article/details/131641188?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-131641188-blog-52870727.235%5Ev38%5Epc_relevant_anti_vip&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-131641188-blog-52870727.235%5Ev38%5Epc_relevant_anti_vip&amp;utm_relevant_index=2</p>
+<p>http://blog.chinaaet.com/justlxy/p/5100053251</p>
+<p>http://blog.chinaaet.com/justlxy/p/5100057851</p>
+<p>https://blog.csdn.net/MissMango0820/article/details/128497422</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/03_PCIe高级特性/PCIe_SRIOV.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../01__基石篇__硬件接口与协议深度图鉴/UCIE/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/03_PCIe高级特性/PCIe_SRIOV.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../01__基石篇__硬件接口与协议深度图鉴/UCIE/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

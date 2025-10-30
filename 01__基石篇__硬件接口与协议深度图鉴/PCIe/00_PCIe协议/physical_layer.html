@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>physical layer - 跨越边界——固件工程师视角下的芯片与系统</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="涵盖硬件接口、芯片设计、固件开发、内核协同、AI基础设施的全栈技术知识库">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">跨越边界——固件工程师视角下的芯片与系统</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="物理层"><a class="header" href="#物理层">物理层</a></h1>
+<p>关键字：逻辑与电气，Link与Lane，串并转换，编码，加扰，EQ，LTSSM</p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>物理层就是将上层封装好的东西，通过电信号传输出去。</p>
+<p><img src="images/physical_layer/image-20240704095625749.png" alt="image-20240704095625749" /></p>
+<p>物理层主要分为两个子块：</p>
+<ul>
+<li>逻辑子块（Logical Sub-Block）：逻辑子块负责编码和解码数据，以及处理时钟恢复和同步。它将数据链路层发送过来的数据进行编码后发送到电气子块。在接收方向，逻辑子块将电气子块接收的编码数据进行解码，恢复原始的数据，并送入数据链路层进行后续处理。此外，逻辑子块还处理与时钟恢复和数据流的对齐和同步相关的任务。</li>
+<li>电气子块（Electrical Sub-Block）：电气子块负责实际的数据传输。它将逻辑子块编码的数据转换为电信号，并通过物理链路发送出去。在接收方向，电气子块将接收到的电信号转换回编码数据，并发送给逻辑子块。电气子块还负责处理物理链路的一些特性，如电平调整，差分信号传输，以及其他与物理链路的电气特性相关的任务。</li>
+</ul>
+<h2 id="logical-sub-block"><a class="header" href="#logical-sub-block">Logical Sub-Block</a></h2>
+<p><img src="images/physical_layer/image-20240705171230174.png" alt="image-20240705171230174" /></p>
+<h3 id="tx-buffer--mux"><a class="header" href="#tx-buffer--mux">Tx Buffer &amp; Mux</a></h3>
+<p>这里有个buffer，缓存DL层的包。同时有个Mux，选择发送DL层的东西，或者发送物理层自己的有续集。因为有时候需要停下正常的包，发一些有续集，如skip等，所以需要这个buffer。</p>
+<h3 id="byte-striping"><a class="header" href="#byte-striping">Byte Striping</a></h3>
+<p>把字节流分到不同的lane上。</p>
+<p><img src="images/physical_layer/image-20240705172339842.png" alt="image-20240705172339842" /></p>
+<h3 id="data-scrambling"><a class="header" href="#data-scrambling">Data Scrambling</a></h3>
+<p>首先，物理层会将接收到的数据进行加扰（Scrambling），让原本规整的数据流看上去像是随机数一样（所以有时候又把这个称为伪随机数生成：pseudo-random number generator）。</p>
+<p>这样做的目的是为了<strong>避免信号的能量聚集在某些特殊的频段</strong>上，从而减少EMI。原理是这样：我们传输的数据其实是大量高频的0和1，而由于传输的数据可能是类似的，所以会形成特定高频的01变化的模式。了解傅里叶变换的小伙伴知道，任何周期信号都可以表示为一系列成谐波关系的正弦信号的叠加。这样分解之后，这种特定形状的高频信号，就会在特定的频率上产生能量集中的电磁波，导致干扰。而加扰（Scrambling）就是为了避免这种特定形状的信号出现，从而避免这种情况的发生。</p>
+<p>而PCIe使用了一种非常聪明的方法进行数据加扰 —— <strong>利用XOR运算！也就是线性反馈移位寄存器（LFSR，Linear-feedback shift register）</strong></p>
+<p><img src="images/physical_layer/image-20240705172450492.png" alt="image-20240705172450492" /></p>
+<p>PCIe使用的是伽罗瓦（Galois）式LFSR，其中PCIe 1.0和2.0使用的是16位的LFSR的多项式表达为：</p>
+<p><img src="images/physical_layer/image-20240705172531352.png" alt="image-20240705172531352" /></p>
+<p>而3.0开始之后，使用的是更长的23位LFSR，表达为：</p>
+<p><img src="images/physical_layer/image-20240705172536567.png" alt="image-20240705172536567" /></p>
+<p>这样，每一次时钟，LFSR就会产生一个伪随机的bit，然后我们用这个bit和数据再进行一次XOR运算，就可以达到数据加扰的目的了。</p>
+<p><img src="images/physical_layer/pcie-phy-lfsr-galois.gif" alt="pcie-phy-lfsr-galois" /></p>
+<p>另外，PCIe1.0和2.0中，数据加扰用的LFSR的初始值（Seed）都是0xFFFF，但是在PCIe3.0之后，为了避免不同的Lane上出现相似的数据，每条Lane上的LFSR的初始值（Seed）都不一样（大于等于8的Lane ID需要对8取模）：</p>
+<div class="table-wrapper"><table><thead><tr><th>Lane</th><th>Seed</th></tr></thead><tbody>
+<tr><td>0</td><td>1DBFBCh</td></tr>
+<tr><td>1</td><td>0607BBh</td></tr>
+<tr><td>2</td><td>1EC760h</td></tr>
+<tr><td>3</td><td>18C0DBh</td></tr>
+<tr><td>4</td><td>010F12h</td></tr>
+<tr><td>5</td><td>19CFC9h</td></tr>
+<tr><td>6</td><td>0277CEh</td></tr>
+<tr><td>7</td><td>1BB807h</td></tr>
+</tbody></table>
+</div>
+<p>这个方法聪明的地方在于，通过XOR产生的伪随机数是可以恢复的！因为只要操作数一样，两次XOR操作的效果会被抵消，所以只要发送方和接收方的Seed一样，那么接收方就可以通过执行完全一样的LFSR操作，来恢复出原始的数据。</p>
+<p>最后，为了方便我们用示波器调试，数据加扰是可以被关闭的。规范没有说怎么关闭，具体看厂商实现。</p>
+<h3 id="encoding"><a class="header" href="#encoding">Encoding</a></h3>
+<p>在打乱数据之后，接下来就是对数据进行编码（Encoding）了。编码的目的是保证传输的0和1的数量尽可能的一致，从而保持DC平衡（DC Balance），让数据的传输更加可靠，也能帮助PCIe从数据信号中恢复时钟（Clock Recovery）。</p>
+<p>PCIe使用的编码方式有三种：8b/10b编码，128b/130b编码和242B/256B FLIT编码。而一旦知道了编码方式和PCIe的总线时钟频率，我们就可以算出来每条Lane的传输速率了。用PCIe 1.0 8b/10b来举例子，这个代表8bit的数据会被编码为10b的数据进行传输，所以，最后每条Lane的传输速率就是：</p>
+<p><img src="images/physical_layer/image-20240705173724380.png" alt="image-20240705173724380" /></p>
+<p>以下是PCIe各个版本的编码方式和传输速率：</p>
+<div class="table-wrapper"><table><thead><tr><th>PCIe Version</th><th>Line code</th><th>Transfer rate per lane</th><th>Throughput x1</th><th>Throughput x16</th></tr></thead><tbody>
+<tr><td>1.0</td><td>8b/10b</td><td>2.5 GT/s</td><td>250 MB/s</td><td>4 GB/s</td></tr>
+<tr><td>2.0</td><td>8b/10b</td><td>5 GT/s</td><td>500 MB/s</td><td>8 GB/s</td></tr>
+<tr><td>3.0</td><td>128b/130b</td><td>8 GT/s</td><td>984.6 MB/s</td><td>15.75 GB/s</td></tr>
+<tr><td>4.0</td><td>128b/130b</td><td>16 GT/s</td><td>1.969 GB/s</td><td>31.51 GB/s</td></tr>
+<tr><td>5.0</td><td>128b/130b</td><td>32 GT/s</td><td>3.938 GB/s</td><td>63.02 GB/s</td></tr>
+<tr><td>6.0</td><td>1b/1b 242B/256B FLIT</td><td>64 GT/s</td><td>7.564 GB/s</td><td>121.00 GB/s</td></tr>
+</tbody></table>
+</div>
+<p>注意：242B/256B是大写的B，不再是bit而是Byte了。</p>
+<h4 id="8b10b编码"><a class="header" href="#8b10b编码">8b/10b编码</a></h4>
+<p>8b/10b编码主要用在PCIe 1.0和2.0中，为2.5GT/s和5GT/s的传输频率提供数据编码 [<a href="https://en.wikipedia.org/wiki/8b/10b_encoding">4]</a>。它的核心思想是，将一个8bits的数据拆分成一个5bits的数据和一个3bits的数据，然后分别通过一个固定的关系映射到6bits和4bits的中空间中去，从而避免连续的0或者1的出现。如下：<code>ABCDEFGH</code>被拆分成<code>ABCDE</code>和<code>FGH</code>，然后转换为小端，再分别映射到<code>abcdei</code>和<code>fghj</code>中去。</p>
+<p>转换后的8b/10b编码有两种类型的值：控制码（K）和数据码（D），根据数据<code>ABCDE</code>和<code>FGH</code>的分组，被记为<code>D.&lt;ABCDE&gt;.&lt;FGH&gt;</code>或者<code>K.&lt;ABCDE&gt;.&lt;FGH&gt;</code>。其具体的映射方式如下：</p>
+<p><img src="images/physical_layer/image-20240705174102857.png" alt="image-20240705174102857" /></p>
+<p><img src="images/physical_layer/image-20240705174110853.png" alt="image-20240705174110853" /></p>
+<p>这里**RD（Running Disparity）**代表着当前字节开始前，前面的数据流中1的数量减去0的数量的差值。为了保证精确的01数量一致，8b/10b编码会使用这个值对当前字节的编码进行调整。这样它就能保证在传输每个字节之前，RD的值不会超过±1，在传输数据过程中，RD的值不会超过±2。</p>
+<p>由于硬编码的原因，8b/10b编码可以精确的01数量一致，从而达到稳定的保持DC平衡，但是它的问题在于编码设计复杂，而且编码的效率有高达20%的浪费！这也是为什么PCIe 3.0之后，就不再使用8b/10b编码的原因。</p>
+<h4 id="128b130b编码"><a class="header" href="#128b130b编码">128b/130b编码</a></h4>
+<p>PCIe 3.0之后，为了提高编码效率从而提升有效带宽，PCIe开始使用128b/130b编码。可以看到由于每130个bits中间，只有2个bits是浪费的，所以它的效率高达98.46%！</p>
+<p>128b/130b编码是64b/66b编码的变形 [<a href="https://en.wikipedia.org/wiki/64b/66b_encoding">5]</a>，唯一的区别是将其payload的部分扩大了一倍（64b -&gt; 128b）。它和8b/10b最大的不同在于它不再使用硬编码表进行转换了，而是依赖于上面我们提到的3.0之后的LFSR算法来进行转换，从而生成一个统计意义上的DC平衡的数据流。</p>
+<p>除了使用LFSR算法进行数据处理以外，在编码的时候，128b/130b编码会做两件事情：Framing和Encoding。</p>
+<h5 id="framing"><a class="header" href="#framing">Framing</a></h5>
+<p>首先，128b/130b编码会将整个上层的包（不是一个block）的之前和之后加上特定的标识用的Token，用来表示这个包的开始：</p>
+<ul>
+<li>对于TLP而言，它会在前面增加一个2字节的头，并且复写数据链路层的前4个bits，将其修改为FCRC，从而和已有的数据链路层的Seq一起组成一个4字节的token —— STP（Start of TLP）。</li>
+</ul>
+<p><img src="images/physical_layer/image-20240705174145453.png" alt="image-20240705174145453" /></p>
+<ul>
+<li>对于DLLP而言，它会用一个2字节的Token - SDP（Start of DLLP）表示开始。</li>
+</ul>
+<p><img src="images/physical_layer/image-20240705174151441.png" alt="image-20240705174151441" /></p>
+<p>这两个Token会被永远从Lane 0开始，并作为一个数据包的开头（Byte 0）。另外，除此以外，还有用来标记空闲的IDL（Logical Idle），Nullify之前TLP的EDB（EnD Bad），和标记数据流结束的EDS（End of Data Stream）。</p>
+<p><img src="images/physical_layer/image-20240705174208546.png" alt="image-20240705174208546" /></p>
+<h5 id="encoding-1"><a class="header" href="#encoding-1">Encoding</a></h5>
+<p>然后，128b/130b编码会将整个数据包分为大小为128bit的block，然后在每个128bits的payload之前，加上一个2bits的同步头（SyncHeader），用来表示这个payload的类型并且做多通道同步。这个同步头的值有两种：</p>
+<ul>
+<li>01b：表示这个payload是数据块（Data Block），长度为128bits</li>
+<li>10b：表示这个payload是Ordered Set Block，长度也为128bits</li>
+</ul>
+<p>比如，我们假设需要在一个通道上传输一个数据块，总共16个字节，S0-S15，其中最低位的bit我们记作.0，最高位记作.7，那么传输序列如下（注意同步头也会被转位小端发送，所以01b会变成10b）：</p>
+<p><img src="images/physical_layer/image-20240705174235248.png" alt="image-20240705174235248" /></p>
+<p>当有多条通道的时候，发送的时候数据将被分配到多个通道上同时发送，并且时钟对齐的：</p>
+<p><img src="images/physical_layer/image-20240705174247660.png" alt="image-20240705174247660" /></p>
+<h4 id="242b256b-flit编码"><a class="header" href="#242b256b-flit编码">242B/256B FLIT编码</a></h4>
+<p>虽然128b/130b的编码很好，但是随着对速率的要求变得更高，PCIe6.0更换了从PCIe1.0一致沿用下来的NRZ（Non-Return-To-Zero）信号调制方式，而是转而使用了PAM4（Pulse Amplitude Modulation 4）信号调制方式。这种调制方式可以在同样的信号频率下，提供双倍的传输速率（下面会详细说）。然而这样的调制方式，也让错误率变得更高，所以PCIe6.0开始，PCIe使用了242B/256B FLIT编码，加入更多的校验机制，来提高信号的可靠性。</p>
+<p>242B/256B FLIT编码的传输单位是一个FLIT，大小为256个字节（不是bits）。</p>
+<p><img src="images/physical_layer/image-20240705174353371.png" alt="image-20240705174353371" /></p>
+<p>其中没有包头，从报文开始，前236个字节是TLP数据，然后是6个字节的DLLP（Data Link Layer Packet），8个字节的CRC，最后是6个字节的FEC（Forward Error Correction）。由于FLIT中已经带有CRC了，所以DLLP和TLP中是没有CRC的。传输后如果发现问题，就会尝试使用FEC进行修正（单字节），如果不行，就会对整个FLIT进行重传。</p>
+<p>另外，一旦开启了FLIT模式，PCIe就会一直使用FLIT模式，即使速率降低到NRZ的速率（比如2.5 GT/s，5.0 GT/s，8.0 GT/s，16.0 GT/s，32.0 GT/s）也不会转换回NRZ模式了。</p>
+<h2 id="electrical-sub-block"><a class="header" href="#electrical-sub-block">Electrical Sub-block</a></h2>
+<h3 id="parallel-to-serial"><a class="header" href="#parallel-to-serial">Parallel to Serial</a></h3>
+<p>首先，由于我们最后的信号是串行的，而逻辑子块上传下来的数据是是一个一个的字节（单通道），所以需要将按字节的并行信号转变为最后的串行信号（Parallel to Serial），再进行发送。</p>
+<p>自然的，接收方则相反，最后当所有的数据处理完成之后，需要将串行的数据重新转化为并行的数据，交给数据链路层进行处理。</p>
+<h3 id="调制modulation"><a class="header" href="#调制modulation">调制（Modulation）</a></h3>
+<p>接下来转换为串行的数据需要经过调制，将其变为易于传输的电信号，而接收方则需要将电信号重新解调，转换会数字信号。</p>
+<h4 id="nrz编码non-return-to-zero"><a class="header" href="#nrz编码non-return-to-zero">NRZ编码（Non-Return-to-Zero）</a></h4>
+<p>在PCIe1.0到5.0中，PCIe一直使用的调制方法叫做不归零码（NRZ，Non-Return-to-Zero） [<a href="https://en.wikipedia.org/wiki/Non-return-to-zero">10]</a>。这种调制方式特点是与归零码（RZ，Return-to-Zero）相比，它的每个比特1会占满整个时钟周期，不会在后半个周期归零。PCIe使用的是中的两极不归零码（Bipolar NRZ level），它的编码方法很简单，就是将0变为负电平−V，1变为正电平+V，其电平图和眼图如下：</p>
+<p><strong><img src="images/physical_layer/image-20240705174549147.png" alt="image-20240705174549147" /></strong></p>
+<p>由于不归零码本身没有稳定的机制传递时钟，所以需要上面提到的编码（Encoding），加扰（Scrambling）和其他方式来进行辅助时钟恢复，这个我们下面会提到。</p>
+<h4 id="pam4编码"><a class="header" href="#pam4编码">PAM4编码</a></h4>
+<p>为了支持更高的传输速率，PCIe6.0开始使用PAM4（Pulse Amplitude Modulation 4）调制方式，即脉冲幅度调制，将00变为−V，10变为+V，01变为−V/3，11变为+V/3，其眼图与每个电平表示的信号如下：</p>
+<p><img src="images/physical_layer/image-20240705174638258.png" alt="image-20240705174638258" /></p>
+<p>这样在同样的电压下，容纳的状态就变成了之前的两倍，所以在同样的时钟下，传输速率也就变成了之前的两倍！但是这样也就导致了更高概率的误码。</p>
+<h3 id="差分信号differential-signal"><a class="header" href="#差分信号differential-signal">差分信号（Differential Signal）</a></h3>
+<p>再接下来，再最后发送给真正的电路前，为了对抗电磁辐射等等原因导致的干扰，PCIe使用了差分信号（Differential Signaling）的方式进行传输。即将信号分为正负两个信号，然后在接收端，将两个信号相减，重新得到原始信号（这就是在Pinout中，我们看到的Differential Pair）。</p>
+<p><img src="images/physical_layer/image-20240705174714897.png" alt="image-20240705174714897" /></p>
+<p><img src="images/physical_layer/image-20240705174727675.png" alt="image-20240705174727675" /></p>
+<p><img src="images/physical_layer/image-20240705174944032.png" alt="image-20240705174944032" /></p>
+<p>参考： <a href="https://r12f.com/posts/pcie-4-phy/#%E7%89%A9%E7%90%86%E5%B1%82%EF%BC%88Physical-Layer%EF%BC%89">Blog</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/00_PCIe协议/ltssm_timeout.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/00_PCIe协议/post_nonpost.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/00_PCIe协议/ltssm_timeout.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../01__基石篇__硬件接口与协议深度图鉴/PCIe/00_PCIe协议/post_nonpost.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
